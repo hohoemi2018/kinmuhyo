@@ -1,0 +1,1336 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<title>ほほえみ勤務表</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Kiwi+Maru:wght@400;500&family=Zen+Maru+Gothic:wght@400;500;700&display=swap">
+<style id="hk-css">
+/* layout: 一枚の画用紙。上に園の絵と対象の月、①〜⑤の順に進むタブ、その下に縫い目で区切った大きな紙。 */
+:root{
+  --bg:#FFF3E8; --dot:rgba(226,170,130,.20); --paper:#FFFDF9; --paper-2:#FFF7EE;
+  --ink:#4B3A33; --muted:#86726A; --line:#F0DDCD; --line-strong:#E2C7B3;
+  --cocoa:#5A4034; --on-cocoa:#FFF6EC; --coral:#EE7F6E; --coral-ink:#B24637;
+  --e-bg:#FFE6AE; --e-fg:#754700; --n-bg:#CFEED8; --n-fg:#1D5A3B; --l-bg:#DEDAFA; --l-fg:#41368A;
+  --w-bg:#FFD8DE; --w-fg:#962E48; --p-bg:#D4ECF6; --p-fg:#1D526E;
+  --off-fg:#9C8A7E; --closed-bg:#F4E9DE;
+  --sat:#32699F; --sun-day:#C24A35; --warn-bg:#FFE7D2; --warn-fg:#8F4310; --ok-bg:#DCF2E3; --ok-fg:#1D5A3B;
+  --sun:#F9B93E; --sun-ray:#F29A3A; --moon:#F7DA7B; --cheek:#F7A9A0; --chick:#FFD95E; --chick-shade:#F6C343; --beak:#F29A3A; --cup:#F3A6B4; --face:#5A4034;
+  --shadow:0 2px 0 rgba(120,84,60,.07),0 14px 28px -18px rgba(120,84,60,.45);
+  --scene-filter:none;
+  --font-display:'Kiwi Maru','Zen Maru Gothic','Hiragino Maru Gothic ProN','Yu Gothic',sans-serif;
+  --font-body:'Zen Maru Gothic','Hiragino Maru Gothic ProN','Hiragino Sans','Yu Gothic','Meiryo',sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#2A201B; --dot:rgba(255,220,190,.06); --paper:#372B25; --paper-2:#41332C;
+    --ink:#F7EADF; --muted:#C6AF9F; --line:#54433A; --line-strong:#6C574B;
+    --cocoa:#F4DCC6; --on-cocoa:#3A2A22; --coral:#F29080; --coral-ink:#FFB8AB;
+    --e-bg:#6A4A12; --e-fg:#FFE3A8; --n-bg:#21503A; --n-fg:#C6F0D6; --l-bg:#3F3777; --l-fg:#DDD7FF;
+    --w-bg:#6B2C3B; --w-fg:#FFD4DC; --p-bg:#214C63; --p-fg:#CFEBF8;
+    --off-fg:#B39E90; --closed-bg:#30251F;
+    --sat:#8DB9EA; --sun-day:#FF9C8A; --warn-bg:#5A3A1C; --warn-fg:#FFD9B0; --ok-bg:#21503A; --ok-fg:#C6F0D6;
+    --shadow:0 2px 0 rgba(0,0,0,.2),0 14px 28px -18px rgba(0,0,0,.7);
+    --scene-filter:brightness(.9) saturate(.95);
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#2A201B; --dot:rgba(255,220,190,.06); --paper:#372B25; --paper-2:#41332C;
+  --ink:#F7EADF; --muted:#C6AF9F; --line:#54433A; --line-strong:#6C574B;
+  --cocoa:#F4DCC6; --on-cocoa:#3A2A22; --coral:#F29080; --coral-ink:#FFB8AB;
+  --e-bg:#6A4A12; --e-fg:#FFE3A8; --n-bg:#21503A; --n-fg:#C6F0D6; --l-bg:#3F3777; --l-fg:#DDD7FF;
+  --w-bg:#6B2C3B; --w-fg:#FFD4DC; --p-bg:#214C63; --p-fg:#CFEBF8;
+  --off-fg:#B39E90; --closed-bg:#30251F;
+  --sat:#8DB9EA; --sun-day:#FF9C8A; --warn-bg:#5A3A1C; --warn-fg:#FFD9B0; --ok-bg:#21503A; --ok-fg:#C6F0D6;
+  --shadow:0 2px 0 rgba(0,0,0,.2),0 14px 28px -18px rgba(0,0,0,.7);
+  --scene-filter:brightness(.9) saturate(.95);
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{
+  background:var(--bg);
+  background-image:radial-gradient(var(--dot) 1.6px,transparent 1.8px);
+  background-size:22px 22px;
+  color:var(--ink);font-family:var(--font-body);font-size:15px;line-height:1.7;
+  -webkit-text-size-adjust:100%;
+}
+.app{max-width:1200px;margin-inline:auto;padding-inline:16px;padding-block:20px 56px;display:flex;flex-direction:column;gap:18px}
+h1,h2,h3{font-family:var(--font-display);font-weight:500;text-wrap:balance;margin:0;line-height:1.35}
+p{margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:3px solid var(--coral);outline-offset:2px}
+
+/* ---- illustration paint ---- */
+.ic{width:1.45em;height:1.45em;flex:none}
+.k-sun{fill:var(--sun)} .k-ray{stroke:var(--sun-ray)} .k-line{stroke:var(--sun-ray)}
+.k-face{fill:var(--face)} .k-smile{stroke:var(--face)} .k-cheek{fill:var(--cheek)}
+.k-moon{fill:var(--moon)} .k-cup{fill:var(--cup)} .k-cupline{stroke:var(--cup)} .k-steam{stroke:var(--muted)}
+.k-chick{fill:var(--chick)} .k-wing{fill:var(--chick-shade)} .k-beak{fill:var(--beak)} .k-foot{stroke:var(--beak)}
+.chick{width:64px;height:64px;flex:none}
+.scene{display:block;width:100%;height:auto;filter:var(--scene-filter)}
+
+/* ---- top ---- */
+.hero{display:grid;grid-template-columns:minmax(0,330px) minmax(0,1fr);gap:22px;align-items:center}
+.hero-text{display:flex;flex-direction:column;gap:6px;min-width:0}
+.eyebrow{font-weight:700;color:var(--coral-ink);letter-spacing:.06em;font-size:14px;overflow-wrap:anywhere}
+h1{font-size:clamp(28px,4.4vw,40px);color:var(--cocoa);letter-spacing:.04em}
+.lede{color:var(--muted);max-width:34em}
+.monthbar{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:8px}
+.mbtn{appearance:none;width:44px;height:44px;border-radius:50%;border:2px solid var(--line-strong);background:var(--paper);font-size:22px;line-height:1;cursor:pointer;color:var(--cocoa)}
+.mlabel{font-family:var(--font-display);font-size:22px;font-weight:500;min-width:6.2em;text-align:center;font-variant-numeric:tabular-nums}
+.mnote{background:var(--n-bg);color:var(--n-fg);border-radius:999px;padding:2px 12px;font-weight:700;font-size:13px}
+.sample{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;background:var(--e-bg);color:var(--e-fg);border-radius:18px;padding:12px 16px;margin-top:14px}
+.sample p{flex:1 1 260px;min-width:0;font-weight:500}
+
+/* ---- steps ---- */
+.steps{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+.step{appearance:none;display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 4px;min-height:62px;border-radius:18px;border:2px solid var(--line);background:var(--paper);cursor:pointer;color:var(--muted);font-weight:700}
+.step .snum{width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--paper-2);border:2px solid var(--line-strong);font-size:12px;line-height:1;font-variant-numeric:tabular-nums}
+.step .slabel{font-size:13px;white-space:nowrap}
+.step[aria-current="page"]{background:var(--cocoa);border-color:var(--cocoa);color:var(--on-cocoa)}
+.step[aria-current="page"] .snum{background:var(--coral);border-color:var(--coral);color:var(--on-cocoa)}
+
+/* ---- paper ---- */
+.panel{background:var(--paper);border:2px solid var(--line);border-radius:26px;box-shadow:var(--shadow);padding:22px;display:flex;flex-direction:column;gap:22px;min-width:0}
+.panel > section{display:flex;flex-direction:column;gap:12px;min-width:0}
+.panel > section + section{border-top:2px dashed var(--line);padding-top:22px}
+h2{font-size:20px;color:var(--cocoa);display:flex;align-items:center;gap:8px}
+h2::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--coral);flex:none}
+.hint{color:var(--muted);font-size:14px;max-width:46em}
+.next{display:flex;justify-content:flex-end;border-top:2px dashed var(--line);padding-top:18px}
+.row{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+
+.btn{appearance:none;display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;padding:0 18px;border-radius:999px;border:2px solid var(--line-strong);background:var(--paper);font-weight:700;cursor:pointer;text-align:center}
+.btn.primary{background:var(--cocoa);border-color:var(--cocoa);color:var(--on-cocoa)}
+.btn.big{min-height:54px;padding:0 28px;font-size:17px}
+.btn.quiet{border-color:transparent;background:transparent;text-decoration:underline;text-underline-offset:4px}
+@media (hover:hover){ .btn:hover,.mbtn:hover,.step:hover{filter:brightness(.97)} }
+.iconbtn{appearance:none;width:40px;height:40px;border-radius:50%;border:2px solid var(--line);background:var(--paper-2);cursor:pointer;font-size:18px;line-height:1;color:var(--muted);flex:none}
+
+input[type=text],input[type=number],input[type=time],select,textarea{background:var(--paper-2);border:2px solid var(--line);border-radius:12px;padding:6px 10px;min-height:42px;max-width:100%}
+input[type=number]{width:5em;text-align:right;font-variant-numeric:tabular-nums}
+input.wide{width:min(100%,26em)}
+textarea{width:100%;min-height:84px;line-height:1.5}
+.fld{display:flex;flex-direction:column;gap:2px;min-width:0;font-size:13px;color:var(--muted);font-weight:700}
+.fld input{width:100%;color:var(--ink);font-weight:400;font-size:15px}
+.fld input[type=number]{text-align:center}
+
+.pill{display:inline-flex;align-items:center;gap:4px;border-radius:999px;padding:2px 11px;font-weight:700;font-size:13px;white-space:nowrap}
+.pill.big{font-size:15px;padding:5px 14px}
+.pE{background:var(--e-bg);color:var(--e-fg)} .pN{background:var(--n-bg);color:var(--n-fg)} .pL{background:var(--l-bg);color:var(--l-fg)}
+.pW{background:var(--w-bg);color:var(--w-fg)} .pP{background:var(--p-bg);color:var(--p-fg)} .pO{background:var(--closed-bg);color:var(--muted)}
+
+.shiftrow{display:grid;grid-template-columns:112px repeat(4,minmax(0,1fr));gap:10px;align-items:end;background:var(--paper-2);border-radius:18px;padding:12px}
+.shiftrow .pill{justify-self:start;align-self:center}
+
+.chk{position:relative;display:inline-flex}
+.chk input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:pointer}
+.chk span{display:inline-flex;align-items:center;justify-content:center;min-width:42px;min-height:40px;padding:0 12px;border-radius:12px;border:2px solid var(--line);background:var(--paper-2);color:var(--muted);font-weight:700}
+.chk input:checked + span{background:var(--n-bg);border-color:var(--n-bg);color:var(--n-fg)}
+.chk input:focus-visible + span{outline:3px solid var(--coral);outline-offset:2px}
+.rule{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+
+/* ---- calendars ---- */
+.cal{display:flex;flex-direction:column;gap:4px;width:100%;max-width:540px}
+.cal-head,.cal-body{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.cal-head span{text-align:center;font-size:12px;font-weight:700;color:var(--muted)}
+.cal-head .d0{color:var(--sun-day)} .cal-head .d6{color:var(--sat)}
+.cday,.wday{appearance:none;border:2px solid transparent;border-radius:12px;min-height:52px;padding:2px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;cursor:pointer;line-height:1.25;font-variant-numeric:tabular-nums;min-width:0}
+.cday b,.wday b{font-size:15px}
+.cday small,.wday small{font-size:11px;font-weight:700;white-space:nowrap}
+.cday.is-open{background:var(--n-bg);color:var(--n-fg)}
+.cday.is-closed{background:var(--closed-bg);color:var(--off-fg)}
+.cday.is-hol b{text-decoration:underline wavy;text-underline-offset:3px}
+.wday{background:var(--paper-2);border-color:var(--line);color:var(--ink)}
+.wday.st-W{background:var(--w-bg);border-color:var(--w-bg);color:var(--w-fg)}
+.wday.st-P{background:var(--p-bg);border-color:var(--p-bg);color:var(--p-fg)}
+.wday:disabled{background:var(--closed-bg);border-color:transparent;color:var(--off-fg);cursor:default}
+
+/* ---- staff ---- */
+.stafflist{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:12px}
+.staff{background:var(--paper-2);border-radius:18px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.staff input[type=text],.staff select,.staff input[type=number]{background:var(--paper)}
+.st-head{display:flex;gap:8px;align-items:center}
+.st-head input{flex:1 1 auto;min-width:0;font-weight:700}
+.st-row{display:flex;flex-direction:column;gap:4px}
+.st-row .lab{font-size:13px;font-weight:700;color:var(--muted)}
+.staff .chk span{min-width:38px;min-height:36px;padding:0 8px;background:var(--paper)}
+.staff .chk input:checked + span{background:var(--n-bg)}
+.st-note{font-size:13px;color:var(--muted)}
+.delask{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--warn-bg);color:var(--warn-fg);border-radius:12px;padding:8px 10px;font-weight:700;font-size:14px}
+.sum{border-radius:16px;padding:10px 14px;font-weight:500}
+.sum.ok{background:var(--ok-bg);color:var(--ok-fg)} .sum.warn{background:var(--warn-bg);color:var(--warn-fg)}
+
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{appearance:none;min-height:42px;padding:0 14px;border-radius:999px;border:2px solid var(--line-strong);background:var(--paper);cursor:pointer;font-weight:700}
+.chip[aria-pressed="true"]{background:var(--cocoa);border-color:var(--cocoa);color:var(--on-cocoa)}
+.chip small{font-weight:500;opacity:.85;margin-left:4px}
+.wishlist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.wishlist li{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.wishlist b{min-width:7em}
+
+/* ---- status ---- */
+.status{border-radius:18px;padding:12px 16px;display:flex;gap:12px;align-items:flex-start;min-width:0}
+.status .chick{width:48px;height:48px}
+.status.ok{background:var(--ok-bg);color:var(--ok-fg);align-items:center;font-weight:700}
+.status.warn{background:var(--warn-bg);color:var(--warn-fg)}
+.status ul{margin:4px 0 0;padding-left:1.2em}
+.status li{overflow-wrap:anywhere}
+.stale{background:var(--p-bg);color:var(--p-fg);border-radius:14px;padding:8px 14px;font-weight:500}
+.legend{display:flex;flex-wrap:wrap;gap:6px 8px;align-items:center;list-style:none;margin:0;padding:0}
+.legend li{display:inline-flex}
+
+/* ---- roster table ---- */
+.tbl-wrap{overflow-x:auto;border:2px solid var(--line);border-radius:18px;background:var(--paper);max-width:100%}
+.roster{border-collapse:separate;border-spacing:0;font-size:13px;font-variant-numeric:tabular-nums}
+.roster th,.roster td{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:0;text-align:center;height:34px;min-width:27px;font-weight:500}
+.roster tr > :last-child{border-right:0}
+.roster tfoot tr:last-child > *{border-bottom:0}
+.roster .namecol{position:sticky;left:0;z-index:2;background:var(--paper);text-align:left;padding:2px 10px;white-space:nowrap;min-width:104px;font-weight:700;border-right:2px solid var(--line-strong)}
+.roster .namecol small{display:block;font-size:10px;font-weight:500;color:var(--muted);line-height:1.1}
+.roster thead th{background:var(--paper-2);height:42px}
+.roster thead .namecol{background:var(--paper-2)}
+.dcol span{display:block;line-height:1.2}
+.dcol .dwk{font-size:10px}
+.dcol.satc{color:var(--sat)} .dcol.sunc{color:var(--sun-day)}
+.roster .closed{background:var(--closed-bg)}
+.roster thead .dcol.closed{background:var(--closed-bg)}
+.cellbtn{appearance:none;border:0;border-radius:0;margin:0;padding:0;display:flex;align-items:center;justify-content:center;width:100%;height:34px;min-width:27px;font-weight:700;background:transparent;cursor:pointer}
+span.cellbtn{cursor:default}
+.cellbtn:focus-visible{outline-offset:-3px}
+.cE{background:var(--e-bg);color:var(--e-fg)} .cN{background:var(--n-bg);color:var(--n-fg)} .cL{background:var(--l-bg);color:var(--l-fg)}
+.cW{background:var(--w-bg);color:var(--w-fg)} .cP{background:var(--p-bg);color:var(--p-fg)} .cOff{color:var(--off-fg)}
+.roster .tot{min-width:32px;background:var(--paper-2);padding:0 4px}
+.roster .tot.strong{font-weight:700}
+.roster tfoot td{font-weight:700}
+.roster tfoot .short{background:var(--warn-bg);color:var(--warn-fg);font-size:11px}
+.roster tfoot .namecol{font-weight:500;font-size:12px}
+
+/* ---- personal sheet ---- */
+.sheets{display:flex;flex-direction:column;gap:18px}
+.psheet{background:var(--paper);border:2px solid var(--line-strong);border-radius:26px;padding:16px 16px 18px;width:100%;max-width:760px;margin-inline:auto;display:flex;flex-direction:column;gap:12px}
+.bunting{display:block;width:100%;max-width:520px;height:auto;margin-inline:auto}
+.ps-head{display:flex;gap:12px;align-items:center}
+.ps-head > div{min-width:0}
+.ps-fac{font-size:13px;color:var(--muted);font-weight:700;overflow-wrap:anywhere}
+.ps-head h3{font-size:20px;color:var(--cocoa)}
+.ps-name{font-size:17px;overflow-wrap:anywhere}
+.ps-name strong{font-size:21px;font-family:var(--font-display);font-weight:500}
+.pcal{max-width:none}
+.pday{border-radius:12px;min-height:76px;padding:4px 2px;display:flex;flex-direction:column;align-items:center;gap:1px;background:var(--paper-2);line-height:1.25;min-width:0;font-variant-numeric:tabular-nums}
+.pnum{font-size:13px;font-weight:700}
+.plab{font-size:13px;font-weight:700;white-space:nowrap}
+.ptime{font-size:10.5px;text-align:center;white-space:nowrap}
+.pday.t-E{background:var(--e-bg);color:var(--e-fg)} .pday.t-N{background:var(--n-bg);color:var(--n-fg)} .pday.t-L{background:var(--l-bg);color:var(--l-fg)}
+.pday.t-W{background:var(--w-bg);color:var(--w-fg)} .pday.t-P{background:var(--p-bg);color:var(--p-fg)}
+.pday.t-closed{background:var(--closed-bg);color:var(--off-fg)} .pday.t-off{color:var(--off-fg)}
+.ps-foot{text-align:center;color:var(--muted);font-family:var(--font-display)}
+
+.empty{display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px;padding:26px 0}
+.empty .chick{width:92px;height:92px}
+.empty h2::before{display:none}
+.empty p{color:var(--muted);max-width:30em}
+
+.foot{color:var(--muted);font-size:13px;text-align:center}
+.toast{position:fixed;left:16px;right:16px;margin-inline:auto;width:fit-content;max-width:560px;bottom:calc(20px + env(safe-area-inset-bottom,0px));background:var(--cocoa);color:var(--on-cocoa);padding:10px 18px;border-radius:22px;font-weight:700;text-align:center;z-index:30;box-shadow:var(--shadow)}
+.modal{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:16px;background:rgba(40,28,22,.55)}
+.modal-box{background:var(--paper);color:var(--ink);border-radius:22px;padding:18px;width:min(100%,520px);display:flex;flex-direction:column;gap:10px}
+.backup summary{cursor:pointer;font-weight:700;color:var(--muted)}
+.backup > div{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding-top:10px}
+
+/* ---- staff screen ---- */
+.wday.is-locked{background:var(--paper-2);border-color:var(--line);color:var(--ink)}
+.wday.is-locked.st-W{background:var(--w-bg);border-color:var(--w-bg);color:var(--w-fg)}
+.wday.is-locked.st-P{background:var(--p-bg);border-color:var(--p-bg);color:var(--p-fg)}
+.picker-head{display:flex;align-items:center;gap:14px}
+.picker-head .chick{width:72px;height:72px}
+.namegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,170px),1fr));gap:10px}
+.namebtn{appearance:none;min-height:72px;border-radius:20px;border:2px solid var(--line-strong);background:var(--paper-2);cursor:pointer;font-family:var(--font-display);font-size:20px;color:var(--cocoa);display:flex;align-items:baseline;justify-content:center;gap:4px;padding:16px 12px;overflow-wrap:anywhere;line-height:1.3}
+.namebtn small{font-family:var(--font-body);font-size:13px;color:var(--muted)}
+@media (hover:hover){.namebtn:hover{background:var(--e-bg)}}
+.me-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.me-name{display:flex;align-items:center;gap:10px;font-size:17px}
+.me-name .chick{width:52px;height:52px}
+.me-name strong{font-family:var(--font-display);font-size:24px;font-weight:500;color:var(--cocoa)}
+.pubbar,.accept{display:flex;flex-wrap:wrap;align-items:center;gap:8px 12px}
+.accept .hint{flex:1 1 220px}
+.modepill{background:var(--l-bg);color:var(--l-fg);border-radius:999px;padding:2px 12px;font-weight:700;font-size:13px;align-self:flex-start}
+.tostaff{margin-left:auto}
+.roster tr.me > th.namecol{background:var(--w-bg);color:var(--w-fg)}
+.foot{display:flex;flex-direction:column;align-items:center;gap:4px}
+.credit{font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:8px;opacity:.85}
+#apptitle{overflow-wrap:anywhere}
+#pin-form{display:flex;flex-direction:column;gap:12px}
+#pin-form input{width:100%;font-size:22px;letter-spacing:.3em;text-align:center}
+.pin-err{color:var(--warn-fg);background:var(--warn-bg);border-radius:10px;padding:6px 10px;font-weight:700}
+
+/* ---- overall calendar ---- */
+.viewtoggle{display:inline-flex;gap:4px;background:var(--paper-2);border:2px solid var(--line);border-radius:999px;padding:3px}
+.viewtoggle .chip{min-height:38px;border:0}
+.ocal-wrap{overflow-x:auto;max-width:100%;padding-bottom:4px}
+.ocal{min-width:760px;max-width:none}
+.oday{background:var(--paper-2);border-radius:12px;padding:6px 7px 7px;min-height:104px;display:flex;flex-direction:column;gap:3px;min-width:0;font-size:12px;line-height:1.4}
+.oday.closed{background:var(--closed-bg);color:var(--off-fg)}
+.oday-top{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.oday-top b{font-size:15px;font-variant-numeric:tabular-nums}
+.oday-top small{font-size:10px;color:var(--muted);font-weight:700}
+.oday .sunc{color:var(--sun-day)} .oday .satc{color:var(--sat)}
+.oline{display:flex;gap:4px;align-items:flex-start}
+.otag{flex:none;width:20px;height:18px;border-radius:6px;display:grid;place-items:center;font-weight:700;font-size:11px;line-height:1}
+.onames{min-width:0;overflow-wrap:anywhere;font-weight:500}
+.oclosed{margin:auto;font-weight:700;font-size:13px}
+.oshort{align-self:flex-start;background:var(--warn-bg);color:var(--warn-fg);border-radius:6px;padding:0 6px;font-weight:700;font-size:11px}
+
+/* ---- PDF ---- */
+.bt0{fill:var(--coral)} .bt1{fill:var(--sun)} .bt2{fill:var(--n-bg)} .bt3{fill:var(--l-bg)} .bt4{fill:var(--p-bg)} .bt5{fill:var(--w-bg)} .bt-line{stroke:var(--line-strong)}
+.outbox{display:flex;flex-direction:column;gap:8px;background:var(--paper-2);border-radius:18px;padding:12px 14px}
+.outlab{font-weight:700;color:var(--cocoa);font-size:14px}
+#pdf-stage{position:absolute;left:-30000px;top:0;pointer-events:none}
+.pg{background:var(--paper);color:var(--ink);font-family:var(--font-body);display:flex;flex-direction:column;gap:12px}
+.pg-portrait{width:794px;padding:26px 18px}
+.pg-landscape{width:1123px;padding:20px 28px 22px}
+.pg-head{display:flex;align-items:center;gap:14px}
+.pg-head .chick{width:54px;height:54px}
+.pg-head h3{font-size:24px;color:var(--cocoa)}
+.pg-fac{font-size:13px;color:var(--muted);font-weight:700}
+.pg-head .legend{margin-left:auto;justify-content:flex-end;max-width:560px}
+.pg-foot{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--muted)}
+.pg .bunting{max-width:460px}
+.pg .psheet{max-width:none}
+.pg .pday{min-height:124px;gap:4px;padding-top:8px}
+.pg .pnum{font-size:16px} .pg .plab{font-size:18px} .pg .ptime{font-size:14px}
+.pg .ps-head .chick{width:76px;height:76px} .pg .ps-head h3{font-size:24px} .pg .ps-name strong{font-size:27px} .pg .ps-fac{font-size:14px}
+.pg .psheet{gap:16px;padding:20px 20px 22px}
+.pg .ocal{min-width:0}
+.pg .oday{min-height:92px}
+.pg .tbl-wrap{overflow:visible}
+.pg .roster{width:100%;table-layout:fixed;font-size:11px}
+.pg .roster th,.pg .roster td,.pg .cellbtn{min-width:0;height:27px}
+.pg .roster thead th{height:36px}
+.pg .roster .namecol{position:static;width:98px;min-width:0;white-space:normal;padding:1px 6px}
+.pg .roster .tot{width:30px;min-width:0;padding:0}
+.busy-box{align-items:center;text-align:center}
+.busy-box .chick{width:72px;height:72px}
+@media (prefers-reduced-motion:no-preference){
+  .busy-box .chick{animation:hop 1s ease-in-out infinite}
+  @keyframes hop{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+}
+
+@media (max-width:720px){
+  .hero{grid-template-columns:minmax(0,1fr)}
+  .hero-art{max-width:360px}
+  .panel{padding:16px;border-radius:22px}
+  .shiftrow{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .shiftrow .pill{grid-column:1 / -1}
+  .psheet{padding:12px 8px 14px}
+  .next .btn{width:100%}
+  .roster th,.roster td,.cellbtn{min-width:36px}
+  .roster th,.roster td,.cellbtn{height:38px}
+}
+@media (max-width:520px){
+  .pday{min-height:70px}
+  .plab{font-size:12px}
+  .ptime{font-size:9.5px}
+  .cday small,.wday small{font-size:10px}
+  .step .slabel{font-size:12px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .btn,.step,.chip{transition:filter .15s ease, background-color .15s ease}
+}
+@media print{
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .no-print{display:none!important}
+  body{background:var(--paper);background-image:none}
+  .app{padding:0;max-width:none}
+  .panel{border:0;box-shadow:none;padding:0}
+  .tbl-wrap{overflow:visible;border:0}
+  .roster{width:100%;table-layout:fixed;font-size:9px;border:1px solid var(--line-strong)}
+  .roster th,.roster td,.cellbtn{min-width:0;height:22px}
+  .roster thead th{height:28px}
+  .roster .namecol{position:static;width:12%;min-width:0;white-space:normal;padding:1px 4px}
+  .roster .tot{min-width:0;padding:0}
+  .print-roster{page:wide}
+  .psheet{break-after:page;break-inside:avoid;border:0;max-width:none}
+  .psheet:last-child{break-after:auto}
+}
+@page wide{size:A4 landscape;margin:10mm}
+</style>
+
+</head>
+<body>
+<div class="app" id="app">
+  <header id="top"></header>
+  <nav class="steps no-print" id="steps" aria-label="勤務表づくりの順番"></nav>
+  <main id="main"></main>
+  <div class="foot no-print" id="foot"></div>
+</div>
+<div class="toast no-print" id="toast" role="status" aria-live="polite" hidden></div>
+<div class="modal no-print" id="modal" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="modal-h">
+    <h2 id="modal-h">下の文字を選んでコピーしてください</h2>
+    <p class="hint">この画面では自動でコピーできませんでした。</p>
+    <textarea id="modal-ta" readonly rows="8" aria-label="コピーする内容"></textarea>
+    <div class="row"><button type="button" class="btn primary" data-act="closemodal">とじる</button></div>
+  </div>
+</div>
+
+<div class="modal no-print" id="pin" hidden>
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="pin-h"><form id="pin-form" novalidate></form></div>
+</div>
+<div class="modal no-print" id="busy" hidden>
+  <div class="modal-box busy-box" role="status" aria-live="polite"><span id="busy-art"></span><p id="busy-msg">PDFを作っています</p></div>
+</div>
+<div id="pdf-stage" aria-hidden="true"></div>
+
+<script>
+(function(){
+'use strict';
+
+/*CORE-START*/
+const DOW=['日','月','火','水','木','金','土'];
+const SH=['E','N','L'];
+const SHN={E:'早番',N:'通常',L:'遅番'};
+const SHS={E:'早',N:'通',L:'遅'};
+const HCACHE={};
+
+/* 日本の祝日（振替休日・国民の休日を含む） */
+function holidaysOf(y){
+  if(HCACHE[y]) return HCACHE[y];
+  const h={};
+  const add=(m,d,n)=>{h[m+'-'+d]=n;};
+  const nthMon=(m,k)=>{const f=new Date(y,m-1,1).getDay();return 1+((8-f)%7)+(k-1)*7;};
+  const a=y-1980;
+  add(1,1,'元日');add(1,nthMon(1,2),'成人の日');add(2,11,'建国記念の日');add(2,23,'天皇誕生日');
+  add(3,Math.floor(20.8431+0.242194*a-Math.floor(a/4)),'春分の日');
+  add(4,29,'昭和の日');add(5,3,'憲法記念日');add(5,4,'みどりの日');add(5,5,'こどもの日');
+  add(7,nthMon(7,3),'海の日');add(8,11,'山の日');add(9,nthMon(9,3),'敬老の日');
+  add(9,Math.floor(23.2488+0.242194*a-Math.floor(a/4)),'秋分の日');
+  add(10,nthMon(10,2),'スポーツの日');add(11,3,'文化の日');add(11,23,'勤労感謝の日');
+  const key=dt=>(dt.getMonth()+1)+'-'+dt.getDate();
+  const base=Object.keys(h);
+  base.forEach(k=>{
+    const p=k.split('-').map(Number);const dt=new Date(y,p[0]-1,p[1]);
+    if(dt.getDay()===0){let nx=new Date(y,p[0]-1,p[1]+1);while(h[key(nx)]) nx=new Date(nx.getFullYear(),nx.getMonth(),nx.getDate()+1);if(nx.getFullYear()===y) h[key(nx)]='振替休日';}
+  });
+  base.forEach(k=>{
+    const p=k.split('-').map(Number);const mid=new Date(y,p[0]-1,p[1]+1);const nxt=new Date(y,p[0]-1,p[1]+2);
+    if(!h[key(mid)]&&base.indexOf(key(nxt))>=0&&mid.getDay()!==0&&mid.getFullYear()===y) h[key(mid)]='国民の休日';
+  });
+  HCACHE[y]=h;return h;
+}
+
+function monthInfo(S){
+  const p=S.ym.split('-');const y=+p[0],m=+p[1];const n=new Date(y,m,0).getDate();
+  const hol=holidaysOf(y);const ov=(S.dayOverride&&S.dayOverride[S.ym])||{};const days=[];
+  for(let d=1;d<=n;d++){
+    const dow=new Date(y,m-1,d).getDay();const holiday=hol[m+'-'+d]||'';
+    let def=S.openDows.indexOf(dow)>=0;if(holiday&&S.closeHolidays) def=false;
+    const open=(d in ov)?!!ov[d]:def;
+    days.push({d:d,dow:dow,holiday:holiday,def:def,open:open,kind:(dow===0||dow===6||holiday)?'we':'wk'});
+  }
+  return {y:y,m:m,n:n,days:days};
+}
+function reqOf(S,day,t){return day.open?Math.max(0,Number(S.shifts[t][day.kind])||0):0;}
+function wishOf(S,sid){return (S.wishes[S.ym]||{})[sid]||{};}
+function availCount(S,s,info){const w=wishOf(S,s.id);let c=0;info.days.forEach(day=>{if(day.open&&s.dows.indexOf(day.dow)>=0&&!w[day.d]) c++;});return c;}
+/* その月に組む勤務日数。常勤は「月の日数 − 公休 − 有給」、パートは「勤務日数 − 有給」。 */
+function targetOf(S,s,info){
+  const w=wishOf(S,s.id);let paid=0;for(const k in w){if(w[k]==='P') paid++;}
+  const base=s.type==='part'?(Number(s.work)||0):info.n-(Number(s.off)||0);
+  return Math.max(0,Math.min(base-paid,availCount(S,s,info)));
+}
+
+function generate(S){
+  const info=monthInfo(S);const days=info.days,n=info.n;const R=S.rules;const maxC=Math.max(1,Number(R.maxConsec)||5);
+  const staff=S.staff.map(s=>{
+    const w=wishOf(S,s.id);const av=new Array(n+2).fill(false);
+    days.forEach(day=>{av[day.d]=day.open&&s.dows.indexOf(day.dow)>=0&&!w[day.d];});
+    return {id:s.id,can:s.can,av:av,target:targetOf(S,s,info)};
+  });
+  const rq=new Array(n+2).fill(null);
+  days.forEach(day=>{rq[day.d]={E:reqOf(S,day,'E'),N:reqOf(S,day,'N'),L:reqOf(S,day,'L')};});
+  const weOpen=days.some(day=>day.open&&day.kind==='we');
+
+  function buildOnce(){
+    const A=staff.map(()=>new Array(n+2).fill(''));
+    const c=staff.map(()=>({E:0,N:0,L:0,all:0,we:0}));
+    const rem=staff.map(s=>s.av.filter(Boolean).length);
+    const head=new Array(n+2).fill(0);
+    const dc=[];for(let d=0;d<=n+1;d++) dc.push({E:0,N:0,L:0});
+    const runAt=(i,d)=>{let r=1;for(let x=d-1;x>=1&&A[i][x];x--) r++;for(let x=d+1;x<=n&&A[i][x];x++) r++;return r;};
+    const can=(i,d,t)=>{
+      const s=staff[i];
+      if(A[i][d]||!s.av[d]||!s.can[t]||c[i].all>=s.target) return false;
+      if(runAt(i,d)>maxC) return false;
+      if(R.noLateEarly){if(t==='E'&&A[i][d-1]==='L') return false;if(t==='L'&&A[i][d+1]==='E') return false;}
+      return true;
+    };
+    const put=(i,day,t)=>{A[i][day.d]=t;c[i][t]++;c[i].all++;if(day.kind==='we') c[i].we++;head[day.d]++;dc[day.d][t]++;};
+
+    /* 1巡目：その日に必要な人数を、足りなくなりやすい勤務から順に埋める */
+    days.forEach(day=>{
+      const d=day.d;
+      if(day.open){
+        const slack={};
+        SH.forEach(t=>{let k=0;for(let i=0;i<staff.length;i++){if(can(i,d,t)) k++;}slack[t]=k-rq[d][t]+Math.random()*0.2;});
+        SH.slice().sort((x,y)=>slack[x]-slack[y]).forEach(t=>{
+          for(let k=0;k<rq[d][t];k++){
+            let bi=-1,bc=Infinity;
+            for(let i=0;i<staff.length;i++){
+              if(!can(i,d,t)) continue;
+              const s=staff[i];const tg=Math.max(1,s.target);
+              const urg=(s.target-c[i].all)/Math.max(1,rem[i]);
+              let cost=-2.2*urg+9*(c[i][t]/tg)+Math.random()*0.4;
+              if(day.kind==='we') cost+=7*(c[i].we/tg);
+              if(t==='N'&&!(s.can.E&&s.can.L)) cost-=0.3;
+              if(cost<bc){bc=cost;bi=i;}
+            }
+            if(bi>=0) put(bi,day,t);
+          }
+        });
+      }
+      for(let i=0;i<staff.length;i++){if(staff[i].av[d]) rem[i]--;}
+    });
+
+    /* 2巡目：予定の勤務日数に届くまで、人数の少ない日から足していく（不足の穴埋めも兼ねる） */
+    const order=staff.map((_,i)=>i);
+    for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));const tmp=order[i];order[i]=order[j];order[j]=tmp;}
+    let moved=true;
+    while(moved){
+      moved=false;
+      for(const i of order){
+        const s=staff[i];if(c[i].all>=s.target) continue;
+        let bday=null,bt='',bc=Infinity;
+        for(const day of days){
+          const d=day.d;if(!day.open||A[i][d]||!s.av[d]) continue;
+          let t='',bonus=0;
+          for(const x of SH){if(dc[d][x]<rq[d][x]&&can(i,d,x)){t=x;bonus=-6;break;}}
+          if(!t){
+            const pref=s.can.N?['N']:(c[i].E<=c[i].L?['E','L']:['L','E']);
+            for(const x of pref){if(can(i,d,x)){t=x;break;}}
+          }
+          if(!t) continue;
+          const over=head[d]-(rq[d].E+rq[d].N+rq[d].L);
+          const cost=over+bonus+(day.kind==='we'?2.5:0)+0.12*runAt(i,d)+Math.random()*0.6;
+          if(cost<bc){bc=cost;bday=day;bt=t;}
+        }
+        if(bday){put(i,bday,bt);moved=true;}
+      }
+    }
+
+    let score=0;
+    days.forEach(day=>{if(day.open) SH.forEach(t=>{score+=Math.max(0,rq[day.d][t]-dc[day.d][t])*1000;});});
+    staff.forEach((s,i)=>{score+=(s.target-c[i].all)*30;});
+    const spread=(pick,val,wgt)=>{const v=[];staff.forEach((s,i)=>{if(s.target>0&&pick(s)) v.push(val(i)/s.target*20);});if(v.length>1) score+=(Math.max.apply(null,v)-Math.min.apply(null,v))*wgt;};
+    spread(s=>s.can.E,i=>c[i].E,6);
+    spread(s=>s.can.L,i=>c[i].L,6);
+    if(weOpen) spread(s=>days.some(day=>day.kind==='we'&&s.av[day.d]),i=>c[i].we,4);
+    staff.forEach((s,i)=>{let r=0;for(let d=1;d<=n+1;d++){if(A[i][d]) r++;else{if(r>=maxC) score+=0.5;r=0;}}});
+
+    const cells={};
+    staff.forEach((s,i)=>{cells[s.id]={};for(let d=1;d<=n;d++){if(A[i][d]) cells[s.id][d]=A[i][d];}});
+    return {cells:cells,score:score};
+  }
+
+  const iter=staff.length>24?70:staff.length>12?120:180;
+  let best=null;
+  for(let k=0;k<iter;k++){const r=buildOnce();if(!best||r.score<best.score) best=r;}
+  return best?best.cells:{};
+}
+
+/* いまの勤務表が条件に合っているかを確かめる（手で直したあとも同じ基準で見る） */
+function check(S){
+  const info=monthInfo(S);const sc=S.schedules[S.ym];const cells=sc?sc.cells:{};
+  const R=S.rules;const maxC=Math.max(1,Number(R.maxConsec)||5);
+  const dayCnt={};info.days.forEach(day=>{dayCnt[day.d]={E:0,N:0,L:0};});
+  const per={};const issues=[];
+  const dl=d=>info.m+'/'+d+'('+DOW[info.days[d-1].dow]+')';
+  S.staff.forEach(s=>{
+    const c=cells[s.id]||{};const w=wishOf(S,s.id);const nm=(s.name||'名前なし')+'さん';
+    const p={E:0,N:0,L:0,work:0};let run=0,start=0;
+    const closeRun=end=>{if(run>maxC) issues.push(nm+'：'+dl(start)+'〜'+dl(end)+' が'+run+'日つづきの勤務です（上限'+maxC+'日）');run=0;};
+    info.days.forEach(day=>{
+      const t=c[day.d];
+      if(!t){closeRun(day.d-1);return;}
+      p[t]++;p.work++;dayCnt[day.d][t]++;
+      if(run===0) start=day.d;
+      run++;
+      if(!day.open) issues.push(nm+'：'+dl(day.d)+' は休園日ですが、勤務が入っています');
+      else if(w[day.d]) issues.push(nm+'：'+dl(day.d)+' は'+(w[day.d]==='P'?'有給':'希望休')+'ですが、勤務が入っています');
+      else if(s.dows.indexOf(day.dow)<0) issues.push(nm+'：'+DOW[day.dow]+'曜は勤務できない設定ですが、'+dl(day.d)+' に勤務が入っています');
+      if(!s.can[t]) issues.push(nm+'：'+dl(day.d)+' の'+SHN[t]+'は、できない勤務に設定されています');
+      if(R.noLateEarly&&t==='E'&&c[day.d-1]==='L') issues.push(nm+'：'+dl(day.d-1)+' 遅番の次の日が早番になっています');
+    });
+    closeRun(info.n);
+    const tg=targetOf(S,s,info);
+    if(p.work<tg) issues.push(nm+'：勤務が予定より'+(tg-p.work)+'日少なくなっています（予定'+tg+'日）');
+    if(p.work>tg) issues.push(nm+'：勤務が予定より'+(p.work-tg)+'日多くなっています（予定'+tg+'日）');
+    per[s.id]=p;
+  });
+  const shorts=[];
+  info.days.forEach(day=>{
+    if(!day.open) return;const parts=[];
+    SH.forEach(t=>{const need=reqOf(S,day,t);if(dayCnt[day.d][t]<need) parts.push(SHN[t]+'があと'+(need-dayCnt[day.d][t])+'人');});
+    if(parts.length) shorts.push(dl(day.d)+'：'+parts.join('、')+' 足りません');
+  });
+  return {info:info,dayCnt:dayCnt,per:per,issues:shorts.concat(issues),shortDays:shorts.length};
+}
+/*CORE-END*/
+
+/* ---------- 保存 ---------- */
+const KEY='hohoemi-kinmuhyo-v1';
+const $=(q,r)=>(r||document).querySelector(q);
+const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+const pad=v=>String(v).padStart(2,'0');
+const uid=()=>'s'+Math.random().toString(36).slice(2,8)+Date.now().toString(36).slice(-3);
+const fmtT=t=>{if(!t) return '';const p=String(t).split(':');return Number(p[0])+':'+(p[1]||'00');};
+const clampInt=(v,lo,hi)=>{let x=parseInt(v,10);if(isNaN(x)) x=Number(lo)||0;if(lo!==''&&lo!=null) x=Math.max(Number(lo),x);if(hi!==''&&hi!=null) x=Math.min(Number(hi),x);return x;};
+
+function load(){
+  try{
+    const raw=localStorage.getItem(KEY);if(!raw) return null;
+    return normalize(JSON.parse(raw));
+  }catch(e){return null;}
+}
+function normalize(s){
+  if(!s||s.v!==1||!Array.isArray(s.staff)||!s.shifts||!s.ym) return null;
+  s.facility=s.facility||{name:''};s.dayOverride=s.dayOverride||{};s.wishes=s.wishes||{};s.schedules=s.schedules||{};
+  s.rules=s.rules||{maxConsec:5,noLateEarly:true,wishLimit:3};s.mode=s.mode==='staff'?'staff':'admin';s.pin=s.pin||'';s.wishClosed=s.wishClosed||{};s.openDows=s.openDows||[1,2,3,4,5,6];
+  s.staff.forEach(p=>{p.can=p.can||{E:true,N:true,L:true};p.dows=p.dows||[0,1,2,3,4,5,6];if(p.off==null) p.off=9;if(p.work==null) p.work=12;});
+  return s;
+}
+function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
+function touch(){const sc=S.schedules[S.ym];if(sc) sc.stale=true;save();}
+
+function blank(){
+  const now=new Date();const nx=new Date(now.getFullYear(),now.getMonth()+1,1);
+  return {v:1,sample:false,mode:'admin',pin:'',wishClosed:{},view:'joken',facility:{name:''},ym:nx.getFullYear()+'-'+pad(nx.getMonth()+1),
+    shifts:{E:{start:'07:00',end:'16:00',wk:2,we:1},N:{start:'08:30',end:'17:30',wk:2,we:1},L:{start:'10:00',end:'19:00',wk:2,we:1}},
+    openDows:[1,2,3,4,5,6],closeHolidays:true,dayOverride:{},rules:{maxConsec:5,noLateEarly:true,wishLimit:3},
+    staff:[],wishes:{},schedules:{}};
+}
+function sample(){
+  const st=blank();st.sample=true;st.view='zentai';st.facility.name='ほほえみ保育園';
+  const mk=(name,type,can,dows,off,work)=>({id:uid(),name:name,type:type,can:{E:can.indexOf('E')>=0,N:can.indexOf('N')>=0,L:can.indexOf('L')>=0},dows:dows,off:off,work:work});
+  const all=[0,1,2,3,4,5,6];
+  st.staff=[mk('山田 はな','full','ENL',all,10,12),mk('佐藤 みどり','full','ENL',all,10,12),mk('鈴木 あおい','full','ENL',all,10,12),
+    mk('高橋 ゆい','full','ENL',all,10,12),mk('田中 こはる','full','ENL',all,10,12),mk('伊藤 さくら','full','ENL',all,10,12),mk('渡辺 りこ','full','ENL',all,10,12),
+    mk('中村 ひまり','part','EN',[1,2,3,4,5],9,12),mk('小林 つむぎ','part','NL',[1,3,5,6],9,10)];
+  const info=monthInfo(st);const wk=info.days.filter(d=>d.open&&d.kind==='wk').map(d=>d.d);
+  const W=st.wishes[st.ym]={};
+  const setW=(i,k,v)=>{if(wk[k]){const id=st.staff[i].id;(W[id]=W[id]||{})[wk[k]]=v;}};
+  setW(0,8,'W');setW(2,3,'W');setW(2,13,'P');setW(4,16,'W');setW(5,5,'W');
+  st.schedules[st.ym]={cells:generate(st),at:Date.now(),stale:false,edited:false,published:true};
+  return st;
+}
+
+let S=load()||sample();
+const UI={me:null,stab:'wish',sym:null,pin:null,pinNext:null,pinErr:'',zmode:S.zmode||'table',view:S.view||'joken',selW:null,selP:null,all:false,confirmRegen:false,confirmDel:null};
+let DL=null;
+let TOP=false;try{TOP=window.self===window.top;}catch(e){TOP=false;}
+const INFO=()=>monthInfo(S);
+const staffById=id=>S.staff.find(s=>s.id===id);
+try{document.documentElement.lang='ja';}catch(e){}
+
+/* ---------- イラスト ---------- */
+/* PDF化のときはCSSが届かないので、明るい色を属性でも持たせておく */
+const LIT={'k-sun':'fill="#F9B93E"','k-ray':'stroke="#F29A3A"','k-line':'stroke="#F29A3A"','k-face':'fill="#5A4034"','k-smile':'stroke="#5A4034"','k-cheek':'fill="#F7A9A0"','k-moon':'fill="#F7DA7B"','k-cup':'fill="#F3A6B4"','k-cupline':'stroke="#F3A6B4"','k-steam':'stroke="#86726A"','k-chick':'fill="#FFD95E"','k-wing':'fill="#F6C343"','k-beak':'fill="#F29A3A"','k-foot':'stroke="#F29A3A"'};
+const lit=svg=>svg.replace(/class="(k-[a-z]+)"/g,(m,c)=>LIT[c]?m+' '+LIT[c]:m);
+function icon(t){return lit(iconRaw(t));}
+function iconRaw(t){
+  if(t==='E') return '<svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><g class="k-ray" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M16 4.5v3.2"/><path d="M6.8 8.6l2.2 2.3"/><path d="M25.2 8.6l-2.2 2.3"/><path d="M2.8 17.5H6"/><path d="M26 17.5h3.2"/></g><path class="k-sun" d="M7 23a9 9 0 0 1 18 0z"/><circle class="k-face" cx="12.8" cy="19.2" r="1.1"/><circle class="k-face" cx="19.2" cy="19.2" r="1.1"/><circle class="k-cheek" cx="10.6" cy="21.2" r="1.2"/><circle class="k-cheek" cx="21.4" cy="21.2" r="1.2"/><path class="k-line" d="M3.5 24.4h25" stroke-width="2.4" stroke-linecap="round" fill="none"/></svg>';
+  if(t==='N') return '<svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><g class="k-ray" stroke-width="2.2" stroke-linecap="round" fill="none"><path d="M16 2.8v3"/><path d="M16 26.2v3"/><path d="M2.8 16h3"/><path d="M26.2 16h3"/><path d="M6.7 6.7l2.1 2.1"/><path d="M23.2 23.2l2.1 2.1"/><path d="M25.3 6.7l-2.1 2.1"/><path d="M8.8 23.2l-2.1 2.1"/></g><circle class="k-sun" cx="16" cy="16" r="7.6"/><circle class="k-face" cx="13.2" cy="14.8" r="1.1"/><circle class="k-face" cx="18.8" cy="14.8" r="1.1"/><path class="k-smile" d="M13.2 18q2.8 2.4 5.6 0" stroke-width="1.4" stroke-linecap="round" fill="none"/><circle class="k-cheek" cx="11.1" cy="17.3" r="1.3"/><circle class="k-cheek" cx="20.9" cy="17.3" r="1.3"/></svg>';
+  if(t==='L') return '<svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><g transform="translate(2 4.5) scale(1.08)"><path class="k-moon" d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/><path class="k-smile" d="M6.6 12.6q1.1 1 2.2 0M11 15q1.1 1 2.2 0" stroke-width="1.1" stroke-linecap="round" fill="none"/><circle class="k-cheek" cx="7.4" cy="15.6" r="1.1"/></g><path class="k-moon" d="M25 3.4l1.1 2.9 2.9 1.1-2.9 1.1-1.1 2.9-1.1-2.9L21 7.4l2.9-1.1z"/></svg>';
+  return '<svg class="ic" viewBox="0 0 32 32" aria-hidden="true"><path class="k-steam" d="M12 5.6q-1.6 1.8 0 3.6M17.5 4.6q-1.6 1.8 0 3.6" stroke-width="1.6" stroke-linecap="round" fill="none"/><path class="k-cupline" d="M23 15.5h1.8a2.9 2.9 0 0 1 0 5.8h-2.2" stroke-width="2.2" stroke-linecap="round" fill="none"/><path class="k-cup" d="M6.5 12.5h17V18a7.5 7.5 0 0 1-7.5 7.5h-2A7.5 7.5 0 0 1 6.5 18z"/><path class="k-smile" d="M11.4 17.6q1 .9 2 0M16.6 17.6q1 .9 2 0" stroke-width="1.2" stroke-linecap="round" fill="none"/></svg>';
+}
+function chick(){
+  return lit('<svg class="chick" viewBox="0 0 72 72" aria-hidden="true"><path class="k-chick" d="M33 15c-2-5 0-9 3-10 0 3 1 5 2 6 1-3 3-5 6-5-2 3-2 6-1 9z"/><path class="k-foot" d="M29 61v6M25.5 67h7M43 61v6M39.500 67h7" stroke-width="2.4" stroke-linecap="round" fill="none"/><ellipse class="k-chick" cx="36" cy="39" rx="24" ry="23"/><ellipse class="k-wing" cx="16.500" cy="43" rx="5.500" ry="9" transform="rotate(16 16.500 43)"/><ellipse class="k-wing" cx="55.500" cy="43" rx="5.500" ry="9" transform="rotate(-16 55.500 43)"/><circle class="k-face" cx="28" cy="34" r="2.700"/><circle class="k-face" cx="44" cy="34" r="2.700"/><circle cx="28.900" cy="33.100" r=".9" fill="#FFFFFF"/><circle cx="44.900" cy="33.100" r=".9" fill="#FFFFFF"/><path class="k-beak" d="M31.500 39.500q4.500-3 9 0-4.500 5.500-9 0z"/><ellipse class="k-cheek" cx="22" cy="41" rx="3.800" ry="2.700"/><ellipse class="k-cheek" cx="50" cy="41" rx="3.800" ry="2.700"/></svg>');
+}
+function bunting(){
+  const cols=['#EE7F6E','#F9B93E','#CFEED8','#DEDAFA','#D4ECF6','#FFD8DE'];
+  let f='';
+  for(let k=0;k<11;k++){
+    const t=(k+0.5)/11;const x=8+t*384;const y=4+4*18*t*(1-t)*0.9;
+    f+='<path d="M'+(x-11).toFixed(1)+' '+y.toFixed(1)+'h22l-11 17z" class="bt'+(k%6)+'" fill="'+cols[k%6]+'"/>';
+  }
+  return '<svg class="bunting" viewBox="0 0 400 42" aria-hidden="true"><path d="M4 4Q200 38 396 4" fill="none" stroke-width="1.6" stroke-linecap="round" class="bt-line" stroke="#E2C7B3"/>'+f+'</svg>';
+}
+function scene(){
+  let rays='';
+  for(let k=0;k<10;k++){const a=k*Math.PI/5+0.3;rays+='<path d="M'+(296+Math.cos(a)*31).toFixed(1)+' '+(50+Math.sin(a)*31).toFixed(1)+'L'+(296+Math.cos(a)*39).toFixed(1)+' '+(50+Math.sin(a)*39).toFixed(1)+'"/>';}
+  const tulip=(x,y,col)=>'<path d="M'+x+' '+(y+22)+'V'+(y+6)+'" stroke="#7DBE82" stroke-width="2.6" stroke-linecap="round" fill="none"/><path d="M'+x+' '+(y+17)+'q7-1 8-7-7 0-8 7z" fill="#8FCB93"/><path d="M'+(x-6.5)+' '+(y-3)+'l3.4 3.2L'+x+' '+(y-4)+'l3.1 4.2 3.4-3.2v6a6.5 6.5 0 0 1-13 0z" fill="'+col+'"/>';
+  const mini=(x,y)=>'<g transform="translate('+x+' '+y+')"><path d="M-2 8.500v3.500M2.500 8.500v3.500" stroke="#F29A3A" stroke-width="1.6" stroke-linecap="round" fill="none"/><ellipse cx="0" cy="0" rx="9.500" ry="9" fill="#FFD95E"/><ellipse cx="-4" cy="2" rx="3.800" ry="5" fill="#F6C343"/><circle cx="3.600" cy="-2.600" r="1.300" fill="#5A4034"/><path d="M8.600-1.600l5 1.900-5 2z" fill="#F29A3A"/><circle cx="4.600" cy="2" r="1.600" fill="#F7A9A0"/></g>';
+  return '<svg class="scene" viewBox="0 0 360 190" role="img" aria-label="丘の上の園舎と、にっこりしたおひさま、歩いているひよこたちの絵">'
+  +'<defs><linearGradient id="hk-sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE1CB"/><stop offset="1" stop-color="#FFF5DA"/></linearGradient><clipPath id="hk-clip"><rect width="360" height="190" rx="28"/></clipPath></defs>'
+  +'<g clip-path="url(#hk-clip)"><rect width="360" height="190" fill="url(#hk-sky)"/>'
+  +'<g stroke="#F6B04A" stroke-width="4" stroke-linecap="round" fill="none">'+rays+'</g><circle cx="296" cy="50" r="24" fill="#FFCF6B"/><circle cx="288" cy="47" r="2.300" fill="#5A4034"/><circle cx="304" cy="47" r="2.300" fill="#5A4034"/><path d="M289.500 55q6.500 6 13 0" stroke="#5A4034" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="282.500" cy="54.500" r="3.600" fill="#F7A9A0"/><circle cx="309.500" cy="54.500" r="3.600" fill="#F7A9A0"/>'
+  +'<g fill="#FFFFFF" opacity=".92"><ellipse cx="66" cy="44" rx="22" ry="12"/><ellipse cx="90" cy="37" rx="19" ry="14"/><ellipse cx="110" cy="45" rx="19" ry="10"/></g><g fill="#FFFFFF" opacity=".85"><ellipse cx="214" cy="30" rx="14" ry="8"/><ellipse cx="228" cy="26" rx="12" ry="9"/><ellipse cx="240" cy="32" rx="12" ry="7"/></g>'
+  +'<ellipse cx="100" cy="205" rx="200" ry="75" fill="#CFE9C2"/><ellipse cx="280" cy="215" rx="190" ry="72" fill="#BCDFB3"/>'
+  +'<rect x="40" y="118" width="9" height="30" rx="3" fill="#C99A6B"/><circle cx="30" cy="112" r="15" fill="#B4DDAE"/><circle cx="59" cy="112" r="15" fill="#B4DDAE"/><circle cx="44.500" cy="102" r="22" fill="#9FD3A0"/><circle cx="36" cy="100" r="3" fill="#F28B82"/><circle cx="52" cy="108" r="3" fill="#F28B82"/><circle cx="47" cy="92" r="3" fill="#F28B82"/>'
+  +'<ellipse cx="176" cy="160" rx="72" ry="5" fill="#A5D19E"/>'
+  +'<path d="M176 60V40" stroke="#C99A6B" stroke-width="2.400" stroke-linecap="round" fill="none"/><path d="M177 40l15 5-15 5z" fill="#F7C948"/>'
+  +'<rect x="120" y="98" width="112" height="62" rx="8" fill="#FFFAF2"/>'
+  +'<path d="M108 99L172 59q4-2.500 8 0l64 40q4 3 1 6-1.500 1.500-4 1.500H111q-2.500 0-4-1.500-3-3 1-6z" fill="#F4978A"/>'
+  +'<circle cx="176" cy="85" r="9.500" fill="#FFFAF2"/><path d="M176 85v-5.500M176 85h4" stroke="#5A4034" stroke-width="1.800" stroke-linecap="round" fill="none"/>'
+  +'<path d="M163 160v-24a13 13 0 0 1 26 0v24z" fill="#F2B880"/><circle cx="183.500" cy="143" r="1.800" fill="#5A4034"/>'
+  +'<rect x="129" y="116" width="24" height="22" rx="6" fill="#BFE4F2"/><path d="M141 116v22M129 127h24" stroke="#FFFAF2" stroke-width="2.200" fill="none"/>'
+  +'<rect x="199" y="116" width="24" height="22" rx="6" fill="#BFE4F2"/><path d="M211 116v22M199 127h24" stroke="#FFFAF2" stroke-width="2.200" fill="none"/>'
+  +tulip(266,156,'#F6A5B5')+tulip(288,160,'#FFD166')+tulip(310,155,'#F6A5B5')
+  +mini(66,166)+mini(90,171)+mini(113,168)
+  +'</g></svg>';
+}
+
+/* ---------- 表示のかけら ---------- */
+function calGrid(info,cellFn,cls){
+  let h='<div class="cal '+(cls||'')+'"><div class="cal-head" aria-hidden="true">'+DOW.map((w,i)=>'<span class="d'+i+'">'+w+'</span>').join('')+'</div><div class="cal-body">';
+  for(let i=0;i<info.days[0].dow;i++) h+='<span></span>';
+  info.days.forEach(day=>{h+=cellFn(day);});
+  return h+'</div></div>';
+}
+function legend(noWish){
+  return '<ul class="legend">'+SH.map(t=>'<li><span class="pill p'+t+'">'+icon(t)+SHN[t]+' '+fmtT(S.shifts[t].start)+'〜'+fmtT(S.shifts[t].end)+'</span></li>').join('')
+    +(noWish?'':'<li><span class="pill pW">希 希望休</span></li><li><span class="pill pP">有 有給</span></li>')+'</ul>';
+}
+function emptyBox(title,text,go,label){
+  return '<div class="panel"><div class="empty">'+chick()+'<h2>'+title+'</h2><p>'+text+'</p><button type="button" class="btn primary" data-act="go" data-v="'+go+'">'+label+'</button></div></div>';
+}
+function needTotal(info){let t=0;info.days.forEach(day=>{SH.forEach(k=>{t+=reqOf(S,day,k);});});return t;}
+
+function renderTop(){
+  if(S.mode==='staff'){
+    $('#top').className='';
+    $('#top').innerHTML='<div class="hero"><div class="hero-art">'+scene()+'</div><div class="hero-text">'
+      +'<h1 id="apptitle">'+esc(appTitle())+'</h1><span class="modepill">職員用の画面</span>'
+      +'<p class="lede">名前をえらんで、休みの希望を入れたり、勤務表を見たりできます。</p></div></div>';
+    return;
+  }
+  const info=INFO();const openN=info.days.filter(d=>d.open).length;
+  $('#top').innerHTML='<div class="hero"><div class="hero-art">'+scene()+'</div><div class="hero-text">'
+    +'<h1 id="apptitle">'+esc(appTitle())+'</h1>'
+    +'<p class="lede no-print">休みの希望を入れると、園の条件に合わせて来月の勤務表を自動で作ります。</p>'
+    +'<div class="monthbar no-print"><button type="button" class="mbtn" data-act="month" data-v="-1" aria-label="前の月へ">‹</button>'
+    +'<strong class="mlabel">'+info.y+'年'+info.m+'月</strong>'
+    +'<button type="button" class="mbtn" data-act="month" data-v="1" aria-label="次の月へ">›</button>'
+    +'<span class="mnote">開園日 '+openN+'日</span><button type="button" class="btn tostaff" data-act="tostaff">職員用の画面にする</button></div></div></div>'
+    +(S.sample?'<div class="sample no-print"><p>いまは見本として、サンプルの園と職員が入っています。①から順に入力すると、ご自分の園の勤務表になります。</p><button type="button" class="btn primary" data-act="clearsample">サンプルを消してはじめる</button></div>':'');
+  $('#top').className=UI.view==='zentai'||UI.view==='kojin'?'no-print':'';
+}
+const STEPS=[['joken','条件'],['shokuin','職員'],['kibou','希望休'],['zentai','勤務表'],['kojin','個人表']];
+function renderSteps(){
+  $('#steps').hidden=S.mode==='staff';if(S.mode==='staff'){$('#steps').innerHTML='';return;}
+  $('#steps').innerHTML=STEPS.map((st,i)=>'<button type="button" class="step" data-act="go" data-v="'+st[0]+'"'+(UI.view===st[0]?' aria-current="page"':'')+'><span class="snum">'+(i+1)+'</span><span class="slabel">'+st[1]+'</span></button>').join('');
+}
+
+/* ① 条件 */
+function jokenCal(info){
+  const hol=info.days.filter(d=>d.holiday).map(d=>d.d+'日 '+d.holiday);
+  return calGrid(info,day=>'<button type="button" class="cday '+(day.open?'is-open':'is-closed')+(day.holiday?' is-hol':'')+'" data-act="flipday" data-v="'+day.d+'" aria-label="'+day.d+'日 '+(day.holiday?day.holiday+' ':'')+(day.open?'開園':'休園')+'"'+(day.holiday?' title="'+esc(day.holiday)+'"':'')+'><b>'+day.d+'</b><small>'+(day.open?'開園':'休園')+'</small></button>')
+    +'<p class="hint">'+(hol.length?'この月の祝日：'+hol.join('、')+'。':'この月に祝日はありません。')+'行事で開ける日や臨時のお休みは、日付をタップして切り替えられます。</p>';
+}
+function viewJoken(){
+  const info=INFO();const R=S.rules;
+  const rows=SH.map(t=>{const s=S.shifts[t];return '<div class="shiftrow"><span class="pill big p'+t+'">'+icon(t)+SHN[t]+'</span>'
+    +'<label class="fld"><span>はじまり</span><input type="time" id="sh-'+t+'-start" data-bind="shifts.'+t+'.start" value="'+esc(s.start)+'"></label>'
+    +'<label class="fld"><span>おわり</span><input type="time" id="sh-'+t+'-end" data-bind="shifts.'+t+'.end" value="'+esc(s.end)+'"></label>'
+    +'<label class="fld"><span>平日の人数</span><input type="number" id="sh-'+t+'-wk" min="0" max="50" inputmode="numeric" data-bind="shifts.'+t+'.wk" value="'+esc(s.wk)+'"></label>'
+    +'<label class="fld"><span>土日祝の人数</span><input type="number" id="sh-'+t+'-we" min="0" max="50" inputmode="numeric" data-bind="shifts.'+t+'.we" value="'+esc(s.we)+'"></label></div>';}).join('');
+  const dows=[1,2,3,4,5,6,0].map(d=>'<label class="chk"><input type="checkbox" id="od-'+d+'" data-chg="opendow" data-v="'+d+'"'+(S.openDows.indexOf(d)>=0?' checked':'')+'><span>'+DOW[d]+'</span></label>').join('');
+  return '<div class="panel">'
+    +'<section><h2>園・施設の名前</h2><input type="text" class="wide" id="fac-name" data-bind="facility.name" value="'+esc(S.facility.name)+'" placeholder="例：ほほえみ保育園" aria-label="園・施設の名前"></section>'
+    +'<section><h2>勤務の時間と、1日に必要な人数</h2><p class="hint">早番・通常・遅番それぞれの時間と、その勤務に最低何人いてほしいかを入れてください。</p>'+rows+'</section>'
+    +'<section><h2>開園する曜日</h2><div class="row">'+dows+'</div>'
+    +'<div class="row"><label class="chk"><input type="checkbox" id="close-hol" data-bind="closeHolidays" data-after="cal"'+(S.closeHolidays?' checked':'')+'><span>祝日はお休みにする</span></label></div>'
+    +'<div id="jcal">'+jokenCal(info)+'</div></section>'
+    +'<section><h2>勤務表づくりのきまり</h2>'
+    +'<div class="rule"><label for="r-max">つづけて勤務できるのは</label><input type="number" id="r-max" min="1" max="14" inputmode="numeric" data-bind="rules.maxConsec" value="'+esc(R.maxConsec)+'"><span>日まで</span></div>'
+    +'<div class="rule"><label class="chk"><input type="checkbox" id="r-le" data-bind="rules.noLateEarly"'+(R.noLateEarly?' checked':'')+'><span>遅番の次の日に早番を入れない</span></label></div>'
+    +'<div class="rule"><label for="r-wish">希望休は1人あたり月</label><input type="number" id="r-wish" min="0" max="31" inputmode="numeric" data-bind="rules.wishLimit" value="'+esc(R.wishLimit)+'"><span>日まで（0にすると制限なし。有給は別に数えます）</span></div></section>'
+    +'<section><h2>管理者の暗証番号</h2><p class="hint">'+(S.pin?'設定ずみです。職員用の画面から管理者の画面にもどるときに使います。':'まだ決めていません。「職員用の画面にする」を押したときにも決められます。')+'職員が設定や勤務表づくりの画面に入らないようにするための、簡単なかぎです。</p>'
+    +'<div class="row"><button type="button" class="btn" data-act="pinchange">'+(S.pin?'暗証番号を変える':'暗証番号を決める')+'</button></div></section>'
+    +'<section><details class="backup"><summary>データの控えをとる・戻す</summary><div>'
+    +'<p class="hint">入力した内容はこの端末のブラウザに保存されます。別のパソコンで使うときや、もしものときのために、控えをコピーしてメモ帳などに保管できます。</p>'
+    +'<button type="button" class="btn" data-act="bkcopy">控えをコピー</button>'
+    +'<label for="bk-ta" class="hint">控えから戻すときは、下に貼り付けてください。</label><textarea id="bk-ta" rows="3"></textarea>'
+    +'<button type="button" class="btn" data-act="bkrestore">この控えで戻す</button></div></details></section>'
+    +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="shokuin">つぎへ　職員を登録する</button></div></div>';
+}
+
+/* ② 職員 */
+function staffNote(s,info){
+  const tg=targetOf(S,s,info);
+  return '→ '+info.m+'月の勤務は'+tg+'日の予定';
+}
+function staffSum(info){
+  const need=needTotal(info);let have=0;S.staff.forEach(s=>{have+=targetOf(S,s,info);});
+  const ok=have>=need;
+  return '<p id="staffsum" class="sum '+(ok?'ok':'warn')+'">'+info.m+'月に必要な勤務は のべ'+need+'日、いまの職員の勤務予定は 合計'+have+'日です。'
+    +(ok?'':'あと'+(need-have)+'日ぶん足りません。公休を減らすか、勤務日数を増やすか、職員を追加してください。')+'</p>';
+}
+function viewShokuin(){
+  const info=INFO();
+  const cards=S.staff.map(s=>{
+    const id=s.id;const part=s.type==='part';
+    return '<article class="staff"><div class="st-head">'
+      +'<input type="text" id="sn-'+id+'" data-chg="sf" data-k="name" data-sid="'+id+'" value="'+esc(s.name)+'" placeholder="なまえ" aria-label="なまえ">'
+      +'<select id="sy-'+id+'" data-chg="sf" data-k="type" data-sid="'+id+'" aria-label="はたらき方"><option value="full"'+(part?'':' selected')+'>常勤</option><option value="part"'+(part?' selected':'')+'>パート</option></select>'
+      +'<button type="button" class="iconbtn" data-act="askdel" data-v="'+id+'" aria-label="'+esc(s.name)+'さんを削除">×</button></div>'
+      +(UI.confirmDel===id?'<div class="delask"><span>この職員を削除しますか？</span><button type="button" class="btn" data-act="delstaff" data-v="'+id+'">削除する</button><button type="button" class="btn quiet" data-act="askdel" data-v="">やめる</button></div>':'')
+      +'<div class="st-row"><span class="lab">できる勤務</span><div class="row">'+SH.map(t=>'<label class="chk"><input type="checkbox" id="sc-'+id+'-'+t+'" data-chg="sf" data-k="can" data-v="'+t+'" data-sid="'+id+'"'+(s.can[t]?' checked':'')+'><span>'+SHN[t]+'</span></label>').join('')+'</div></div>'
+      +'<div class="st-row"><span class="lab">勤務できる曜日</span><div class="row">'+[1,2,3,4,5,6,0].map(d=>'<label class="chk"><input type="checkbox" id="sd-'+id+'-'+d+'" data-chg="sf" data-k="dow" data-v="'+d+'" data-sid="'+id+'"'+(s.dows.indexOf(d)>=0?' checked':'')+'><span>'+DOW[d]+'</span></label>').join('')+'</div></div>'
+      +'<div class="st-row"><label class="lab" for="st-'+id+'">'+(part?'月の勤務日数':'月の公休（お休み）の日数')+'</label><div class="row">'
+      +'<input type="number" id="st-'+id+'" min="0" max="31" inputmode="numeric" data-chg="sf" data-k="'+(part?'work':'off')+'" data-sid="'+id+'" value="'+esc(part?s.work:s.off)+'"><span>日</span>'
+      +'<span class="st-note" id="note-'+id+'">'+staffNote(s,info)+'</span></div></div></article>';
+  }).join('');
+  return '<div class="panel"><section><h2>職員の登録</h2>'
+    +'<p class="hint">常勤の方は月の公休の日数を、パートの方は月の勤務日数を入れてください。休園日も公休に数えます。この日数になるように勤務を組みます。</p>'
+    +(S.staff.length?staffSum(info):'')
+    +(S.staff.length?'<div class="stafflist">'+cards+'</div>':'<div class="empty">'+chick()+'<p>まだ職員が登録されていません。下のボタンから1人ずつ追加してください。</p></div>')
+    +'<div class="row"><button type="button" class="btn" data-act="addstaff">＋ 職員を追加</button></div></section>'
+    +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="kibou">つぎへ　休みの希望を入れる</button></div></div>';
+}
+
+/* ③ 希望休 */
+const wishClosed=()=>!!(S.wishClosed&&S.wishClosed[S.ym]);
+function wishCal(s,locked){
+  const info=INFO();const w=wishOf(S,s.id);
+  return calGrid(info,day=>{
+    const ok=day.open&&s.dows.indexOf(day.dow)>=0;const st=w[day.d]||'';
+    const lab=!day.open?'休園':!ok?'勤務なし':st==='W'?'希望休':st==='P'?'有給':'';
+    return '<button type="button" class="wday'+(st?' st-'+st:'')+(ok&&locked?' is-locked':'')+'" data-act="wish" data-v="'+day.d+'" data-s="'+s.id+'"'+(ok&&!locked?'':' disabled')+' aria-label="'+day.d+'日（'+DOW[day.dow]+'）'+(lab||'希望なし')+'"><b>'+day.d+'</b><small>'+(lab||'&nbsp;')+'</small></button>';
+  });
+}
+function wishCounts(s){
+  const w=wishOf(S,s.id);const lim=Number(S.rules.wishLimit)||0;const cnt=k=>Object.keys(w).filter(d=>w[d]===k).length;
+  return '<span class="pill pW">希望休 '+cnt('W')+(lim?' / '+lim:'')+'日</span><span class="pill pP">有給 '+cnt('P')+'日</span>';
+}
+function viewKibou(){
+  const info=INFO();
+  if(!S.staff.length) return emptyBox('まだ職員が登録されていません','②で職員を登録すると、休みの希望を入れられます。','shokuin','職員を登録する');
+  if(!staffById(UI.selW)) UI.selW=S.staff[0].id;
+  const s=staffById(UI.selW);const closed=wishClosed();
+  const chips=S.staff.map(p=>{const pw=wishOf(S,p.id);const k=Object.keys(pw).length;return '<button type="button" class="chip" data-act="selw" data-v="'+p.id+'" aria-pressed="'+(p.id===s.id)+'">'+esc(p.name||'名前なし')+(k?'<small>'+k+'</small>':'')+'</button>';}).join('');
+  const list=S.staff.map(p=>{
+    const pw=wishOf(S,p.id);const ds=Object.keys(pw).map(Number).sort((a,b)=>a-b);
+    return '<li><b>'+esc(p.name||'名前なし')+'</b><span class="row">'+(ds.length?ds.map(d=>'<span class="pill '+(pw[d]==='P'?'pP':'pW')+'">'+d+'日('+DOW[info.days[d-1].dow]+') '+(pw[d]==='P'?'有給':'希望休')+'</span>').join(''):'<span class="hint">希望なし</span>')+'</span></li>';
+  }).join('');
+  return '<div class="panel"><section><h2>'+info.m+'月の休みの希望</h2>'
+    +'<div class="accept"><span class="pill '+(closed?'pO':'pN')+'">'+(closed?'受付を締め切りました':'職員からの受付中')+'</span>'
+    +'<span class="hint">'+(closed?'職員用の画面では、希望を変えられません。':'職員用の画面から、職員が自分で希望を入れられます。')+'</span>'
+    +'<button type="button" class="btn" data-act="wishtoggle">'+(closed?'受付を再開する':'受付を締め切る')+'</button></div>'
+    +'<p class="hint">職員に自分で入れてもらうときは、上の「職員用の画面にする」を押してから端末を渡してください。この画面では、管理者がだれの分でも入力・修正できます（タップで「希望休 → 有給 → なし」）。</p>'
+    +'<div class="chips">'+chips+'</div></section>'
+    +'<section><div class="row"><h2>'+esc(s.name||'名前なし')+' さん</h2>'+wishCounts(s)+'</div>'+wishCal(s,false)+'</section>'
+    +'<section><h2>みんなの希望</h2><ul class="wishlist">'+list+'</ul></section>'
+    +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="zentai">つぎへ　勤務表をつくる</button></div></div>';
+}
+
+/* ④ 全体の勤務表 */
+function rosterTable(inter,meId){
+  const ck=check(S);const info=ck.info;const sc=S.schedules[S.ym];
+  const dcl=day=>(day.open?'':' closed')+(day.holiday||day.dow===0?' sunc':day.dow===6?' satc':'');
+  let h='<table class="roster"><thead><tr><th scope="col" class="namecol">なまえ</th>';
+  info.days.forEach(day=>{h+='<th scope="col" class="dcol'+dcl(day)+'"'+(day.holiday?' title="'+esc(day.holiday)+'"':'')+'><span class="dn">'+day.d+'</span><span class="dwk">'+DOW[day.dow]+'</span></th>';});
+  h+='<th scope="col" class="tot">早</th><th scope="col" class="tot">通</th><th scope="col" class="tot">遅</th><th scope="col" class="tot">勤務</th><th scope="col" class="tot">休み</th></tr></thead><tbody>';
+  S.staff.forEach(s=>{
+    const c=sc.cells[s.id]||{};const w=wishOf(S,s.id);const p=ck.per[s.id];
+    h+='<tr'+(meId===s.id?' class="me"':'')+'><th scope="row" class="namecol">'+esc(s.name||'名前なし')+'<small>'+(s.type==='part'?'パート':'常勤')+'</small></th>';
+    info.days.forEach(day=>{
+      const t=c[day.d];let cls,txt,lab;
+      if(t){cls='c'+t;txt=SHS[t];lab=SHN[t];}
+      else if(!day.open){h+='<td class="closed"></td>';return;}
+      else if(w[day.d]==='W'){cls='cW';txt='希';lab='希望休';}
+      else if(w[day.d]==='P'){cls='cP';txt='有';lab='有給';}
+      else{cls='cOff';txt='・';lab='休み';}
+      h+=inter?'<td><button type="button" class="cellbtn '+cls+'" data-act="cell" data-s="'+s.id+'" data-d="'+day.d+'" aria-label="'+esc(s.name)+' '+day.d+'日 '+lab+'">'+txt+'</button></td>'
+        :'<td><span class="cellbtn '+cls+'">'+txt+'</span></td>';
+    });
+    h+='<td class="tot">'+p.E+'</td><td class="tot">'+p.N+'</td><td class="tot">'+p.L+'</td><td class="tot strong">'+p.work+'</td><td class="tot">'+(info.n-p.work)+'</td></tr>';
+  });
+  h+='</tbody><tfoot>';
+  SH.forEach(t=>{
+    h+='<tr><th scope="row" class="namecol">'+SHN[t]+'の人数</th>';
+    info.days.forEach(day=>{
+      const have=ck.dayCnt[day.d][t],need=reqOf(S,day,t);
+      if(!day.open&&!have){h+='<td class="closed"></td>';return;}
+      h+=have<need?'<td class="short" title="あと'+(need-have)+'人">'+have+'/'+need+'</td>':'<td>'+have+'</td>';
+    });
+    h+='<td class="tot" colspan="5"></td></tr>';
+  });
+  return h+'</tfoot></table>';
+}
+function outButtons(kind){
+  const canPdf=!!(DL||TOP);
+  let pdf='';
+  if(kind==='roster'){
+    pdf+='<button type="button" class="btn primary" data-act="pdf" data-v="ocal">カレンダー形式でPDF保存</button>';
+    pdf+='<button type="button" class="btn" data-act="pdf" data-v="otable">一覧表でPDF保存</button>';
+    if(TOP) pdf+='<button type="button" class="btn" data-act="pdfprint" data-v="'+(UI.zmode==='cal'?'ocal':'otable')+'">'+(UI.zmode==='cal'?'カレンダー':'一覧表')+'を印刷する</button>';
+  }else{
+    const one=staffById(UI.selP);
+    const who=UI.all?'全員分（'+S.staff.length+'人）':esc((one&&one.name)||'名前なし')+'さんの表';
+    pdf+='<button type="button" class="btn primary" data-act="pdf" data-v="personal">'+who+'をPDF保存</button>';
+    if(TOP) pdf+='<button type="button" class="btn" data-act="pdfprint" data-v="personal">'+who+'を印刷する</button>';
+  }
+  let h='<div class="outbox"><p class="outlab">PDFで保存・印刷（A4'+(kind==='roster'?'横':'縦')+'）</p>';
+  if(canPdf) h+='<div class="row">'+pdf+'</div><p class="hint">'+(TOP?'「印刷する」を押すと、PDFが開いて印刷の画面が出ます。':'印刷するときは、保存したPDFを開いて印刷してください。')+'</p>';
+  else h+='<p class="hint">この画面ではPDFを保存できません。</p>';
+  h+='</div><div class="row">';
+  if(kind==='roster'){
+    h+='<button type="button" class="btn" data-act="copytsv">Excel用にコピー</button>';
+    if(canPdf) h+='<button type="button" class="btn" data-act="savecsv">CSVで保存</button>';
+  }else h+='<button type="button" class="btn" data-act="copyp">文章でコピー（LINEなど）</button>';
+  return h+'</div>';
+}
+/* 全体の勤務表をカレンダーの形で。名前は名字だけ（同じ名字がいるときはフルネーム） */
+function shortNames(){
+  const first=s=>((s.name||'').trim().split(/[\s　]+/)[0])||'名前なし';
+  const cnt={};S.staff.forEach(s=>{const f=first(s);cnt[f]=(cnt[f]||0)+1;});
+  const map={};S.staff.forEach(s=>{const f=first(s);map[s.id]=cnt[f]>1?((s.name||'').replace(/[\s　]+/g,'')||f):f;});
+  return map;
+}
+function overallCal(){
+  const info=INFO();const sc=S.schedules[S.ym];const nm=shortNames();
+  return calGrid(info,day=>{
+    const dc=(day.holiday||day.dow===0)?'sunc':day.dow===6?'satc':'';
+    const by={E:[],N:[],L:[]};
+    S.staff.forEach(s=>{const t=(sc.cells[s.id]||{})[day.d];if(t) by[t].push(nm[s.id]);});
+    let h='<div class="oday'+(day.open?'':' closed')+'"><div class="oday-top"><b class="'+dc+'">'+day.d+'</b>'+(day.holiday?'<small>'+esc(day.holiday)+'</small>':'')+'</div>';
+    if(!day.open&&!by.E.length&&!by.N.length&&!by.L.length) return h+'<span class="oclosed">休園</span></div>';
+    SH.forEach(t=>{
+      if(by[t].length||reqOf(S,day,t)) h+='<div class="oline"><span class="otag p'+t+'">'+SHS[t]+'</span><span class="onames">'+(by[t].length?by[t].map(esc).join('・'):'―')+'</span></div>';
+    });
+    const short=SH.filter(t=>by[t].length<reqOf(S,day,t)).map(t=>SHN[t]+'あと'+(reqOf(S,day,t)-by[t].length)+'人');
+    if(short.length) h+='<span class="oshort">'+short.join('・')+'</span>';
+    return h+'</div>';
+  },'ocal');
+}
+function viewZentai(){
+  const info=INFO();const sc=S.schedules[S.ym];
+  if(!S.staff.length) return emptyBox('まだ職員が登録されていません','②で職員を登録すると、勤務表を作れます。','shokuin','職員を登録する');
+  if(!sc){
+    let need=needTotal(info),have=0;S.staff.forEach(s=>{have+=targetOf(S,s,info);});
+    return '<div class="panel"><div class="empty">'+chick()+'<h2>'+info.m+'月の勤務表を作りましょう</h2>'
+      +'<p>園の条件と、みんなの休みの希望をもとに、早番・通常・遅番を自動でふり分けます。</p>'
+      +(have<need?'<p class="sum warn">必要な勤務はのべ'+need+'日ですが、職員の勤務予定は合計'+have+'日です。このままだと人数の足りない日が出ます。</p>':'')
+      +'<button type="button" class="btn primary big" data-act="gen">勤務表を自動でつくる</button></div></div>';
+  }
+  const ck=check(S);const iss=ck.issues;
+  let status;
+  if(!iss.length) status='<div class="status ok">'+chick()+'<span>条件をすべて満たした勤務表ができています。</span></div>';
+  else status='<div class="status warn"><div><strong>確認が必要なところが'+iss.length+'件あります</strong><ul>'+iss.slice(0,8).map(x=>'<li>'+esc(x)+'</li>').join('')+'</ul>'+(iss.length>8?'<p>ほか'+(iss.length-8)+'件</p>':'')+'</div></div>';
+  const regen=UI.confirmRegen
+    ?'<div class="delask"><span>手で直したところも、作り直されます。</span><button type="button" class="btn" data-act="gen">作り直す</button><button type="button" class="btn quiet" data-act="cancelregen">やめる</button></div>'
+    :'<button type="button" class="btn primary" data-act="regen">もう一度つくり直す</button>';
+  return '<div class="panel"><section class="print-roster">'
+    +'<h2>'+esc(S.facility.name?S.facility.name+'　':'')+info.y+'年'+info.m+'月の勤務表</h2>'
+    +'<div class="no-print" style="display:contents">'+status
+    +'<div class="pubbar"><span class="pill '+(sc.published?'pN':'pO')+'">'+(sc.published?'職員に公開中':'下書き（職員には見えません）')+'</span><button type="button" class="btn" data-act="publish">'+(sc.published?'公開をやめる':'職員に公開する')+'</button><span class="hint">公開すると、職員用の画面で自分の表とみんなの一覧表が見られます。</span></div>'
+    +(sc.stale?'<p class="stale">条件・職員・希望休のどれかが変わっています。「もう一度つくり直す」を押すと反映されます。</p>':'')
+    +'<div class="row">'+regen+'</div>'+outButtons('roster')
+    +'<div class="row"><div class="viewtoggle" role="group" aria-label="表示のしかた"><button type="button" class="chip" data-act="zmode" data-v="table" aria-pressed="'+(UI.zmode!=='cal')+'">一覧で見る</button><button type="button" class="chip" data-act="zmode" data-v="cal" aria-pressed="'+(UI.zmode==='cal')+'">カレンダーで見る</button></div></div>'
+    +'<p class="hint">'+(UI.zmode==='cal'?'名前は名字だけで表示しています。手で直すときは「一覧で見る」に切り替えてください。':'マスをタップすると、手で直せます（早番 → 通常 → 遅番 → 休み）。下の3行は、その日の人数です。')+'</p></div>'
+    +legend(UI.zmode==='cal')
+    +(UI.zmode==='cal'
+      ?'<div class="ocal-wrap" tabindex="0" role="region" aria-label="全体の勤務表（カレンダー）">'+overallCal()+'</div>'
+      :'<div class="tbl-wrap" tabindex="0" role="region" aria-label="全体の勤務表。横にスクロールできます">'+rosterTable(true)+'</div>')+'</section>'
+    +'<div class="next no-print"><button type="button" class="btn primary" data-act="go" data-v="kojin">つぎへ　個人ごとの表を見る</button></div></div>';
+}
+
+/* ⑤ 個人ごとの表 */
+function personalSheet(s){
+  const info=INFO();const sc=S.schedules[S.ym];const c=(sc&&sc.cells[s.id])||{};const w=wishOf(S,s.id);
+  const cnt={E:0,N:0,L:0};
+  const cal=calGrid(info,day=>{
+    const t=c[day.d];let cls,lab,time='';
+    if(t){cnt[t]++;cls='t-'+t;lab=SHN[t];time=fmtT(S.shifts[t].start)+'<br>〜'+fmtT(S.shifts[t].end);}
+    else if(!day.open){cls='t-closed';lab='休園';}
+    else if(w[day.d]==='P'){cls='t-P';lab='有給';}
+    else if(w[day.d]==='W'){cls='t-W';lab='希望休';}
+    else{cls='t-off';lab='休み';}
+    return '<div class="pday '+cls+'"><b class="pnum">'+day.d+'</b><span class="plab">'+lab+'</span>'+(time?'<small class="ptime">'+time+'</small>':'')+'</div>';
+  },'pcal');
+  const work=cnt.E+cnt.N+cnt.L;
+  return '<article class="psheet">'+bunting()
+    +'<header class="ps-head">'+chick()+'<div><p class="ps-fac">'+esc(S.facility.name)+'</p><h3>'+info.y+'年'+info.m+'月の勤務表</h3><p class="ps-name"><strong>'+esc(s.name||'名前なし')+'</strong> さん</p></div></header>'
+    +cal
+    +'<ul class="legend">'+SH.map(t=>'<li><span class="pill p'+t+'">'+icon(t)+SHN[t]+' '+cnt[t]+'回（'+fmtT(S.shifts[t].start)+'〜'+fmtT(S.shifts[t].end)+'）</span></li>').join('')
+    +'<li><span class="pill pO">'+icon('O')+'勤務 '+work+'日・お休み '+(info.n-work)+'日</span></li></ul>'
+    +'<p class="ps-foot">今月もよろしくおねがいします</p></article>';
+}
+function personalText(s){
+  const info=INFO();const sc=S.schedules[S.ym];const c=(sc&&sc.cells[s.id])||{};const w=wishOf(S,s.id);const cnt={E:0,N:0,L:0};
+  const lines=[(S.facility.name?'【'+S.facility.name+'】':'')+info.y+'年'+info.m+'月の勤務表',(s.name||'名前なし')+' さん',''];
+  info.days.forEach(day=>{
+    const t=c[day.d];let x;
+    if(t){cnt[t]++;x=SHN[t]+' '+fmtT(S.shifts[t].start)+'〜'+fmtT(S.shifts[t].end);}
+    else if(!day.open) x='休園'+(day.holiday?'（'+day.holiday+'）':'');
+    else if(w[day.d]==='P') x='有給';
+    else if(w[day.d]==='W') x='お休み（希望休）';
+    else x='お休み';
+    lines.push(info.m+'/'+day.d+'('+DOW[day.dow]+') '+x);
+  });
+  const work=cnt.E+cnt.N+cnt.L;
+  lines.push('','早番 '+cnt.E+'回・通常 '+cnt.N+'回・遅番 '+cnt.L+'回','勤務 '+work+'日／お休み '+(info.n-work)+'日');
+  return lines.join('\n');
+}
+function viewKojin(){
+  const info=INFO();const sc=S.schedules[S.ym];
+  if(!S.staff.length) return emptyBox('まだ職員が登録されていません','②で職員を登録すると、個人ごとの表を作れます。','shokuin','職員を登録する');
+  if(!sc) return emptyBox(info.m+'月の勤務表がまだありません','④で勤務表を作ると、ここに一人ずつの表ができます。','zentai','勤務表をつくる');
+  if(!staffById(UI.selP)) UI.selP=S.staff[0].id;
+  const chips=S.staff.map(p=>'<button type="button" class="chip" data-act="selp" data-v="'+p.id+'" aria-pressed="'+(!UI.all&&p.id===UI.selP)+'">'+esc(p.name||'名前なし')+'</button>').join('')
+    +'<button type="button" class="chip" data-act="allp" aria-pressed="'+UI.all+'">全員分をならべる</button>';
+  const list=UI.all?S.staff:[staffById(UI.selP)];
+  return '<div class="panel"><section class="no-print"><h2>個人ごとの勤務表</h2>'
+    +'<p class="hint">名前を選ぶと、その人に渡す1か月分の表になります。</p><div class="chips">'+chips+'</div>'
+    +outButtons('personal')+'</section>'
+    +'<section><div class="sheets">'+list.map(personalSheet).join('')+'</div></section></div>';
+}
+
+const VIEWS={joken:viewJoken,shokuin:viewShokuin,kibou:viewKibou,zentai:viewZentai,kojin:viewKojin};
+function renderMain(){$('#main').innerHTML=S.mode==='staff'?viewStaff():(VIEWS[UI.view]||viewJoken)();}
+/* 見出し：園の名前が入っていれば「〇〇の勤務表」、空欄なら「ほほえみ勤務表」 */
+function appTitle(){const n=(S.facility.name||'').trim();return n?n+'の勤務表':'ほほえみ勤務表';}
+/* 配る版（単体のページとして開いたとき）は、ブラウザのタブの名前も見出しと同じにする */
+function syncTabTitle(){if(TOP){try{document.title=appTitle();}catch(e){}}}
+/* 作成者の表示は画面だけ（.foot は印刷に出ず、PDFにも入らない） */
+function renderFoot(){$('#foot').innerHTML='<p>入力した内容は、この端末のブラウザの中に保存されます。</p>'+(S.mode==='staff'?'<button type="button" class="btn quiet" data-act="adminlogin">管理者の方はこちら</button>':'')+'<p class="credit">合同会社発達支援ほほえみカレッジ作アプリ</p>';}
+function render(){renderTop();renderSteps();renderMain();renderFoot();syncTabTitle();}
+
+/* ---------- 職員用の画面 ---------- */
+function publishedYms(){return Object.keys(S.schedules).filter(k=>S.schedules[k]&&S.schedules[k].published).sort();}
+function ymLabel(ym){const p=ym.split('-');return Number(p[0])+'年'+Number(p[1])+'月';}
+function withYm(ym,fn){const keep=S.ym;S.ym=ym;try{return fn();}finally{S.ym=keep;}}
+function staffPicker(){
+  const info=INFO();
+  if(!S.staff.length) return '<div class="panel"><div class="empty">'+chick()+'<h2>まだ職員が登録されていません</h2><p>管理者の方に、職員の登録をしてもらってください。</p></div></div>';
+  return '<div class="panel"><section><div class="picker-head">'+chick()+'<div><h2>あなたの名前をえらんでください</h2><p class="hint">'+info.m+'月の休みの希望を入れたり、勤務表を見たりできます。</p></div></div>'
+    +'<div class="namegrid">'+S.staff.map(p=>'<button type="button" class="namebtn" data-act="me" data-v="'+p.id+'">'+esc(p.name||'名前なし')+'<small>さん</small></button>').join('')+'</div></section></div>';
+}
+function staffWish(me){
+  const info=INFO();const closed=wishClosed();const lim=Number(S.rules.wishLimit)||0;
+  return '<section><div class="row"><h2>'+info.m+'月の休みの希望</h2>'+wishCounts(me)+'</div>'
+    +(closed?'<p class="stale">'+info.m+'月の希望の受付は締め切りました。変えたいときは、管理者に相談してください。</p>'
+      :'<p class="hint">休みたい日をタップしてください。タップするたびに「希望休 → 有給 → なし」と切り替わり、そのまま保存されます。'+(lim?'希望休は月'+lim+'日までです。':'')+'</p>')
+    +wishCal(me,closed)+'</section>'
+    +'<div class="next"><button type="button" class="btn primary" data-act="donewish">入力をおえる</button></div>';
+}
+function staffSchedule(me){
+  const yms=publishedYms();
+  if(!yms.length) return '<section><div class="empty">'+chick()+'<h2>勤務表はまだ公開されていません</h2><p>管理者が勤務表を公開すると、ここで見られるようになります。</p></div></section>';
+  if(yms.indexOf(UI.sym)<0) UI.sym=yms.indexOf(S.ym)>=0?S.ym:yms[yms.length-1];
+  const shown=yms.slice(-4);if(shown.indexOf(UI.sym)<0) shown.unshift(UI.sym);
+  const months=yms.length>1?'<div class="chips" role="group" aria-label="月をえらぶ">'+shown.map(y=>'<button type="button" class="chip" data-act="smonth" data-v="'+y+'" aria-pressed="'+(y===UI.sym)+'">'+ymLabel(y)+'</button>').join('')+'</div>':'';
+  return withYm(UI.sym,()=>{
+    if(UI.stab==='mine') return '<section>'+months+'<div class="sheets">'+personalSheet(me)+'</div></section>';
+    const info=INFO();
+    return '<section><h2>'+info.y+'年'+info.m+'月 みんなの勤務表</h2>'+months
+      +'<p class="hint">あなたの行に色がついています。横にスクロールすると月末まで見られます。</p>'+legend()
+      +'<div class="tbl-wrap" tabindex="0" role="region" aria-label="みんなの勤務表。横にスクロールできます">'+rosterTable(false,me.id)+'</div></section>';
+  });
+}
+function viewStaff(){
+  const me=staffById(UI.me);
+  if(!me) return staffPicker();
+  const tabs=[['wish','休みの希望'],['mine','わたしの勤務表'],['all','みんなの勤務表']];
+  return '<div class="panel"><div class="me-bar"><p class="me-name">'+chick()+'<span><strong>'+esc(me.name||'名前なし')+'</strong> さん</span></p>'
+    +'<button type="button" class="btn" data-act="me" data-v="">おわる（名前をえらびなおす）</button></div>'
+    +'<div class="chips" role="group" aria-label="見るもの">'+tabs.map(t=>'<button type="button" class="chip" data-act="stab" data-v="'+t[0]+'" aria-pressed="'+(UI.stab===t[0])+'">'+t[1]+'</button>').join('')+'</div>'
+    +(UI.stab==='wish'?staffWish(me):staffSchedule(me))+'</div>';
+}
+
+/* ---------- 管理者の暗証番号 ---------- */
+function hashPin(p){let h=5381;const t='hohoemi:'+p;for(let i=0;i<t.length;i++){h=((h<<5)+h+t.charCodeAt(i))|0;}return 'h'+(h>>>0).toString(36);}
+function drawPin(){
+  const set=UI.pin==='set';
+  $('#pin-form').innerHTML='<h2 id="pin-h">'+(set?'管理者の暗証番号を決めてください':'管理者の暗証番号を入れてください')+'</h2>'
+    +(set?'<p class="hint">職員用の画面から管理者の画面にもどるときに使います。4〜8けたの数字です。忘れないように控えておいてください。</p>':'<p class="hint">設定や勤務表づくりの画面にもどります。</p>')
+    +'<label class="fld" for="pin-a"><span>暗証番号</span><input type="password" id="pin-a" inputmode="numeric" autocomplete="off" maxlength="8"></label>'
+    +(set?'<label class="fld" for="pin-b"><span>確認のため、もう一度</span><input type="password" id="pin-b" inputmode="numeric" autocomplete="off" maxlength="8"></label>':'')
+    +(UI.pinErr?'<p class="pin-err" role="alert">'+esc(UI.pinErr)+'</p>':'')
+    +'<div class="row"><button type="submit" class="btn primary">'+(set?'この番号に決める':'管理者の画面へ')+'</button><button type="button" class="btn quiet" data-act="pincancel">やめる</button></div>';
+}
+function openPin(mode,next){UI.pin=mode;UI.pinNext=next||null;UI.pinErr='';drawPin();$('#pin').hidden=false;const f=$('#pin-a');if(f) f.focus();}
+function closePin(){$('#pin').hidden=true;UI.pin=null;UI.pinErr='';$('#pin-form').innerHTML='';}
+function toStaffMode(msg){S.mode='staff';UI.me=null;UI.stab='wish';UI.sym=null;save();render();window.scrollTo(0,0);toast(msg);}
+function pinSubmit(){
+  const a=($('#pin-a')||{}).value||'';
+  if(UI.pin==='set'){
+    const b2=($('#pin-b')||{}).value||'';
+    if(!/^\d{4,8}$/.test(a)){UI.pinErr='4〜8けたの数字で入れてください';drawPin();$('#pin-a').focus();return;}
+    if(a!==b2){UI.pinErr='2回の入力がちがっています。もう一度入れてください';drawPin();$('#pin-a').focus();return;}
+    S.pin=hashPin(a);const next=UI.pinNext;closePin();
+    if(next==='staff') toStaffMode('暗証番号を決めて、職員用の画面にしました');
+    else{save();renderMain();toast('暗証番号を決めました');}
+    return;
+  }
+  if(S.pin&&hashPin(a)===S.pin){closePin();S.mode='admin';UI.me=null;save();render();window.scrollTo(0,0);toast('管理者の画面にもどりました');}
+  else{UI.pinErr='暗証番号がちがいます';drawPin();$('#pin-a').focus();}
+}
+
+/* ---------- 書き出し ---------- */
+function rosterMatrix(){
+  const ck=check(S);const info=ck.info;const sc=S.schedules[S.ym];
+  const rows=[['なまえ'].concat(info.days.map(d=>d.d+'('+DOW[d.dow]+')'),['早番','通常','遅番','勤務日数','休み'])];
+  S.staff.forEach(s=>{
+    const c=sc.cells[s.id]||{};const w=wishOf(S,s.id);const p=ck.per[s.id];
+    rows.push([s.name||'名前なし'].concat(info.days.map(day=>{const t=c[day.d];return t?SHS[t]:!day.open?'':w[day.d]==='W'?'希':w[day.d]==='P'?'有':'休';}),[p.E,p.N,p.L,p.work,info.n-p.work]));
+  });
+  SH.forEach(t=>{rows.push([SHN[t]+'の人数'].concat(info.days.map(day=>day.open?ck.dayCnt[day.d][t]:'')));});
+  return rows;
+}
+const LIBS=['https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js','https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js'];
+let libP=null,BUSY=false;
+function loadLibs(){
+  if(window.html2canvas&&window.jspdf) return Promise.resolve();
+  if(!libP) libP=Promise.all(LIBS.map(src=>new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=src;sc.onload=res;sc.onerror=()=>rej(new Error('load'));document.head.appendChild(sc);}))).catch(e=>{libP=null;throw e;});
+  return libP;
+}
+function todayStr(){const d=new Date();return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();}
+function pdfPages(kind){
+  const info=INFO();const ttl=info.y+'年'+info.m+'月の勤務表';
+  const foot='<p class="pg-foot"><span>'+esc(S.facility.name)+'</span><span>'+todayStr()+' 作成</span></p>';
+  const head=sub=>'<header class="pg-head">'+chick()+'<div><p class="pg-fac">'+esc(S.facility.name)+'</p><h3>'+ttl+'<small style="font-size:15px;color:var(--muted)">　'+sub+'</small></h3></div>'+legend(sub==='カレンダー')+'</header>';
+  if(kind==='ocal') return ['<div class="pg pg-landscape">'+bunting()+head('カレンダー')+overallCal()+foot+'</div>'];
+  if(kind==='otable') return ['<div class="pg pg-landscape">'+head('一覧')+'<div class="tbl-wrap">'+rosterTable(false)+'</div>'+foot+'</div>'];
+  return (UI.all?S.staff:[staffById(UI.selP)]).filter(Boolean).map(s=>'<div class="pg pg-portrait">'+personalSheet(s)+'</div>');
+}
+function pdfName(kind){
+  const base='勤務表_'+S.ym;
+  if(kind==='ocal') return base+'_全体カレンダー.pdf';
+  if(kind==='otable') return base+'_全体一覧.pdf';
+  if(UI.all) return base+'_個人表_全員.pdf';
+  const s=staffById(UI.selP);return base+'_'+(((s&&s.name)||'個人表').replace(/[\s　\\/:*?"<>|]+/g,''))+'.pdf';
+}
+function busy(msg){const b=$('#busy');if(msg==null){b.hidden=true;return;}$('#busy-msg').textContent=msg;if(b.hidden){$('#busy-art').innerHTML=chick();b.hidden=false;}}
+async function makePdf(kind,printIt){
+  if(BUSY) return;BUSY=true;
+  let win=null;
+  if(printIt){try{win=window.open('','_blank');}catch(e){win=null;}}
+  busy('PDFの準備をしています…');
+  const stage=$('#pdf-stage');
+  try{
+    await loadLibs();
+    const pages=pdfPages(kind);if(!pages.length) throw new Error('empty');
+    const orient=kind==='personal'?'portrait':'landscape';
+    const PW=orient==='portrait'?210:297,PH=orient==='portrait'?297:210,M=8;
+    const pdf=new window.jspdf.jsPDF({orientation:orient,unit:'mm',format:'a4',compress:true});
+    for(let i=0;i<pages.length;i++){
+      busy('PDFを作っています（'+(i+1)+' / '+pages.length+'ページ）');
+      stage.innerHTML=pages[i];
+      if(document.fonts&&document.fonts.ready) await document.fonts.ready;
+      /* 絵は画像に置きかえてから写す（PDFの中でずれずに描ける） */
+      const imgs=[];
+      stage.querySelectorAll('svg').forEach(v=>{
+        const r=v.getBoundingClientRect();const c=v.cloneNode(true);
+        c.setAttribute('width',r.width.toFixed(2));c.setAttribute('height',r.height.toFixed(2));
+        const img=new Image();img.alt='';img.className=v.getAttribute('class')||'';
+        img.style.cssText='width:'+r.width.toFixed(2)+'px;height:'+r.height.toFixed(2)+'px;display:'+getComputedStyle(v).display+';flex:none';
+        img.src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(new XMLSerializer().serializeToString(c));
+        v.replaceWith(img);imgs.push(img);
+      });
+      await Promise.all(imgs.map(m=>m.decode?m.decode().catch(()=>{}):Promise.resolve()));
+      const canvas=await window.html2canvas(stage.firstElementChild,{scale:2,backgroundColor:'#FFFDF9',logging:false,windowWidth:1400,windowHeight:1000,
+        onclone:d=>{d.documentElement.setAttribute('data-theme','light');}});
+      const ratio=canvas.height/canvas.width;let w=PW-2*M,h=w*ratio;if(h>PH-2*M){h=PH-2*M;w=h/ratio;}
+      if(i>0) pdf.addPage('a4',orient);
+      pdf.addImage(canvas.toDataURL('image/jpeg',0.92),'JPEG',(PW-w)/2,M,w,h,undefined,'FAST');
+    }
+    stage.innerHTML='';
+    pdf.setProperties({title:pdfName(kind).replace(/\.pdf$/,'')});
+    if(printIt){
+      pdf.autoPrint();const url=pdf.output('bloburl');
+      if(win) win.location.href=url;else{busy(null);await saveFile(pdfName(kind),pdf.output('blob'),'application/pdf');}
+    }else{
+      busy(null);await saveFile(pdfName(kind),pdf.output('blob'),'application/pdf');
+    }
+  }catch(e){
+    stage.innerHTML='';if(win){try{win.close();}catch(_){}}
+    toast(e&&e.message==='load'?'PDFの部品を読み込めませんでした。インターネットにつながった状態で、もう一度お試しください':'PDFを作れませんでした。もう一度お試しください');
+  }finally{BUSY=false;busy(null);}
+}
+async function saveFile(filename,data,mime){
+  if(DL){
+    try{await DL.save({filename:filename,data:data});toast('保存しました');}
+    catch(e){const code=e&&e.code;if(code==='declined') return;toast(code==='rate_limited'?'少し待ってから、もう一度お試しください':'この画面では保存できませんでした');}
+    return;
+  }
+  if(TOP){
+    try{const url=URL.createObjectURL(new Blob([data],{type:mime}));const a=document.createElement('a');a.href=url;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),4000);}
+    catch(e){toast('保存できませんでした');}
+  }
+}
+function copyText(text,okMsg){
+  const manual=()=>{const ta=$('#modal-ta');ta.value=text;$('#modal').hidden=false;ta.focus();ta.select();};
+  const second=()=>{
+    const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');ta.style.cssText='position:fixed;top:0;left:0;opacity:0';
+    document.body.appendChild(ta);ta.select();let ok=false;try{ok=document.execCommand('copy');}catch(e){}
+    ta.remove();if(ok) toast(okMsg);else manual();
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(()=>toast(okMsg),second);
+  else second();
+}
+let toastTimer=0;
+function toast(msg){const t=$('#toast');t.textContent=msg;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.hidden=true;},2800);}
+
+/* ---------- 操作 ---------- */
+const ACT={
+  go(v){
+    UI.view=v;S.view=v;UI.confirmRegen=false;UI.confirmDel=null;save();render();
+    const r=$('#steps').getBoundingClientRect();if(r.top<0) $('#steps').scrollIntoView({block:'start'});
+  },
+  month(v){
+    const p=S.ym.split('-').map(Number);const dt=new Date(p[0],p[1]-1+Number(v),1);
+    S.ym=dt.getFullYear()+'-'+pad(dt.getMonth()+1);UI.confirmRegen=false;save();render();
+  },
+  clearsample(){S=blank();UI.view='joken';UI.selW=UI.selP=null;UI.all=false;save();render();toast('サンプルを消しました。①から入力してください');},
+  flipday(v){
+    const d=Number(v);const day=INFO().days[d-1];const ov=S.dayOverride[S.ym]||(S.dayOverride[S.ym]={});
+    const want=!day.open;if(want===day.def) delete ov[d];else ov[d]=want;
+    touch();renderTop();$('#jcal').innerHTML=jokenCal(INFO());
+  },
+  addstaff(){
+    const last=S.staff[S.staff.length-1];
+    S.staff.push({id:uid(),name:'',type:'full',can:{E:true,N:true,L:true},dows:[0,1,2,3,4,5,6],off:last?last.off:9,work:last?last.work:12});
+    touch();renderMain();
+    const el=$('#sn-'+S.staff[S.staff.length-1].id);if(el) el.focus();
+  },
+  askdel(v){UI.confirmDel=v||null;renderMain();},
+  delstaff(v){
+    S.staff=S.staff.filter(s=>s.id!==v);
+    Object.keys(S.wishes).forEach(k=>{delete S.wishes[k][v];});
+    Object.keys(S.schedules).forEach(k=>{delete S.schedules[k].cells[v];});
+    UI.confirmDel=null;touch();renderMain();
+  },
+  selw(v){UI.selW=v;renderMain();},
+  wish(v,b){
+    const sid=(b&&b.dataset.s)||UI.selW;
+    if(S.mode==='staff'&&(sid!==UI.me||wishClosed())) return;
+    const s=staffById(sid);if(!s) return;const d=Number(v);
+    const W=S.wishes[S.ym]||(S.wishes[S.ym]={});const w=W[s.id]||(W[s.id]={});const cur=w[d];
+    if(!cur){
+      const lim=Number(S.rules.wishLimit)||0;const used=Object.keys(w).filter(k=>w[k]==='W').length;
+      if(lim>0&&used>=lim){w[d]='P';toast('希望休は月'+lim+'日までのため、有給として入れました');}
+      else w[d]='W';
+    }else if(cur==='W') w[d]='P';
+    else delete w[d];
+    touch();renderMain();
+  },
+  gen(){
+    const was=S.schedules[S.ym];const wasPub=!!(was&&was.published);
+    S.schedules[S.ym]={cells:generate(S),at:Date.now(),stale:false,edited:false,published:false};
+    UI.confirmRegen=false;save();renderMain();
+    const n=check(S).issues.length;
+    toast((n?'勤務表を作りました。確認が必要なところが'+n+'件あります':'勤務表ができました')+(wasPub?'。下書きにもどったので、見せるときは「職員に公開する」を押してください':''));
+  },
+  publish(){const sc=S.schedules[S.ym];if(!sc) return;sc.published=!sc.published;save();renderMain();toast(sc.published?'職員用の画面で見られるようにしました':'職員用の画面から見えなくしました');},
+  wishtoggle(){if(wishClosed()) delete S.wishClosed[S.ym];else S.wishClosed[S.ym]=true;save();renderMain();},
+  tostaff(){if(!S.pin){openPin('set','staff');return;}toStaffMode('職員用の画面にしました');},
+  pinchange(){openPin('set',null);},
+  pincancel(){closePin();},
+  adminlogin(){if(!S.pin){S.mode='admin';save();render();return;}openPin('enter',null);},
+  me(v){UI.me=v||null;UI.stab='wish';UI.sym=null;renderMain();$('#main').scrollIntoView({block:'start'});},
+  stab(v){UI.stab=v;renderMain();},
+  smonth(v){UI.sym=v;renderMain();},
+  donewish(){const s=staffById(UI.me);UI.me=null;renderMain();window.scrollTo(0,0);toast((s&&s.name?s.name+'さんの':'')+'希望を保存しました');},
+  regen(){const sc=S.schedules[S.ym];if(sc&&sc.edited){UI.confirmRegen=true;renderMain();}else ACT.gen();},
+  cancelregen(){UI.confirmRegen=false;renderMain();},
+  cell(v,b){
+    const sc=S.schedules[S.ym];if(!sc) return;const sid=b.dataset.s,d=Number(b.dataset.d);
+    const c=sc.cells[sid]||(sc.cells[sid]={});const cur=c[d]||'';
+    const nx=cur===''?'E':cur==='E'?'N':cur==='N'?'L':'';
+    if(nx) c[d]=nx;else delete c[d];
+    sc.edited=true;save();renderMain();
+  },
+  selp(v){UI.selP=v;UI.all=false;renderMain();},
+  allp(){UI.all=!UI.all;renderMain();},
+  copyp(){
+    const list=UI.all?S.staff:[staffById(UI.selP)];
+    copyText(list.map(personalText).join('\n\n――――――――\n\n'),'コピーしました');
+  },
+  copytsv(){copyText(rosterMatrix().map(r=>r.join('\t')).join('\n'),'コピーしました。Excelに貼り付けてください');},
+  savecsv(){
+    const csv='﻿'+rosterMatrix().map(r=>r.map(x=>{const v=String(x);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',')).join('\r\n');
+    saveFile('kinmuhyo-'+S.ym+'.csv',csv,'text/csv;charset=utf-8');
+  },
+  pdf(v){makePdf(v,false);},
+  pdfprint(v){makePdf(v,true);},
+  zmode(v){UI.zmode=v;S.zmode=v;save();renderMain();},
+  bkcopy(){copyText(JSON.stringify(S),'控えをコピーしました。メモ帳などに貼り付けて保管してください');},
+  bkrestore(){
+    let s=null;try{s=normalize(JSON.parse($('#bk-ta').value));}catch(e){s=null;}
+    if(!s){toast('控えを読み取れませんでした。コピーした文字をそのまま貼り付けてください');return;}
+    S=s;UI.view=S.view||'joken';UI.selW=UI.selP=null;save();render();toast('控えから戻しました');
+  },
+  closemodal(){$('#modal').hidden=true;}
+};
+const CHG={
+  opendow(el){
+    const d=Number(el.dataset.v);const i=S.openDows.indexOf(d);
+    if(el.checked&&i<0) S.openDows.push(d);if(!el.checked&&i>=0) S.openDows.splice(i,1);
+    touch();renderTop();$('#jcal').innerHTML=jokenCal(INFO());
+  },
+  sf(el){
+    const s=staffById(el.dataset.sid);if(!s) return;const k=el.dataset.k;
+    if(k==='name'){s.name=el.value.trim();save();return;}
+    if(k==='type'){s.type=el.value;touch();renderMain();return;}
+    if(k==='can') s.can[el.dataset.v]=el.checked;
+    else if(k==='dow'){const d=Number(el.dataset.v);const i=s.dows.indexOf(d);if(el.checked&&i<0) s.dows.push(d);if(!el.checked&&i>=0) s.dows.splice(i,1);}
+    else{const v=clampInt(el.value,0,31);el.value=v;s[k]=v;}
+    touch();
+    const info=INFO();const nt=$('#note-'+s.id);if(nt) nt.textContent=staffNote(s,info);
+    const sm=$('#staffsum');if(sm) sm.outerHTML=staffSum(info);
+  }
+};
+const STAFF_ACTS={me:1,stab:1,smonth:1,wish:1,donewish:1,adminlogin:1,pincancel:1,closemodal:1};
+const sig=el=>el&&el.dataset&&el.dataset.act?[el.dataset.act,el.dataset.v||'',el.dataset.s||'',el.dataset.d||''].join('|'):null;
+document.addEventListener('click',e=>{
+  const b=e.target.closest?e.target.closest('[data-act]'):null;if(!b||b.disabled) return;
+  const fn=ACT[b.dataset.act];if(!fn) return;
+  if(S.mode==='staff'&&!STAFF_ACTS[b.dataset.act]) return;
+  const key=sig(b);const wrap=$('.tbl-wrap');const sl=wrap?wrap.scrollLeft:0;const before=document.activeElement;
+  fn(b.dataset.v,b);
+  const w2=$('.tbl-wrap');if(w2&&sl) w2.scrollLeft=sl;
+  if(key&&before===b&&!document.body.contains(b)){
+    const els=document.querySelectorAll('[data-act]');
+    for(let i=0;i<els.length;i++){if(sig(els[i])===key){try{els[i].focus({preventScroll:true});}catch(err){}break;}}
+  }
+});
+document.addEventListener('change',e=>{
+  const el=e.target;if(!el||!el.dataset) return;
+  if(el.dataset.bind){
+    let val;
+    if(el.type==='checkbox') val=el.checked;
+    else if(el.type==='number'){val=clampInt(el.value,el.min,el.max);el.value=val;}
+    else val=el.value;
+    const ks=el.dataset.bind.split('.');let o=S;for(let i=0;i<ks.length-1;i++) o=o[ks[i]];o[ks[ks.length-1]]=val;
+    if(el.dataset.bind==='facility.name'){save();const f=$('#apptitle');if(f) f.textContent=appTitle();syncTabTitle();return;}
+    touch();
+    if(el.dataset.after==='cal'){renderTop();$('#jcal').innerHTML=jokenCal(INFO());}
+    return;
+  }
+  if(el.dataset.chg&&CHG[el.dataset.chg]) CHG[el.dataset.chg](el);
+});
+document.addEventListener('keydown',e=>{if(e.key!=='Escape') return;if(!$('#modal').hidden) $('#modal').hidden=true;if(!$('#pin').hidden) closePin();});
+document.addEventListener('submit',e=>{if(e.target&&e.target.id==='pin-form'){e.preventDefault();pinSubmit();}});
+/* 職員用の画面で5分さわらなかったら、名前の選択にもどす（共有の端末なので） */
+let lastTouch=Date.now();
+['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{lastTouch=Date.now();},true));
+setInterval(()=>{if(S.mode==='staff'&&UI.me&&Date.now()-lastTouch>5*60*1000){UI.me=null;renderMain();toast('しばらく操作がなかったので、名前の選択にもどりました');}},20000);
+
+/* 印刷のときは明るい色で出す */
+let themeBefore;
+window.addEventListener('beforeprint',()=>{themeBefore=document.documentElement.getAttribute('data-theme');document.documentElement.setAttribute('data-theme','light');});
+window.addEventListener('afterprint',()=>{if(themeBefore==null) document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',themeBefore);});
+
+render();
+if(window.claude&&typeof window.claude.use==='function'){
+  window.claude.use('downloads').then(ns=>{if(ns){DL=ns;if(UI.view==='zentai'||UI.view==='kojin'){const wrap=$('.tbl-wrap');const sl=wrap?wrap.scrollLeft:0;renderMain();const w2=$('.tbl-wrap');if(w2) w2.scrollLeft=sl;}}}).catch(()=>{});
+}
+})();
+</script>
+
+</body>
+</html>
