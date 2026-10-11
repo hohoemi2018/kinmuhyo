@@ -243,8 +243,8 @@ span.cellbtn{cursor:default}
 .picker-head{display:flex;align-items:center;gap:14px}
 .picker-head .chick{width:72px;height:72px}
 .namegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,170px),1fr));gap:10px}
-.namebtn{appearance:none;min-height:72px;border-radius:20px;border:2px solid var(--line-strong);background:var(--paper-2);cursor:pointer;font-family:var(--font-display);font-size:20px;color:var(--cocoa);display:flex;align-items:baseline;justify-content:center;gap:4px;padding:16px 12px;overflow-wrap:anywhere;line-height:1.3}
-.namebtn small{font-family:var(--font-body);font-size:13px;color:var(--muted)}
+.namebtn{appearance:none;min-height:72px;border-radius:20px;border:2px solid var(--line-strong);background:var(--paper-2);cursor:pointer;font-family:var(--font-display);font-size:20px;color:var(--cocoa);display:flex;flex-wrap:wrap;align-items:baseline;align-content:center;justify-content:center;gap:4px;padding:16px 12px;overflow-wrap:anywhere;line-height:1.3}
+.namebtn small{font-family:var(--font-body);font-size:13px;color:var(--muted);white-space:nowrap}
 @media (hover:hover){.namebtn:hover{background:var(--e-bg)}}
 .me-bar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
 .me-name{display:flex;align-items:center;gap:10px;font-size:17px}
@@ -262,6 +262,15 @@ span.cellbtn{cursor:default}
 #pin-form{display:flex;flex-direction:column;gap:12px}
 #pin-form input{width:100%;font-size:22px;letter-spacing:.3em;text-align:center}
 .pin-err{color:var(--warn-fg);background:var(--warn-bg);border-radius:10px;padding:6px 10px;font-weight:700}
+#pin .modal-box{max-height:calc(100dvh - 32px);overflow:auto}
+#pin-form h3{margin:0;font-size:16px;font-family:var(--font-display);color:var(--cocoa)}
+.pin-sub{border-top:2px dashed var(--line);padding-top:12px;display:flex;flex-direction:column;gap:10px}
+.rc-code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:30px;font-weight:700;letter-spacing:.06em;text-align:center;background:var(--paper-2);border:2px dashed var(--line-strong);border-radius:14px;padding:14px 8px;color:var(--cocoa);overflow-wrap:anywhere}
+.rc-ask{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:26px;font-weight:700;letter-spacing:.12em;text-align:center;color:var(--cocoa)}
+#pin-form input.code{letter-spacing:.12em}
+.rc-state{border-radius:12px;padding:8px 12px;font-weight:500}
+.rc-state.ok{background:var(--ok-bg);color:var(--ok-fg)}
+.rc-state.no{background:var(--warn-bg);color:var(--warn-fg)}
 
 /* ---- time card ---- */
 .tc-punch{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;background:var(--paper-2);border-radius:22px;padding:18px 14px}
@@ -279,7 +288,7 @@ span.cellbtn{cursor:default}
 .tc-done .chick{width:96px;height:96px}
 .tc-done-msg{font-family:var(--font-display);font-size:26px;color:var(--cocoa)}
 .tc-done b{font-size:22px;font-variant-numeric:tabular-nums}
-.nb-dot{font-family:var(--font-body);font-size:11px;font-weight:700;background:var(--n-bg);color:var(--n-fg);border-radius:999px;padding:1px 8px;margin-left:6px;align-self:center}
+.nb-dot{font-family:var(--font-body);font-size:11px;font-weight:700;background:var(--n-bg);color:var(--n-fg);border-radius:999px;padding:1px 8px;margin-left:6px;align-self:center;white-space:nowrap}
 .todaygrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,190px),1fr));gap:8px;list-style:none;margin:0;padding:0}
 .todaygrid li{background:var(--paper-2);border-radius:14px;padding:8px 12px;display:flex;flex-direction:column;gap:2px;min-width:0}
 .todaygrid b{overflow-wrap:anywhere}
@@ -801,7 +810,7 @@ function defPat(){return {1:'N',2:'N',3:'N',4:'N',5:'N',6:'',0:''};}
 function normalize(s){
   if(!s||s.v!==1||!Array.isArray(s.staff)||!s.shifts||!s.ym) return null;
   s.facility=s.facility||{name:''};s.dayOverride=s.dayOverride||{};s.wishes=s.wishes||{};s.schedules=s.schedules||{};
-  s.rules=s.rules||{maxConsec:5,noLateEarly:true,wishLimit:3};s.mode=s.mode==='staff'?'staff':'admin';s.tc=s.tc||{breakMin:60,breakAfterH:6};s.tcSnap=s.tcSnap||{};s.punchAt=s.punchAt||0;if(!s.punches){s.punches=(s.sample&&HAS_TC)?samplePunches(s):{};if(s.sample&&HAS_TC&&!s.reqs) s.reqs=sampleReqs(s);}s.reqs=s.reqs||[];s.genMode=s.genMode||'auto';if(s.fillSubs==null) s.fillSubs=true;s.pin=s.pin||'';s.wishClosed=s.wishClosed||{};s.openDows=s.openDows||[1,2,3,4,5,6];
+  s.rules=s.rules||{maxConsec:5,noLateEarly:true,wishLimit:3};s.mode=s.mode==='staff'?'staff':'admin';s.tc=s.tc||{breakMin:60,breakAfterH:6};s.tcSnap=s.tcSnap||{};s.punchAt=s.punchAt||0;if(!s.punches){s.punches=(s.sample&&HAS_TC)?samplePunches(s):{};if(s.sample&&HAS_TC&&!s.reqs) s.reqs=sampleReqs(s);}s.reqs=s.reqs||[];s.genMode=s.genMode||'auto';if(s.fillSubs==null) s.fillSubs=true;s.pin=s.pin||'';s.rc=s.rc||'';s.rcAt=s.rcAt||0;s.pinReq=s.pinReq||null;s.wishClosed=s.wishClosed||{};s.openDows=s.openDows||[1,2,3,4,5,6];
   s.staff.forEach(p=>{p.can=p.can||{E:true,N:true,L:true};p.dows=p.dows||[0,1,2,3,4,5,6];if(p.off==null) p.off=9;if(p.work==null) p.work=12;if(!p.pat) p.pat=defPat();if(!Array.isArray(p.quals)) p.quals=[];if(!p.hrs) p.hrs={on:false,start:'09:00',end:'13:00'};});if(!Array.isArray(s.qualList)) s.qualList=defQuals();s.qualList.forEach(q=>{if(q.wkAM==null){q.wkAM=q.wkPM=Number(q.wk)||0;q.weAM=q.wePM=Number(q.we)||0;}});if(!s.noon) s.noon='12:00';
   return s;
 }
@@ -810,7 +819,7 @@ function touch(){const sc=S.schedules[S.ym];if(sc) sc.stale=true;save();}
 
 function blank(){
   const now=new Date();const nx=new Date(now.getFullYear(),now.getMonth()+1,1);
-  return {v:1,sample:false,mode:'admin',pin:'',wishClosed:{},qualList:defQuals(),noon:'12:00',reqs:[],genMode:'auto',fillSubs:true,punches:{},tc:{breakMin:60,breakAfterH:6},tcSnap:{},punchAt:0,view:'joken',facility:{name:''},ym:nx.getFullYear()+'-'+pad(nx.getMonth()+1),
+  return {v:1,sample:false,mode:'admin',pin:'',rc:'',rcAt:0,pinReq:null,wishClosed:{},qualList:defQuals(),noon:'12:00',reqs:[],genMode:'auto',fillSubs:true,punches:{},tc:{breakMin:60,breakAfterH:6},tcSnap:{},punchAt:0,view:'joken',facility:{name:''},ym:nx.getFullYear()+'-'+pad(nx.getMonth()+1),
     shifts:{E:{start:'07:00',end:'16:00',wk:2,we:1},N:{start:'08:30',end:'17:30',wk:2,we:1},L:{start:'10:00',end:'19:00',wk:2,we:1}},
     openDows:[1,2,3,4,5,6],closeHolidays:true,dayOverride:{},rules:{maxConsec:5,noLateEarly:true,wishLimit:3},
     staff:[],wishes:{},schedules:{}};
@@ -978,8 +987,14 @@ function viewJoken(){
     +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="shokuin">つぎへ　職員を登録する</button></div></div>';
 }
 function pinSection(){
+  const d=S.rcAt?new Date(S.rcAt):null;const when=d?(d.getFullYear()+'年'+(d.getMonth()+1)+'月'+d.getDate()+'日'):'';
+  const rcPart=!S.pin?'':(S.rc
+    ?'<p class="rc-state ok">予備のコード：作成ずみ（'+when+'）。暗証番号を忘れたときは、このコードで決め直せます。</p>'
+    :'<p class="rc-state no">予備のコードがまだありません。作っておくと、暗証番号を忘れたときに自分で決め直せます。</p>');
   return '<section><h2>管理者の暗証番号</h2><p class="hint">'+(S.pin?'設定ずみです。職員用の画面から管理者の画面にもどるときに使います。':'まだ決めていません。「職員用の画面にする」を押したときにも決められます。')+'職員が設定や勤務表づくりの画面に入らないようにするための、簡単なかぎです。</p>'
-    +'<div class="row"><button type="button" class="btn" data-act="pinchange">'+(S.pin?'暗証番号を変える':'暗証番号を決める')+'</button></div></section>';
+    +rcPart
+    +'<div class="row"><button type="button" class="btn" data-act="pinchange">'+(S.pin?'暗証番号を変える':'暗証番号を決める')+'</button>'
+    +(S.pin?'<button type="button" class="btn" data-act="rcnew">'+(S.rc?'予備のコードを作り直す':'予備のコードを作る')+'</button>':'')+'</div></section>';
 }
 function backupSection(){
   return '<section><details class="backup"><summary>データの控えをとる・戻す</summary><div>'
@@ -1606,33 +1621,108 @@ function viewStaff(){
 
 /* ---------- 管理者の暗証番号 ---------- */
 function hashPin(p){let h=5381;const t='hohoemi:'+p;for(let i=0;i<t.length;i++){h=((h<<5)+h+t.charCodeAt(i))|0;}return 'h'+(h>>>0).toString(36);}
+/* 予備のコード・解除コード用の、もう少し長いハッシュ */
+function hash53(str){let h1=0xdeadbeef,h2=0x41c6ce57;for(let i=0;i<str.length;i++){const ch=str.charCodeAt(i);h1=Math.imul(h1^ch,2654435761);h2=Math.imul(h2^ch,1597334677);}
+  h1=Math.imul(h1^(h1>>>16),2246822507)^Math.imul(h2^(h2>>>13),3266489909);h2=Math.imul(h2^(h2>>>16),2246822507)^Math.imul(h1^(h1>>>13),3266489909);return 4294967296*(2097151&h2)+(h1>>>0);}
+const hashRc=c=>'r'+hash53('hohoemi-rc:'+c).toString(36);
+/* ほほえみカレッジが出す解除コード（問い合わせ番号ごとにちがう6けた） */
+const UNLOCK_KEY='hc-2026-sakura-hiyoko';
+const unlockOf=q=>String(hash53('hohoemi-unlock:'+UNLOCK_KEY+':'+q)%1000000).padStart(6,'0');
+function rand(n){let out='';const a=new Uint32Array(n);try{crypto.getRandomValues(a);}catch(e){for(let i=0;i<n;i++) a[i]=Math.floor(Math.random()*4294967296);}for(let i=0;i<n;i++) out+=String(a[i]%10);return out;}
+const fmtRc=c=>c.slice(0,4)+'-'+c.slice(4,8)+'-'+c.slice(8,12);
+function newRc(){const c=rand(12);S.rc=hashRc(c);S.rcAt=Date.now();save();return c;}
 function drawPin(){
-  const set=UI.pin==='set';
-  $('#pin-form').innerHTML='<h2 id="pin-h">'+(set?'管理者の暗証番号を決めてください':'管理者の暗証番号を入れてください')+'</h2>'
-    +(set?'<p class="hint">職員用の画面から管理者の画面にもどるときに使います。4〜8けたの数字です。忘れないように控えておいてください。</p>':'<p class="hint">設定や勤務表づくりの画面にもどります。</p>')
-    +'<label class="fld" for="pin-a"><span>暗証番号</span><input type="password" id="pin-a" inputmode="numeric" autocomplete="off" maxlength="8"></label>'
-    +(set?'<label class="fld" for="pin-b"><span>確認のため、もう一度</span><input type="password" id="pin-b" inputmode="numeric" autocomplete="off" maxlength="8"></label>':'')
-    +(UI.pinErr?'<p class="pin-err" role="alert">'+esc(UI.pinErr)+'</p>':'')
-    +'<div class="row"><button type="button" class="btn primary" data-act="pinok">'+(set?'この番号に決める':'管理者の画面へ')+'</button><button type="button" class="btn quiet" data-act="pincancel">やめる</button></div>';
+  const m=UI.pin;const set=m==='set'||m==='reset';let h='';
+  if(m==='rcshow'){
+    h='<h2 id="pin-h">予備のコードを控えてください</h2>'
+      +(UI.rcNote?'<p class="hint">'+esc(UI.rcNote)+'</p>':'')
+      +'<p class="hint">暗証番号を忘れたときに、このコードで暗証番号を決め直せます。紙に書いて、職員の目にふれない場所に保管してください。<strong>このコードは、いまだけ表示されます。</strong></p>'
+      +'<p class="rc-code" id="rc-code">'+fmtRc(UI.rcCode||'')+'</p>'
+      +'<div class="row"><button type="button" class="btn primary" data-act="rcdone">控えました</button><button type="button" class="btn" data-act="rccopy">コピーする</button></div>';
+  }else if(m==='forgot'){
+    if(!S.pinReq) {S.pinReq={code:rand(6),at:Date.now()};save();}
+    h='<h2 id="pin-h">暗証番号を忘れたとき</h2>'
+      +(S.rc?'<div class="pin-sub" style="border-top:0;padding-top:0"><h3>予備のコードで決め直す</h3>'
+        +'<p class="hint">暗証番号を決めたときに控えた、12けたの「予備のコード」を入れてください。</p>'
+        +'<label class="fld" for="rc-in"><span>予備のコード（12けた）</span><input type="text" id="rc-in" class="code" inputmode="numeric" autocomplete="off" maxlength="20" placeholder="0000-0000-0000"></label>'
+        +'<div class="row"><button type="button" class="btn primary" data-act="rcuse">このコードで決め直す</button></div></div>'
+        :'<p class="hint">この端末では、まだ「予備のコード」が作られていません。下の方法で決め直してください。</p>')
+      +'<div class="pin-sub"><h3>'+(S.rc?'予備のコードも見つからないとき':'ほほえみカレッジに問い合わせる')+'</h3>'
+      +'<p class="hint">合同会社発達支援ほほえみカレッジに、次の「問い合わせ番号」をお伝えください。お返事の「解除コード」（6けた）を入れると、暗証番号を決め直せます。</p>'
+      +'<p class="rc-ask">'+S.pinReq.code.slice(0,3)+' '+S.pinReq.code.slice(3)+'</p>'
+      +'<label class="fld" for="ul-in"><span>解除コード（6けた）</span><input type="text" id="ul-in" class="code" inputmode="numeric" autocomplete="off" maxlength="10"></label>'
+      +'<div class="row"><button type="button" class="btn" data-act="ulunlock">解除コードで決め直す</button></div></div>'
+      +(UI.pinErr?'<p class="pin-err" role="alert">'+esc(UI.pinErr)+'</p>':'')
+      +'<div class="row"><button type="button" class="btn quiet" data-act="pinback">暗証番号の入力にもどる</button><button type="button" class="btn quiet" data-act="pincancel">やめる</button></div>';
+  }else{
+    h='<h2 id="pin-h">'+(m==='reset'?'新しい暗証番号を決めてください':set?'管理者の暗証番号を決めてください':'管理者の暗証番号を入れてください')+'</h2>'
+      +(set?'<p class="hint">職員用の画面から管理者の画面にもどるときに使います。4〜8けたの数字です。忘れないように控えておいてください。</p>':'<p class="hint">'+(HAS_ROSTER?'設定や勤務表づくりの画面にもどります。':'設定や集計の画面にもどります。')+'</p>')
+      +'<label class="fld" for="pin-a"><span>'+(m==='reset'?'新しい暗証番号':'暗証番号')+'</span><input type="password" id="pin-a" inputmode="numeric" autocomplete="off" maxlength="8"></label>'
+      +(set?'<label class="fld" for="pin-b"><span>確認のため、もう一度</span><input type="password" id="pin-b" inputmode="numeric" autocomplete="off" maxlength="8"></label>':'')
+      +(UI.pinErr?'<p class="pin-err" role="alert">'+esc(UI.pinErr)+'</p>':'')
+      +'<div class="row"><button type="button" class="btn primary" data-act="pinok">'+(set?'この番号に決める':'管理者の画面へ')+'</button><button type="button" class="btn quiet" data-act="pincancel">やめる</button></div>'
+      +(m==='enter'?'<div class="row"><button type="button" class="btn quiet" data-act="pinforgot">暗証番号を忘れたとき</button></div>':'');
+  }
+  $('#pin-form').innerHTML=h;
 }
-function openPin(mode,next){UI.pin=mode;UI.pinNext=next||null;UI.pinErr='';drawPin();$('#pin').hidden=false;const f=$('#pin-a');if(f) f.focus();}
-function closePin(){$('#pin').hidden=true;UI.pin=null;UI.pinErr='';$('#pin-form').innerHTML='';}
+function pinFocus(){const f=$('#pin-a')||$('#rc-in')||$('#ul-in')||$('[data-act="rcdone"]');if(f) f.focus();}
+function openPin(mode,next){UI.pin=mode;UI.pinNext=next||null;UI.pinErr='';drawPin();$('#pin').hidden=false;pinFocus();}
+function closePin(){if(UI.pin==='rcshow'){rcDone();return;}$('#pin').hidden=true;UI.pin=null;UI.pinErr='';UI.rcCode=null;UI.rcNote='';$('#pin-form').innerHTML='';}
+function pinGo(mode){UI.pin=mode;UI.pinErr='';drawPin();pinFocus();}
+/* 予備のコードを見せる。控えたら next（staff:職員用の画面へ／admin:管理者の画面へ）に進む */
+function showRc(code,note,next){UI.rcCode=code;UI.rcNote=note||'';UI.pinNext=next||null;UI.pin='rcshow';UI.pinErr='';drawPin();$('#pin').hidden=false;pinFocus();}
+function rcDone(){
+  const next=UI.pinNext;$('#pin').hidden=true;UI.pin=null;UI.pinErr='';UI.rcCode=null;UI.rcNote='';$('#pin-form').innerHTML='';
+  if(next==='staff') toStaffMode('暗証番号を決めて、職員用の画面にしました');
+  else if(next==='admin'){S.mode='admin';UI.me=null;save();render();window.scrollTo(0,0);toast('新しい暗証番号にしました');}
+  else if(next==='login'){renderMain();toast('管理者の画面にもどりました');}
+  else if(next==='pinset'){renderMain();toast('暗証番号を決めました');}
+  else{renderMain();toast('予備のコードを作りました');}
+}
 function toStaffMode(msg){S.mode='staff';UI.me=null;UI.stab='wish';UI.sym=null;save();render();window.scrollTo(0,0);toast(msg);}
 /* 全角の数字で入っても受けつける */
 const half=v=>String(v||'').replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/\s+/g,'');
+const digitsOf=v=>half(v).replace(/[^0-9]/g,'');
+/* まちがいが続いたら、少し待ってもらう */
+let pinFails=0,pinWaitUntil=0;
+function pinWaiting(){if(Date.now()<pinWaitUntil){UI.pinErr='入力のまちがいが続いたので、'+Math.ceil((pinWaitUntil-Date.now())/1000)+'秒ほど待ってから入れてください';drawPin();pinFocus();return true;}return false;}
+function pinFail(msg){pinFails++;if(pinFails>=5){pinFails=0;pinWaitUntil=Date.now()+30000;}UI.pinErr=msg;drawPin();pinFocus();}
 function pinSubmit(){
+  if(UI.pin==='forgot'||UI.pin==='rcshow') return;
   const a=half(($('#pin-a')||{}).value);
-  if(UI.pin==='set'){
+  if(UI.pin==='set'||UI.pin==='reset'){
     const b2=half(($('#pin-b')||{}).value);
     if(!/^\d{4,8}$/.test(a)){UI.pinErr='4〜8けたの数字で入れてください';drawPin();$('#pin-a').focus();return;}
     if(a!==b2){UI.pinErr='2回の入力がちがっています。もう一度入れてください';drawPin();$('#pin-a').focus();return;}
-    S.pin=hashPin(a);const next=UI.pinNext;closePin();
+    S.pin=hashPin(a);const next=UI.pinNext;
+    if(UI.pin==='reset'){S.pinReq=null;const c=newRc();showRc(c,'新しい暗証番号にしました。前の予備のコードは使えなくなったので、新しいコードを控えてください。','admin');return;}
+    if(!S.rc){const c=newRc();showRc(c,'',next==='staff'?'staff':'pinset');return;}
+    closePin();
     if(next==='staff') toStaffMode('暗証番号を決めて、職員用の画面にしました');
-    else{save();renderMain();toast('暗証番号を決めました');}
+    else{save();renderMain();toast('暗証番号を変えました（予備のコードはそのままです）');}
     return;
   }
-  if(S.pin&&hashPin(a)===S.pin){closePin();S.mode='admin';UI.me=null;save();render();window.scrollTo(0,0);toast('管理者の画面にもどりました');}
-  else{UI.pinErr='暗証番号がちがいます';drawPin();$('#pin-a').focus();}
+  if(pinWaiting()) return;
+  if(S.pin&&hashPin(a)===S.pin){
+    pinFails=0;closePin();S.mode='admin';UI.me=null;save();render();window.scrollTo(0,0);
+    if(!S.rc){const c=newRc();showRc(c,'暗証番号を忘れたときのために、予備のコードを作りました。','login');return;}
+    toast('管理者の画面にもどりました');
+  }
+  else pinFail('暗証番号がちがいます');
+}
+function rcUse(){
+  if(pinWaiting()) return;
+  const c=digitsOf(($('#rc-in')||{}).value);
+  if(c.length!==12){UI.pinErr='予備のコードは12けたの数字です（ハイフンはあってもなくてもかまいません）';drawPin();pinFocus();return;}
+  if(!S.rc||hashRc(c)!==S.rc){pinFail('予備のコードがちがいます。いちばん新しく控えたコードか、確かめてください');return;}
+  pinFails=0;pinGo('reset');
+}
+function ulUnlock(){
+  if(pinWaiting()) return;
+  const c=digitsOf(($('#ul-in')||{}).value);
+  if(c.length!==6){UI.pinErr='解除コードは6けたの数字です';drawPin();$('#ul-in').focus();return;}
+  if(!S.pinReq||unlockOf(S.pinReq.code)!==c){pinFail('解除コードがちがいます。問い合わせ番号と合っているか、確かめてください');return;}
+  pinFails=0;pinGo('reset');
 }
 
 /* ---------- 書き出し ---------- */
@@ -1809,6 +1899,13 @@ const ACT={
   pinchange(){openPin('set',null);},
   pincancel(){closePin();},
   pinok(){pinSubmit();},
+  pinforgot(){pinGo('forgot');},
+  pinback(){pinGo('enter');},
+  rcuse(){rcUse();},
+  ulunlock(){ulUnlock();},
+  rcdone(){rcDone();},
+  rccopy(){copyText(fmtRc(UI.rcCode||''),'コピーしました。メモなどに貼り付けて保管してください');},
+  rcnew(){const had=!!S.rc;const c=newRc();showRc(c,had?'新しい予備のコードを作りました。前に控えたコードは使えなくなります。':'',null);},
   adminlogin(){if(!S.pin){S.mode='admin';save();render();return;}openPin('enter',null);},
   me(v){UI.me=v||null;UI.rq=null;UI.stab=HAS_TC?'tc':'wish';UI.sym=null;UI.punched=null;renderMain();$('#main').scrollIntoView({block:'start'});},
   stab(v){UI.stab=v;renderMain();},
@@ -1909,7 +2006,7 @@ const CHG={
     const sm=$('#staffsum');if(sm) sm.outerHTML=staffSum(info);
   }
 };
-const STAFF_ACTS={me:1,stab:1,smonth:1,wish:1,donewish:1,adminlogin:1,pincancel:1,pinok:1,closemodal:1,rqopen:1,rqreason:1,rqsend:1,rqclose:1,rqcancel:1,punch:1,tcback:1};
+const STAFF_ACTS={me:1,stab:1,smonth:1,wish:1,donewish:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,closemodal:1,rqopen:1,rqreason:1,rqsend:1,rqclose:1,rqcancel:1,punch:1,tcback:1};
 const sig=el=>el&&el.dataset&&el.dataset.act?[el.dataset.act,el.dataset.v||'',el.dataset.s||'',el.dataset.d||''].join('|'):null;
 document.addEventListener('click',e=>{
   const b=e.target.closest?e.target.closest('[data-act]'):null;if(!b||b.disabled) return;
@@ -1941,7 +2038,7 @@ document.addEventListener('change',e=>{
 document.addEventListener('keydown',e=>{if(e.key!=='Escape') return;if(!$('#modal').hidden) $('#modal').hidden=true;if(!$('#pin').hidden) closePin();});
 /* 暗証番号の欄でEnterを押したときも決定にする（フォームの送信は使わない） */
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.target&&e.target.id==='q-new'){e.preventDefault();ACT.qadd();}});
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.target&&e.target.closest&&e.target.closest('#pin-form')&&e.target.tagName==='INPUT'){e.preventDefault();pinSubmit();}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.target&&e.target.closest&&e.target.closest('#pin-form')&&e.target.tagName==='INPUT'){e.preventDefault();if(e.target.id==='rc-in') rcUse();else if(e.target.id==='ul-in') ulUnlock();else pinSubmit();}});
 /* 職員用の画面で5分さわらなかったら、名前の選択にもどす（共有の端末なので） */
 let lastTouch=Date.now();
 ['pointerdown','keydown'].forEach(ev=>document.addEventListener(ev,()=>{lastTouch=Date.now();},true));
