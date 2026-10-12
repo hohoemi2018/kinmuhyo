@@ -448,6 +448,14 @@ span.cellbtn{cursor:default}
 .cm-opt.cm-off{background:var(--paper-2);color:var(--muted)}
 .cm-sub{font-size:14px;font-weight:700;color:var(--muted);margin-top:4px}
 
+/* ---- ご利用の登録 ---- */
+.licbar{background:var(--p-bg);color:var(--p-fg);border-radius:14px;padding:10px 14px;margin-bottom:12px;font-size:14px}
+.licbar.warn{background:var(--warn-bg);color:var(--warn-fg)}
+.licwho{font-weight:700;color:var(--cocoa)}
+.gate{gap:14px}
+.gate .gate-paste{width:min(100%,34em);text-align:left}
+.gate .gate-paste textarea{min-height:72px}
+
 /* ---- PDF ---- */
 .bt0{fill:var(--coral)} .bt1{fill:var(--sun)} .bt2{fill:var(--n-bg)} .bt3{fill:var(--l-bg)} .bt4{fill:var(--p-bg)} .bt5{fill:var(--w-bg)} .bt-line{stroke:var(--line-strong)}
 .outbox{display:flex;flex-direction:column;gap:8px;background:var(--paper-2);border-radius:18px;padding:12px 14px}
@@ -986,7 +994,7 @@ function defPat(){return {1:'N',2:'N',3:'N',4:'N',5:'N',6:'',0:''};}
 function normalize(s){
   if(!s||s.v!==1||!Array.isArray(s.staff)||!s.shifts||!s.ym) return null;
   s.facility=s.facility||{name:''};s.dayOverride=s.dayOverride||{};s.wishes=s.wishes||{};s.schedules=s.schedules||{};
-  s.rules=s.rules||{maxConsec:5,noLateEarly:true,wishLimit:3};s.mode=s.mode==='staff'?'staff':'admin';s.tc=s.tc||{breakMin:60,breakAfterH:6};s.tcSnap=s.tcSnap||{};s.punchAt=s.punchAt||0;if(!s.punches){s.punches=(s.sample&&HAS_TC)?samplePunches(s):{};if(s.sample&&HAS_TC&&!s.reqs) s.reqs=sampleReqs(s);}s.reqs=s.reqs||[];s.genMode=s.genMode||'auto';if(s.fillSubs==null) s.fillSubs=true;s.paid=s.paid||{};s.pin=s.pin||'';s.rc=s.rc||'';s.rcAt=s.rcAt||0;s.pinReq=s.pinReq||null;s.wishClosed=s.wishClosed||{};s.openDows=s.openDows||[1,2,3,4,5,6];
+  s.rules=s.rules||{maxConsec:5,noLateEarly:true,wishLimit:3};s.mode=s.mode==='staff'?'staff':'admin';s.tc=s.tc||{breakMin:60,breakAfterH:6};s.tcSnap=s.tcSnap||{};s.punchAt=s.punchAt||0;if(!s.punches){s.punches=(s.sample&&HAS_TC)?samplePunches(s):{};if(s.sample&&HAS_TC&&!s.reqs) s.reqs=sampleReqs(s);}s.reqs=s.reqs||[];s.genMode=s.genMode||'auto';if(s.fillSubs==null) s.fillSubs=true;s.lv=1;s.paid=s.paid||{};s.pin=s.pin||'';s.rc=s.rc||'';s.rcAt=s.rcAt||0;s.pinReq=s.pinReq||null;s.wishClosed=s.wishClosed||{};s.openDows=s.openDows||[1,2,3,4,5,6];
   normShifts(s);
   s.staff.forEach(p=>{p.can=p.can||{E:true,N:true,L:true};s.shiftIds.forEach(k=>{if(p.can[k]==null) p.can[k]=true;});p.dows=p.dows||[0,1,2,3,4,5,6];if(p.off==null) p.off=9;if(p.work==null) p.work=12;if(!p.pat) p.pat=defPat();if(!Array.isArray(p.quals)) p.quals=[];if(!p.hrs) p.hrs={on:false,start:'09:00',end:'13:00'};
     if(!Array.isArray(p.hrs.alt)) p.hrs.alt=[];p.hrs.alt=p.hrs.alt.filter(b=>b&&typeof b==='object').slice(0,HRS_MAX-1);p.hrs.alt.forEach(b=>{if(!Array.isArray(b.dows)) b.dows=[];});});if(!Array.isArray(s.qualList)) s.qualList=defQuals();s.qualList.forEach(q=>{if(q.wkAM==null){q.wkAM=q.wkPM=Number(q.wk)||0;q.weAM=q.wePM=Number(q.we)||0;}});if(!s.noon) s.noon='12:00';
@@ -997,7 +1005,7 @@ function touch(){const sc=S.schedules[S.ym];if(sc) sc.stale=true;save();}
 
 function blank(){
   const now=new Date();const nx=new Date(now.getFullYear(),now.getMonth()+1,1);
-  return {v:1,sample:false,mode:'admin',paid:{},pin:'',rc:'',rcAt:0,pinReq:null,wishClosed:{},qualList:defQuals(),noon:'12:00',reqs:[],genMode:'auto',fillSubs:true,punches:{},tc:{breakMin:60,breakAfterH:6},tcSnap:{},punchAt:0,view:'joken',facility:{name:''},ym:nx.getFullYear()+'-'+pad(nx.getMonth()+1),
+  return {v:1,lv:1,sample:false,mode:'admin',paid:{},pin:'',rc:'',rcAt:0,pinReq:null,wishClosed:{},qualList:defQuals(),noon:'12:00',reqs:[],genMode:'auto',fillSubs:true,punches:{},tc:{breakMin:60,breakAfterH:6},tcSnap:{},punchAt:0,view:'joken',facility:{name:''},ym:nx.getFullYear()+'-'+pad(nx.getMonth()+1),
     shifts:{E:{name:'早番',ab:'早',abAuto:true,col:0,start:'07:00',end:'16:00',wk:2,we:1},N:{name:'通常',ab:'通',abAuto:true,col:1,start:'08:30',end:'17:30',wk:2,we:1},L:{name:'遅番',ab:'遅',abAuto:true,col:2,start:'10:00',end:'19:00',wk:2,we:1}},shiftIds:['E','N','L'],
     openDows:[1,2,3,4,5,6],closeHolidays:true,dayOverride:{},rules:{maxConsec:5,noLateEarly:true,wishLimit:3},
     staff:[],wishes:{},schedules:{}};
@@ -1023,6 +1031,107 @@ function sample(){
   st.reqs=HAS_TC?sampleReqs(st):[];
   st.paid=HAS_TC?samplePaid(st):{};
   return st;
+}
+
+/* ---------- ご利用の登録（購入した事業所・特典の事業所だけが使える） ----------
+   利用リンク（…/#lic=〇〇）は、ほほえみカレッジが電子署名をつけて発行する。アプリには、たしかめるための公開かぎだけを入れる。
+   3つのアプリは同じ場所（hohoemi2018.github.io）にあるので、登録は3つで共有する（どのアプリを使えるかは利用リンクに書いてある）。
+   この仕組みを入れる前からデータがある端末は「これまでの端末」として、登録なしでそのまま使える（LEG_KEY）。 */
+const LIC_KEY='hohoemi-license-v1',LEG_KEY='hohoemi-legacy-v1';
+const LIC_PUB=[{"kty":"EC","crv":"P-256","x":"56AOz_HCMxeiFtEJnyAjqC86K4rvs-W7PpBglh_Y6s0","y":"V7o1woeb7wL57NxE9xOGu-PcS1GQx7eESvtBRPESJ_0"}];
+const APP_CODE=APP==='roster'?'k':APP==='timecard'?'t':'b';
+const APP_LABEL={k:'勤務表',t:'タイムカード',b:'勤務表・タイムカード'};
+const LIC={state:'checking',lic:null,expired:null,legacy:false,all:[],badUrl:false,justAdded:null};
+function legacyCheck(){
+  try{if(localStorage.getItem(LEG_KEY)) return true;}catch(e){return false;}
+  const found=['hohoemi-kinmuhyo-v1','hohoemi-timecard-v1','hohoemi-kinmuhyo-tc-v1'].some(k=>{try{const o=JSON.parse(localStorage.getItem(k)||'null');return !!(o&&o.v===1&&Array.isArray(o.staff)&&o.lv==null);}catch(e){return false;}});
+  if(found){try{localStorage.setItem(LEG_KEY,JSON.stringify({at:Date.now()}));}catch(e){}}
+  return found;
+}
+const LEGACY_AT_START=legacyCheck();
+function b64uDec(t){t=String(t).replace(/-/g,'+').replace(/_/g,'/');while(t.length%4) t+='=';const bin=atob(t);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++) u[i]=bin.charCodeAt(i);return u;}
+async function licVerify(tok){
+  try{
+    const p=String(tok||'').trim().split('.');if(p.length!==2) return null;
+    const data=b64uDec(p[0]),sig=b64uDec(p[1]);
+    for(const jwk of LIC_PUB){
+      const key=await crypto.subtle.importKey('jwk',jwk,{name:'ECDSA',namedCurve:'P-256'},false,['verify']);
+      if(await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},key,sig,data)){const o=JSON.parse(new TextDecoder().decode(data));if(o&&o.v===1&&Array.isArray(o.a)) return Object.assign(o,{tok:String(tok).trim()});}
+    }
+  }catch(e){}
+  return null;
+}
+function tokFrom(text){const t=String(text||'');const m=t.match(/lic=([A-Za-z0-9_-]+\.[A-Za-z0-9_-]+)/);if(m) return m[1];const x=t.trim();return /^[A-Za-z0-9_-]{20,}\.[A-Za-z0-9_-]{20,}$/.test(x)?x:null;}
+function ymdToday(){const d=new Date();return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());}
+function ymdLabel(x){const p=String(x).split('-').map(Number);return p[0]+'年'+p[1]+'月'+p[2]+'日';}
+function licReadToks(){try{const a=JSON.parse(localStorage.getItem(LIC_KEY)||'[]');return Array.isArray(a)?a.filter(x=>typeof x==='string'):[];}catch(e){return [];}}
+function licWriteToks(a){try{localStorage.setItem(LIC_KEY,JSON.stringify(a.slice(-10)));}catch(e){}}
+function licPick(){
+  const mine=LIC.all.filter(o=>(o.a||[]).indexOf(APP_CODE)>=0);const today=ymdToday();
+  const live=mine.filter(o=>!o.x||o.x>=today).sort((a,b)=>(a.x?1:0)-(b.x?1:0)||String(b.x).localeCompare(String(a.x)));
+  LIC.lic=live[0]||null;
+  LIC.expired=LIC.lic?null:(mine.slice().sort((a,b)=>String(b.x).localeCompare(String(a.x)))[0]||null);
+  LIC.state=LIC.lic?'ok':LIC.legacy?'legacy':LIC.expired?'expired':'none';
+}
+/* はじめに1回：アドレスの #lic= を取りこみ、保存してある利用リンクをたしかめる */
+async function licInit(){
+  LIC.legacy=LEGACY_AT_START;
+  let fromUrl=null;try{fromUrl=tokFrom(location.hash);}catch(e){}
+  const toks=licReadToks();if(fromUrl&&toks.indexOf(fromUrl)<0) toks.push(fromUrl);
+  const ok=[],keep=[];
+  if(window.crypto&&crypto.subtle){for(const t of toks){const o=await licVerify(t);if(o){ok.push(o);keep.push(t);}}}
+  else LIC.noCrypto=true;
+  if(fromUrl){
+    if(keep.indexOf(fromUrl)>=0){LIC.justAdded=ok.find(o=>o.tok===fromUrl)||null;} else LIC.badUrl=true;
+    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+  }
+  if(keep.length||fromUrl) licWriteToks(keep);
+  LIC.all=ok;licPick();
+}
+/* 利用リンクを貼り付けて登録する（LINEなどの中でリンクを開いてしまったとき） */
+async function licAddText(text){
+  const tok=tokFrom(text);if(!tok) return {ok:false,msg:'利用リンクが見つかりませんでした。届いたリンクを、そのまま全部貼り付けてください'};
+  const o=await licVerify(tok);if(!o) return {ok:false,msg:'利用リンクをたしかめられませんでした。リンクが途中で切れていないか、たしかめてください'};
+  const toks=licReadToks();if(toks.indexOf(tok)<0) toks.push(tok);licWriteToks(toks);
+  if(!LIC.all.some(x=>x.tok===tok)) LIC.all.push(o);const before=LIC.state;licPick();
+  return {ok:true,o:o,mine:(o.a||[]).indexOf(APP_CODE)>=0,before:before};
+}
+function licWho(o){return esc(o.n||'')+' 様（'+(o.g?'ほほえみカレッジ 特典':o.x?ymdLabel(o.x)+'まで':'期限なし')+'）';}
+function licDaysLeft(o){if(!o||!o.x) return null;const p=o.x.split('-').map(Number);const end=new Date(p[0],p[1]-1,p[2]);const t=new Date();t.setHours(0,0,0,0);return Math.round((end-t)/86400000);}
+/* 期限が切れたときに使えるボタン（見る・控え・PDFだけ） */
+const VIEW_ACTS={go:1,month:1,zmode:1,selp:1,allp:1,pdf:1,pdfprint:1,copyp:1,copytsv:1,savecsv:1,tcmonth:1,tcsel:1,tccopy:1,tccsv:1,tcsum:1,bkcopy:1,closemodal:1,licadd:1,me:1,stab:1,smonth:1,tcback:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,rccopy:1,cellclose:1,selw:1};
+const GATE_ACTS={licadd:1,closemodal:1};
+function licBar(){
+  if(LIC.state==='expired') return '<div class="licbar warn no-print" role="status"><b>ご利用の期限（'+ymdLabel(LIC.expired.x)+'）が切れています。</b>いまは見ることと、控え・PDFの保存だけできます。続けてお使いになるときは、合同会社発達支援ほほえみカレッジにご連絡ください。新しい利用リンクを開くと、そのまま使えます。</div>';
+  const d=licDaysLeft(LIC.lic);
+  if(LIC.state==='ok'&&d!=null&&d<=30&&S.mode!=='staff') return '<div class="licbar no-print" role="status">ご利用の期限は '+ymdLabel(LIC.lic.x)+' です（あと'+d+'日）。続けてお使いになるときは、合同会社発達支援ほほえみカレッジにご連絡ください。</div>';
+  return '';
+}
+function licSection(){
+  const st=LIC.state;let h='<section id="lic-sec"><h2>ご利用の登録</h2>';
+  if(st==='ok') h+='<p class="sum ok">'+licWho(LIC.lic)+'として登録されています。</p>';
+  else if(st==='legacy') h+='<p class="sum ok">この端末は、これまでお使いいただいている端末として、そのままお使いいただけます。</p>';
+  else if(st==='expired') h+='<p class="sum warn">ご利用の期限（'+ymdLabel(LIC.expired.x)+'）が切れています。</p>';
+  h+='<p class="hint">新しいパソコンやタブレットで使うときは、合同会社発達支援ほほえみカレッジからお送りした「利用リンク」を、その端末のいつものブラウザで開いてください。期限を延ばしたときの新しい利用リンクも、開くか、下に貼り付けると登録されます。</p>'
+    +'<details class="backup"><summary>利用リンクを貼り付けて登録する</summary><div><label for="lic-in" class="hint">利用リンク</label><textarea id="lic-in" rows="3"></textarea><button type="button" class="btn" data-act="licadd">登録する</button></div></details>';
+  return h+'</section>';
+}
+function viewGate(){
+  return '<div class="panel"><div class="empty gate">'+chick()+'<h2>ご利用の登録をお願いします</h2>'
+    +'<p>このアプリは、ご購入いただいた事業所でお使いいただけます。合同会社発達支援ほほえみカレッジからお送りした「利用リンク」を、いつもお使いのブラウザ（Chrome・Edge・Safari など）で開いてください。</p>'
+    +(LIC.noCrypto?'<p class="sum warn">このブラウザでは、利用リンクをたしかめられません。新しいブラウザで開いてください。</p>':'')
+    +(LIC.badUrl?'<p class="sum warn">利用リンクをたしかめられませんでした。リンクが途中で切れていないか、たしかめてください。</p>':'')
+    +(LIC.expired?'<p class="sum warn">ご利用の期限（'+ymdLabel(LIC.expired.x)+'）が切れています。</p>':'')
+    +'<details class="backup gate-paste"><summary>リンクを開いても、この画面のままのとき</summary><div>'
+    +'<p class="hint">LINEやメールのアプリの中でリンクを開くと、いつものブラウザには登録されません。リンクを長押しして「コピー」し、いつものブラウザでこのページを開いて、下に貼り付けてください。</p>'
+    +'<label for="lic-in" class="hint">利用リンク</label><textarea id="lic-in" rows="3"></textarea><button type="button" class="btn primary" data-act="licadd">登録する</button></div></details>'
+    +'<p class="hint">お問い合わせ：合同会社発達支援ほほえみカレッジ</p></div></div>';
+}
+function renderGate(){
+  $('#top').className='';
+  $('#top').innerHTML='<div class="hero"><div class="hero-art">'+scene()+'</div><div class="hero-text"><h1 id="apptitle"><span class="tw">ほほえみ</span>'+(HAS_ROSTER&&HAS_TC?'<span class="tw">勤務表・</span><span class="tw">タイムカード</span>':'<span class="tw">'+(HAS_ROSTER?'勤務表':'タイムカード')+'</span>')+'</h1><p class="lede">保育園・児童発達支援・放課後等デイサービスのための'+(HAS_ROSTER&&HAS_TC?'勤務表とタイムカード':HAS_ROSTER?'勤務表':'タイムカード')+'のアプリです。</p></div></div>';
+  $('#steps').hidden=true;$('#steps').innerHTML='';$('#main').innerHTML=viewGate();
+  $('#foot').innerHTML='<p class="credit">合同会社発達支援ほほえみカレッジ作アプリ</p>';
 }
 
 let S=load()||sample();
@@ -1197,7 +1306,7 @@ function viewJoken(){
     +'<div class="rule"><label for="r-max">つづけて勤務できるのは</label><input type="number" id="r-max" min="1" max="14" inputmode="numeric" data-bind="rules.maxConsec" value="'+esc(R.maxConsec)+'"><span>日まで</span></div>'
     +'<div class="rule" id="le-rule">'+leRuleHTML()+'</div>'
     +'<div class="rule"><label for="r-wish">希望休は1人あたり月</label><input type="number" id="r-wish" min="0" max="31" inputmode="numeric" data-bind="rules.wishLimit" value="'+esc(R.wishLimit)+'"><span>日まで（0にすると制限なし。有給は別に数えます）</span></div></section>'
-    +pinSection()+backupSection()+importSection()
+    +pinSection()+backupSection()+importSection()+licSection()
     +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="shokuin">つぎへ　職員を登録する</button></div></div>';
 }
 function pinSection(){
@@ -1269,7 +1378,7 @@ function backupSection(){
 function viewJokenTC(){
   return '<div class="panel">'
     +'<section><h2>園・事業所の名前</h2><input type="text" class="wide" id="fac-name" data-bind="facility.name" value="'+esc(S.facility.name)+'" placeholder="例：ほほえみ児童デイ" aria-label="園・事業所の名前"></section>'
-    +pinSection().replace('勤務表づくり','タイムカードの集計')+backupSection()
+    +pinSection().replace('勤務表づくり','タイムカードの集計')+backupSection()+licSection()
     +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="shokuin">つぎへ　職員を登録する</button></div></div>';
 }
 
@@ -1978,15 +2087,15 @@ function samplePaid(st){
 
 const VIEWS=HAS_ROSTER?{joken:viewJoken,shokuin:viewShokuin,kibou:viewKibou,zentai:viewZentai,kojin:viewKojin}:{joken:viewJoken,shokuin:viewShokuin,tc:viewTC};
 if(APP==='both') VIEWS.tc=viewTC;
-function renderMain(){syncSH();$('#main').innerHTML=S.mode==='staff'?viewStaff():(VIEWS[UI.view]||viewJoken)();}
+function renderMain(){syncSH();if(LIC.state==='checking') return;if(LIC.state==='none'){renderGate();return;}$('#main').innerHTML=licBar()+(S.mode==='staff'?viewStaff():(VIEWS[UI.view]||viewJoken)());}
 /* 見出し：園の名前が入っていれば「〇〇の勤務表」、空欄なら「ほほえみ勤務表」 */
 function appTitle(){const n=(S.facility.name||'').trim();const base=HAS_ROSTER&&HAS_TC?'勤務表・タイムカード':HAS_ROSTER?'勤務表':'タイムカード';return n?n+'の'+base:'ほほえみ'+base;}
 /* 配る版（単体のページとして開いたとき）は、ブラウザのタブの名前も見出しと同じにする */
 function titleHTML(){const n=(S.facility.name||'').trim();const t=appTitle();if(!n) return esc(t);return '<span class="tw">'+esc(n+'の')+'</span><span class="tw">'+esc(t.slice(n.length+1))+'</span>';}
 function syncTabTitle(){if(TOP){try{document.title=appTitle();}catch(e){}}}
 /* 作成者の表示は画面だけ（.foot は印刷に出ず、PDFにも入らない） */
-function renderFoot(){$('#foot').innerHTML='<p>入力した内容は、この端末のブラウザの中に保存されます。</p>'+(S.mode==='staff'?'<button type="button" class="btn quiet" data-act="adminlogin">管理者の方はこちら</button>':'')+'<p class="credit">合同会社発達支援ほほえみカレッジ作アプリ</p>';}
-function render(){syncSH();if(!VIEWS[UI.view]) UI.view='joken';renderTop();renderSteps();renderMain();renderFoot();syncTabTitle();}
+function renderFoot(){$('#foot').innerHTML=(LIC.state==='ok'?'<p class="licwho">ご利用：'+licWho(LIC.lic)+'</p>':'')+'<p>入力した内容は、この端末のブラウザの中に保存されます。</p>'+(S.mode==='staff'?'<button type="button" class="btn quiet" data-act="adminlogin">管理者の方はこちら</button>':'')+'<p class="credit">合同会社発達支援ほほえみカレッジ作アプリ</p>';}
+function render(){syncSH();if(LIC.state==='checking') return;if(LIC.state==='none'){renderGate();return;}if(!VIEWS[UI.view]) UI.view='joken';renderTop();renderSteps();renderMain();renderFoot();syncTabTitle();}
 
 /* ---------- 職員用の画面 ---------- */
 function publishedYms(){return Object.keys(S.schedules).filter(k=>S.schedules[k]&&S.schedules[k].published).sort();}
@@ -2457,6 +2566,12 @@ const ACT={
     S=s;UI.view=S.view||'joken';UI.selW=UI.selP=null;save();render();toast('控えから戻しました');
   },
   closemodal(){$('#modal').hidden=true;},
+  async licadd(){
+    const ta=$('#lic-in');const r=await licAddText(ta?ta.value:'');
+    if(!r.ok){toast(r.msg);return;}
+    if(!r.mine){toast('登録しました。この利用リンクで使えるのは「'+(r.o.a||[]).map(c=>APP_LABEL[c]).join('」「')+'」です');return;}
+    render();window.scrollTo(0,0);toast(r.o.n+' 様として登録しました');
+  },
   impgo(){UI.view='joken';UI.imp=null;render();impScroll();},
   impdev(){const R=readOld('roster'),T=readOld('tc');if(!R&&!T){toast('この端末には、取りこめるデータがありません');return;}UI.imp={R:R,T:T};UI.impMsg='';renderMain();impScroll();},
   imppaste(){
@@ -2538,11 +2653,13 @@ const CHG={
     const sm=$('#staffsum');if(sm) sm.outerHTML=staffSum(info);
   }
 };
-const STAFF_ACTS={brkpick:1,me:1,stab:1,smonth:1,wish:1,donewish:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,closemodal:1,rqopen:1,rqreason:1,rqsend:1,rqclose:1,rqcancel:1,punch:1,tcback:1};
+const STAFF_ACTS={licadd:1,brkpick:1,me:1,stab:1,smonth:1,wish:1,donewish:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,closemodal:1,rqopen:1,rqreason:1,rqsend:1,rqclose:1,rqcancel:1,punch:1,tcback:1};
 const sig=el=>el&&el.dataset&&el.dataset.act?[el.dataset.act,el.dataset.v||'',el.dataset.s||'',el.dataset.d||''].join('|'):null;
 document.addEventListener('click',e=>{
   const b=e.target.closest?e.target.closest('[data-act]'):null;if(!b||b.disabled) return;
   const fn=ACT[b.dataset.act];if(!fn) return;
+  if(LIC.state==='none'||LIC.state==='checking'){if(!GATE_ACTS[b.dataset.act]) return;}
+  else if(LIC.state==='expired'&&!VIEW_ACTS[b.dataset.act]){toast('ご利用の期限が切れているため、見ることだけできます');return;}
   if(S.mode==='staff'&&!STAFF_ACTS[b.dataset.act]) return;
   const key=sig(b);const wrap=$('.tbl-wrap');const sl=wrap?wrap.scrollLeft:0;const before=document.activeElement;
   fn(b.dataset.v,b);
@@ -2554,6 +2671,7 @@ document.addEventListener('click',e=>{
 });
 document.addEventListener('change',e=>{
   const el=e.target;if(!el||!el.dataset) return;
+  if(LIC.state!=='ok'&&LIC.state!=='legacy'){if(el.id!=='lic-in'&&(el.dataset.bind||el.dataset.chg)){toast(LIC.state==='expired'?'ご利用の期限が切れているため、見ることだけできます':'ご利用の登録をお願いします');renderMain();}return;}
   if(el.dataset.bind){
     let val;
     if(el.type==='checkbox') val=el.checked;
@@ -2570,7 +2688,7 @@ document.addEventListener('change',e=>{
 document.addEventListener('keydown',e=>{if(e.key!=='Escape') return;if(!$('#modal').hidden) $('#modal').hidden=true;if(!$('#cellm').hidden) closeCell();if(!$('#pin').hidden) closePin();});
 document.addEventListener('click',e=>{if(e.target&&e.target.id==='cellm') closeCell();});
 /* 暗証番号の欄でEnterを押したときも決定にする（フォームの送信は使わない） */
-document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.target&&e.target.id==='q-new'){e.preventDefault();ACT.qadd();}});
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.target&&e.target.id==='q-new'){e.preventDefault();if(LIC.state==='ok'||LIC.state==='legacy') ACT.qadd();}});
 document.addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.isComposing&&e.target&&e.target.closest&&e.target.closest('#pin-form')&&e.target.tagName==='INPUT'){e.preventDefault();if(e.target.id==='rc-in') rcUse();else if(e.target.id==='ul-in') ulUnlock();else pinSubmit();}});
 /* 職員用の画面で5分さわらなかったら、名前の選択にもどす（共有の端末なので） */
 let lastTouch=Date.now();
@@ -2583,7 +2701,21 @@ let themeBefore;
 window.addEventListener('beforeprint',()=>{themeBefore=document.documentElement.getAttribute('data-theme');document.documentElement.setAttribute('data-theme','light');});
 window.addEventListener('afterprint',()=>{if(themeBefore==null) document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',themeBefore);});
 
-render();
+/* アプリを開いたまま、同じタブで利用リンクを開いたとき（アドレスの # だけが変わる） */
+window.addEventListener('hashchange',()=>{
+  let t=null;try{t=tokFrom(location.hash);}catch(e){}if(!t) return;
+  licAddText(t).then(r=>{
+    try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+    if(!r.ok){LIC.badUrl=true;render();toast(r.msg);return;}
+    LIC.badUrl=false;render();window.scrollTo(0,0);
+    toast(r.mine?r.o.n+' 様として登録しました':'登録しました。この利用リンクで使えるのは「'+(r.o.a||[]).map(c=>APP_LABEL[c]).join('」「')+'」です');
+  });
+});
+licInit().catch(()=>{LIC.state=LIC.legacy?'legacy':'none';}).then(()=>{
+  render();
+  if(LIC.justAdded&&(LIC.justAdded.a||[]).indexOf(APP_CODE)>=0) toast(LIC.justAdded.n+' 様として登録しました');
+  else if(LIC.justAdded) toast('登録しました。この利用リンクで使えるのは「'+(LIC.justAdded.a||[]).map(c=>APP_LABEL[c]).join('」「')+'」です');
+});
 if(window.claude&&typeof window.claude.use==='function'){
   window.claude.use('downloads').then(ns=>{if(ns){DL=ns;if(UI.view==='zentai'||UI.view==='kojin'||UI.view==='tc'){const wrap=$('.tbl-wrap');const sl=wrap?wrap.scrollLeft:0;renderMain();const w2=$('.tbl-wrap');if(w2) w2.scrollLeft=sl;}}}).catch(()=>{});
 }
