@@ -1,12 +1,15 @@
-"""ほほえみ勤務表・ほほえみタイムカードを、1つの元ファイルから作り分ける。
+"""ほほえみ勤務表・ほほえみタイムカード・合わせたアプリを、1つの元ファイルから作り分ける。
 
 使い方（このリポジトリの一番上で）:
-    python3 _src/build.py                 # index.html（勤務表）と ../timecard/index.html（タイムカード）を作る
-    python3 _src/build.py --timecard PATH # タイムカードの出力先を指定する
+    python3 _src/build.py                 # 3つとも作る
+        index.html                        … 勤務表だけ（このリポジトリ）
+        ../timecard/index.html            … タイムカードだけ
+        ../kinmuhyo-timecard/index.html   … 勤務表とタイムカードを合わせたアプリ
+    python3 _src/build.py --both PATH     # 合わせたアプリの出力先を指定する（--kinmuhyo / --timecard も同じ）
 
 元ファイル _src/hohoemi-src.html の中の const APP='both'; を
-'roster'（勤務表だけ）/'timecard'（タイムカードだけ）に置きかえて、
-完全なHTML文書として書き出す。
+'roster'（勤務表だけ）/'timecard'（タイムカードだけ）/'both'（合わせたアプリ）に置きかえて、
+完全なHTML文書として書き出す。出力先のフォルダがないものはスキップする。
 """
 import argparse
 import os
@@ -36,9 +39,11 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('--kinmuhyo', default=os.path.join(REPO, 'index.html'))
     ap.add_argument('--timecard', default=os.path.join(os.path.dirname(REPO), 'timecard', 'index.html'))
+    ap.add_argument('--both', default=os.path.join(os.path.dirname(REPO), 'kinmuhyo-timecard', 'index.html'))
     a = ap.parse_args()
     src = open(SRC, encoding='utf-8').read()
-    for app, title, out in (('roster', 'ほほえみ勤務表', a.kinmuhyo), ('timecard', 'ほほえみタイムカード', a.timecard)):
+    for app, title, out in (('roster', 'ほほえみ勤務表', a.kinmuhyo), ('timecard', 'ほほえみタイムカード', a.timecard),
+                            ('both', 'ほほえみ勤務表・タイムカード', a.both)):
         if not os.path.isdir(os.path.dirname(out)):
             print('スキップ（フォルダがありません）:', out)
             continue

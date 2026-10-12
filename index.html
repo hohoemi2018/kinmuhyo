@@ -148,6 +148,7 @@ textarea{width:100%;min-height:84px;line-height:1.5}
 .wday{background:var(--paper-2);border-color:var(--line);color:var(--ink)}
 .wday.st-W{background:var(--w-bg);border-color:var(--w-bg);color:var(--w-fg)}
 .wday.st-P{background:var(--p-bg);border-color:var(--p-bg);color:var(--p-fg)}
+.wday.st-H{background:linear-gradient(135deg,var(--p-bg) 50%,var(--paper) 50%);border-color:var(--p-bg);color:var(--p-fg)}
 .wday:disabled{background:var(--closed-bg);border-color:transparent;color:var(--off-fg);cursor:default}
 
 /* ---- staff ---- */
@@ -161,6 +162,10 @@ textarea{width:100%;min-height:84px;line-height:1.5}
 .staff .chk span{min-width:38px;min-height:36px;padding:0 8px;background:var(--paper)}
 .staff .chk input:checked + span{background:var(--n-bg)}
 .st-note{font-size:13px;color:var(--muted)}
+.implist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:6px}
+.implist li{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:center;background:var(--paper-2);border-radius:12px;padding:8px 12px}
+.imp-fld{align-self:stretch}
+.imp-fld textarea{width:100%;min-height:64px}
 .delask{display:flex;flex-wrap:wrap;gap:8px;align-items:center;background:var(--warn-bg);color:var(--warn-fg);border-radius:12px;padding:8px 10px;font-weight:700;font-size:14px}
 .sum{border-radius:16px;padding:10px 14px;font-weight:500}
 .sum.ok{background:var(--ok-bg);color:var(--ok-fg)} .sum.warn{background:var(--warn-bg);color:var(--warn-fg)}
@@ -204,6 +209,10 @@ span.cellbtn{cursor:default}
 .cellbtn:focus-visible{outline-offset:-3px}
 .cE{background:var(--e-bg);color:var(--e-fg)} .cN{background:var(--n-bg);color:var(--n-fg)} .cL{background:var(--l-bg);color:var(--l-fg)}
 .cW{background:var(--w-bg);color:var(--w-fg)} .cP{background:var(--p-bg);color:var(--p-fg)} .cOff{color:var(--off-fg)}
+.cellbtn.hp{position:relative}
+.cellbtn.hp::after{content:'半';position:absolute;top:1px;right:1px;font-size:9px;line-height:1;font-weight:700;color:var(--p-fg);background:var(--p-bg);border-radius:3px;padding:1px 2px}
+.hpkey{display:inline-block;font-size:10px;line-height:1;font-weight:700;color:var(--p-fg);background:var(--paper);border-radius:3px;padding:1px 3px;margin-right:2px}
+.ohp{font-size:10px;font-weight:700;color:var(--p-fg)}
 .roster .tot{min-width:32px;background:var(--paper-2);padding:0 4px}
 .roster .tot.strong{font-weight:700}
 .roster tfoot td{font-weight:700}
@@ -246,6 +255,7 @@ span.cellbtn{cursor:default}
 .wday.is-locked{background:var(--paper-2);border-color:var(--line);color:var(--ink)}
 .wday.is-locked.st-W{background:var(--w-bg);border-color:var(--w-bg);color:var(--w-fg)}
 .wday.is-locked.st-P{background:var(--p-bg);border-color:var(--p-bg);color:var(--p-fg)}
+.wday.is-locked.st-H{background:linear-gradient(135deg,var(--p-bg) 50%,var(--paper) 50%);border-color:var(--p-bg);color:var(--p-fg)}
 .picker-head{display:flex;align-items:center;gap:14px}
 .picker-head .chick{width:72px;height:72px}
 .namegrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,170px),1fr));gap:10px}
@@ -265,6 +275,7 @@ span.cellbtn{cursor:default}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 .credit{font-size:11px;color:var(--muted);letter-spacing:.04em;margin-top:8px;opacity:.85}
 #apptitle{overflow-wrap:anywhere}
+#apptitle .tw{display:inline-block}
 #pin-form{display:flex;flex-direction:column;gap:12px}
 #pin-form input{width:100%;font-size:22px;letter-spacing:.3em;text-align:center}
 .pin-err{color:var(--warn-fg);background:var(--warn-bg);border-radius:10px;padding:6px 10px;font-weight:700}
@@ -330,6 +341,7 @@ span.cellbtn{cursor:default}
 .subkey{display:inline-block;padding:0 4px;box-shadow:inset 0 -3px 0 var(--coral);font-weight:700}
 .onsub{text-decoration:underline wavy var(--coral);text-underline-offset:3px}
 .psub{font-size:10px;font-weight:700;background:var(--paper);color:var(--coral-ink);border-radius:6px;padding:0 4px}
+.psub.hpsub{color:var(--p-fg)}
 /* ---- 打刻もれの申請 ---- */
 .step{position:relative}
 .stbadge{position:absolute;top:4px;right:6px;min-width:20px;height:20px;padding:0 5px;border-radius:999px;background:var(--sun-day);color:var(--paper);font-size:12px;line-height:20px;font-weight:700}
@@ -341,6 +353,7 @@ span.cellbtn{cursor:default}
 .rq-diff{font-variant-numeric:tabular-nums;font-size:14px;line-height:1.8}
 .tc-ap{color:var(--n-fg);background:var(--n-bg);border-radius:6px;padding:0 6px;font-weight:700;font-size:11px;margin-left:4px;white-space:nowrap}
 .tc-pl{color:var(--p-fg);background:var(--p-bg);border-radius:6px;padding:0 6px;font-weight:700;font-size:12px;margin-left:4px;white-space:nowrap}
+.tc-src{display:block;font-size:11px;color:var(--muted);white-space:nowrap}
 .tc-pd{display:block;font-size:12px;font-weight:500;color:var(--muted);white-space:normal;max-width:16em;margin-left:auto}
 .tc-brk-note{font-size:12px;color:var(--muted)}
 .tctable select{min-height:36px;padding:2px 6px;font-size:14px}
@@ -561,7 +574,10 @@ function qualReqs(S,day){const out=[];(S.qualList||[]).forEach(q=>{HALVES.forEac
 function qCount(S,cells,d,qid,h){return S.staff.filter(s=>{const t=(cells[s.id]||{})[d];return t&&(qid==null||hasQ(s,qid))&&coversHalf(S,s,t,h);}).length;}
 function reqOf(S,day,t){return day.open?Math.max(0,Number(S.shifts[t][day.kind])||0):0;}
 function wishOf(S,sid){return (S.wishes[S.ym]||{})[sid]||{};}
-function availCount(S,s,info){const w=wishOf(S,s.id);let c=0;info.days.forEach(day=>{if(day.open&&s.dows.indexOf(day.dow)>=0&&!w[day.d]) c++;});return c;}
+/* 希望の種類：W＝希望休、P＝有給（1日）、H＝有給（半日。その日は出勤の日として組む） */
+function offWish(v){return v==='W'||v==='P';}
+function paidDays(w){let n=0;for(const k in w){if(w[k]==='P') n+=1;else if(w[k]==='H') n+=0.5;}return n;}
+function availCount(S,s,info){const w=wishOf(S,s.id);let c=0;info.days.forEach(day=>{if(day.open&&s.dows.indexOf(day.dow)>=0&&!offWish(w[day.d])) c++;});return c;}
 /* その月に組む勤務日数。常勤は「月の日数 − 公休 − 有給」、パートは「勤務日数 − 有給」。 */
 function targetOf(S,s,info){
   const w=wishOf(S,s.id);let paid=0;for(const k in w){if(w[k]==='P') paid++;}
@@ -573,7 +589,7 @@ function generate(S){
   const info=monthInfo(S);const days=info.days,n=info.n;const R=S.rules;const maxC=Math.max(1,Number(R.maxConsec)||5);
   const staff=S.staff.map(s=>{
     const w=wishOf(S,s.id);const av=new Array(n+2).fill(false);
-    days.forEach(day=>{av[day.d]=day.open&&s.dows.indexOf(day.dow)>=0&&!w[day.d];});
+    days.forEach(day=>{av[day.d]=day.open&&s.dows.indexOf(day.dow)>=0&&!offWish(w[day.d]);});
     return {id:s.id,can:s.can,av:av,target:targetOf(S,s,info),quals:s.quals||[],src:s};
   });
   const rq=new Array(n+2).fill(null);
@@ -696,7 +712,7 @@ function prevYmOf(ym){const p=ym.split('-').map(Number);const d=new Date(p[0],p[
 function basePattern(S,info){
   const cells={};
   S.staff.forEach(s=>{const w=wishOf(S,s.id);const pat=s.pat||{};const c={};
-    info.days.forEach(day=>{if(!day.open||w[day.d]) return;const t=pat[day.dow];if(t&&SH.indexOf(t)>=0) c[day.d]=t;});
+    info.days.forEach(day=>{if(!day.open||offWish(w[day.d])) return;const t=pat[day.dow];if(t&&SH.indexOf(t)>=0) c[day.d]=t;});
     cells[s.id]=c;});
   return cells;
 }
@@ -707,16 +723,16 @@ function baseRepeat(S,info){
   const byDow={};pinfo.days.forEach(day=>{if(day.open)(byDow[day.dow]=byDow[day.dow]||[]).push(day.d);});
   const pw=S.wishes[pym]||{};
   /* 前の月に希望休・有給で休んだ日は、その曜日にいちばん多かった勤務で埋める */
-  const usual=(sid,dow)=>{const cnt={};(byDow[dow]||[]).forEach(d=>{if((pw[sid]||{})[d]) return;const t=(ps.cells[sid]||{})[d]||'';cnt[t]=(cnt[t]||0)+1;});let best='',bc=-1;Object.keys(cnt).forEach(t=>{if(cnt[t]>bc){bc=cnt[t];best=t;}});return best;};
+  const usual=(sid,dow)=>{const cnt={};(byDow[dow]||[]).forEach(d=>{if(offWish((pw[sid]||{})[d])) return;const t=(ps.cells[sid]||{})[d]||'';cnt[t]=(cnt[t]||0)+1;});let best='',bc=-1;Object.keys(cnt).forEach(t=>{if(cnt[t]>bc){bc=cnt[t];best=t;}});return best;};
   const occ={};const cells={};S.staff.forEach(s=>{cells[s.id]={};});
   info.days.forEach(day=>{
     const k=occ[day.dow]=(occ[day.dow]||0)+1;
     if(!day.open) return;const list=byDow[day.dow]||[];if(!list.length) return;
     const src=list[Math.min(k,list.length)-1];
     S.staff.forEach(s=>{
-      if(wishOf(S,s.id)[day.d]) return;
+      if(offWish(wishOf(S,s.id)[day.d])) return;
       let t=(ps.cells[s.id]||{})[src]||'';
-      if(!t&&(pw[s.id]||{})[src]) t=usual(s.id,day.dow);
+      if(!t&&offWish((pw[s.id]||{})[src])) t=usual(s.id,day.dow);
       if(t) cells[s.id][day.d]=t;
     });
   });
@@ -742,7 +758,7 @@ function fillSubs(S,info,cells){
       while(c[t]<need){
         let best=null,bc=Infinity;
         const qs=qShort(d,day);
-        S.staff.forEach(s=>{if(cells[s.id][d]||wishOf(S,s.id)[d]||!s.can[t]||s.dows.indexOf(day.dow)<0) return;if(runAt(s.id,d)>maxC||!leOK(s.id,d,t)) return;const cost=used[s.id]*10+work[s.id]+Math.random()*0.5-qs.filter(id=>hasQ(s,id)).length*40;if(cost<bc){bc=cost;best=s;}});
+        S.staff.forEach(s=>{if(cells[s.id][d]||offWish(wishOf(S,s.id)[d])||!s.can[t]||s.dows.indexOf(day.dow)<0) return;if(runAt(s.id,d)>maxC||!leOK(s.id,d,t)) return;const cost=used[s.id]*10+work[s.id]+Math.random()*0.5-qs.filter(id=>hasQ(s,id)).length*40;if(cost<bc){bc=cost;best=s;}});
         if(!best) break;cells[best.id][d]=t;subs[best.id][d]=1;used[best.id]++;work[best.id]++;c=cnt();
       }
     });
@@ -751,7 +767,7 @@ function fillSubs(S,info,cells){
       let have=qCount(S,cells,d,q.id,q.half);
       while(have<q.need){
         let best=null,bt='',bc=Infinity;
-        S.staff.forEach(s=>{if(!hasQ(s,q.id)||cells[s.id][d]||wishOf(S,s.id)[d]||s.dows.indexOf(day.dow)<0||runAt(s.id,d)>maxC) return;
+        S.staff.forEach(s=>{if(!hasQ(s,q.id)||cells[s.id][d]||offWish(wishOf(S,s.id)[d])||s.dows.indexOf(day.dow)<0||runAt(s.id,d)>maxC) return;
           const t=['N','E','L'].find(x=>s.can[x]&&leOK(s.id,d,x)&&coversHalf(S,s,x,q.half));if(!t) return;const cost=used[s.id]*10+work[s.id]+Math.random()*0.5;if(cost<bc){bc=cost;best=s;bt=t;}});
         if(!best) break;cells[best.id][d]=bt;subs[best.id][d]=1;used[best.id]++;work[best.id]++;have++;
       }
@@ -785,7 +801,7 @@ function check(S){
       if(run===0) start=day.d;
       run++;
       if(!day.open) issues.push(nm+'：'+dl(day.d)+' は休園日ですが、勤務が入っています');
-      else if(w[day.d]) issues.push(nm+'：'+dl(day.d)+' は'+(w[day.d]==='P'?'有給':'希望休')+'ですが、勤務が入っています');
+      else if(offWish(w[day.d])) issues.push(nm+'：'+dl(day.d)+' は'+(w[day.d]==='P'?'有給':'希望休')+'ですが、勤務が入っています');
       else if(auto&&s.dows.indexOf(day.dow)<0) issues.push(nm+'：'+DOW[day.dow]+'曜は勤務できない設定ですが、'+dl(day.d)+' に勤務が入っています');
       if(auto&&!s.can[t]) issues.push(nm+'：'+dl(day.d)+' の'+SHN[t]+'は、できない勤務に設定されています');
       if(auto&&R.noLateEarly&&t==='E'&&c[day.d-1]==='L') issues.push(nm+'：'+dl(day.d-1)+' 遅番の次の日が早番になっています');
@@ -808,7 +824,8 @@ function check(S){
 /*CORE-END*/
 
 /* ---------- 保存 ---------- */
-const KEY=APP==='timecard'?'hohoemi-timecard-v1':'hohoemi-kinmuhyo-v1';
+/* 保存場所（ブラウザの中）。アプリごとに別。合わせたアプリは、勤務表・タイムカードのデータとまざらないよう別の名前にする */
+const KEY=APP==='timecard'?'hohoemi-timecard-v1':APP==='both'?'hohoemi-kinmuhyo-tc-v1':'hohoemi-kinmuhyo-v1';
 const $=(q,r)=>(r||document).querySelector(q);
 const esc=v=>String(v==null?'':v).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
 const pad=v=>String(v).padStart(2,'0');
@@ -854,7 +871,7 @@ function sample(){
   const info=monthInfo(st);const wk=info.days.filter(d=>d.open&&d.kind==='wk').map(d=>d.d);
   const W=st.wishes[st.ym]={};
   const setW=(i,k,v)=>{if(wk[k]){const id=st.staff[i].id;(W[id]=W[id]||{})[wk[k]]=v;}};
-  setW(0,8,'W');setW(2,3,'W');setW(2,13,'P');setW(4,16,'W');setW(5,5,'W');
+  setW(0,8,'W');setW(2,3,'W');setW(2,13,'P');setW(4,16,'W');setW(5,5,'W');setW(3,10,'H');setW(6,6,'P');
   if(HAS_ROSTER) st.schedules[st.ym]={cells:generate(st),at:Date.now(),stale:false,edited:false,published:true};
   st.staff.forEach((p,i)=>{const o=SH.filter(t=>p.can[t]);const pt={};[0,1,2,3,4,5,6].forEach(d=>{pt[d]=(d!==0&&p.dows.indexOf(d)>=0&&(d!==6||i<3))?o[i%o.length]:'';});p.pat=pt;});
   st.staff[3].brk=90;
@@ -929,7 +946,7 @@ function calGrid(info,cellFn,cls){
 }
 function legend(noWish){
   return '<ul class="legend">'+SH.map(t=>'<li><span class="pill p'+t+'">'+icon(t)+SHN[t]+' '+fmtT(S.shifts[t].start)+'〜'+fmtT(S.shifts[t].end)+'</span></li>').join('')
-    +(noWish?'':'<li><span class="pill pW">希 希望休</span></li><li><span class="pill pP">有 有給</span></li>')
+    +(noWish?'':'<li><span class="pill pW">希 希望休</span></li><li><span class="pill pP">有 有給</span></li><li><span class="pill pP"><span class="hpkey">半</span>有給（半日）</span></li>')
     +(hasSubs()?'<li><span class="pill pO"><span class="subkey">下線</span>＝交代で入った勤務</span></li>':'')+'</ul>';
 }
 function hasSubs(){const sc=S.schedules[S.ym];return !!(sc&&sc.subs&&Object.keys(sc.subs).some(k=>Object.keys(sc.subs[k]).length));
@@ -943,14 +960,14 @@ function renderTop(){
   if(S.mode==='staff'){
     $('#top').className='';
     $('#top').innerHTML='<div class="hero"><div class="hero-art">'+scene()+'</div><div class="hero-text">'
-      +'<h1 id="apptitle">'+esc(appTitle())+'</h1><span class="modepill">職員用の画面</span>'
+      +'<h1 id="apptitle">'+titleHTML()+'</h1><span class="modepill">職員用の画面</span>'
       +'<p class="lede">'+(!HAS_ROSTER?'名前をえらんで、出勤・退勤を押してください。':HAS_TC?'名前をえらんで、タイムカードを押したり、休みの希望を入れたり、勤務表を見たりできます。':'名前をえらんで、休みの希望を入れたり、勤務表を見たりできます。')+'</p></div></div>';
     return;
   }
   if(!HAS_ROSTER){
     $('#top').className='';
     $('#top').innerHTML='<div class="hero"><div class="hero-art">'+scene()+'</div><div class="hero-text">'
-      +'<h1 id="apptitle">'+esc(appTitle())+'</h1>'
+      +'<h1 id="apptitle">'+titleHTML()+'</h1>'
       +'<p class="lede no-print">職員が出勤・退勤を押すと時刻を記録し、1日と1か月の勤務時間を自動で計算します。</p>'
       +'<div class="monthbar no-print"><button type="button" class="btn tostaff" data-act="tostaff">職員用の画面にする</button></div></div></div>'
       +(S.sample?'<div class="sample no-print"><p>いまは見本として、サンプルの職員と打刻が入っています。①から順に入力すると、ご自分の事業所のタイムカードになります。</p><button type="button" class="btn primary" data-act="clearsample">サンプルを消してはじめる</button></div>':'');
@@ -958,13 +975,15 @@ function renderTop(){
   }
   const info=INFO();const openN=info.days.filter(d=>d.open).length;
   $('#top').innerHTML='<div class="hero"><div class="hero-art">'+scene()+'</div><div class="hero-text">'
-    +'<h1 id="apptitle">'+esc(appTitle())+'</h1>'
-    +'<p class="lede no-print">休みの希望を入れると、園の条件に合わせて来月の勤務表を自動で作ります。</p>'
+    +'<h1 id="apptitle">'+titleHTML()+'</h1>'
+    +'<p class="lede no-print">休みの希望を入れると、園の条件に合わせて来月の勤務表を自動で作ります。'+(HAS_TC?'出勤・退勤の記録と勤務時間の集計もできます。':'')+'</p>'
     +'<div class="monthbar no-print"><button type="button" class="mbtn" data-act="month" data-v="-1" aria-label="前の月へ">‹</button>'
     +'<strong class="mlabel">'+info.y+'年'+info.m+'月</strong>'
     +'<button type="button" class="mbtn" data-act="month" data-v="1" aria-label="次の月へ">›</button>'
     +'<span class="mnote">開園日 '+openN+'日</span><button type="button" class="btn tostaff" data-act="tostaff">職員用の画面にする</button></div></div></div>'
-    +(S.sample?'<div class="sample no-print"><p>いまは見本として、サンプルの園と職員が入っています。①から順に入力すると、ご自分の園の勤務表になります。</p><button type="button" class="btn primary" data-act="clearsample">サンプルを消してはじめる</button></div>':'');
+    +(S.sample?'<div class="sample no-print"><p>いまは見本として、サンプルの園と職員が入っています。①から順に入力すると、ご自分の園の勤務表になります。'+(APP==='both'&&(readOld('roster')||readOld('tc'))?'これまでの勤務表・タイムカードのデータを取りこむこともできます。':'')+'</p>'
+      +(APP==='both'&&(readOld('roster')||readOld('tc'))?'<button type="button" class="btn primary" data-act="impgo">これまでのデータを取りこむ</button>':'')
+      +'<button type="button" class="btn'+(APP==='both'&&(readOld('roster')||readOld('tc'))?'':' primary')+'" data-act="clearsample">サンプルを消してはじめる</button></div>':'');
   $('#top').className=UI.view==='zentai'||UI.view==='kojin'?'no-print':'';
 }
 const STEPS=HAS_ROSTER?[['joken','条件'],['shokuin','職員'],['kibou','希望休'],['zentai','勤務表'],['kojin','個人表']]:[['joken','設定'],['shokuin','職員'],['tc','タイムカード']];
@@ -1002,7 +1021,7 @@ function viewJoken(){
     +'<div class="rule"><label for="r-max">つづけて勤務できるのは</label><input type="number" id="r-max" min="1" max="14" inputmode="numeric" data-bind="rules.maxConsec" value="'+esc(R.maxConsec)+'"><span>日まで</span></div>'
     +'<div class="rule"><label class="chk"><input type="checkbox" id="r-le" data-bind="rules.noLateEarly"'+(R.noLateEarly?' checked':'')+'><span>遅番の次の日に早番を入れない</span></label></div>'
     +'<div class="rule"><label for="r-wish">希望休は1人あたり月</label><input type="number" id="r-wish" min="0" max="31" inputmode="numeric" data-bind="rules.wishLimit" value="'+esc(R.wishLimit)+'"><span>日まで（0にすると制限なし。有給は別に数えます）</span></div></section>'
-    +pinSection()+backupSection()
+    +pinSection()+backupSection()+importSection()
     +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="shokuin">つぎへ　職員を登録する</button></div></div>';
 }
 function pinSection(){
@@ -1015,6 +1034,55 @@ function pinSection(){
     +'<div class="row"><button type="button" class="btn" data-act="pinchange">'+(S.pin?'暗証番号を変える':'暗証番号を決める')+'</button>'
     +(S.pin?'<button type="button" class="btn" data-act="rcnew">'+(S.rc?'予備のコードを作り直す':'予備のコードを作る')+'</button>':'')+'</div></section>';
 }
+/* ---------- これまでのアプリから取りこむ（合わせたアプリだけ） ----------
+   同じ端末・同じブラウザなら、ほほえみ勤務表（hohoemi-kinmuhyo-v1）と、ほほえみタイムカード（hohoemi-timecard-v1）の
+   データを読める（どちらも hohoemi2018.github.io にあるため）。読むだけで、もとのデータは変えない */
+const OLD_KEYS={roster:'hohoemi-kinmuhyo-v1',tc:'hohoemi-timecard-v1'};
+function parseOld(text){try{const o=JSON.parse(text);if(!o||typeof o!=='object') return null;if(!o.punches) o.punches={};if(!o.reqs) o.reqs=[];if(!o.paid) o.paid={};return normalize(o);}catch(e){return null;}}
+function readOld(kind){if(APP!=='both') return null;let t=null;try{t=localStorage.getItem(OLD_KEYS[kind]);}catch(e){}return t?parseOld(t):null;}
+const nameKey=n=>String(n||'').replace(/[\s　]/g,'');
+function mergeOld(R,T){
+  const base=JSON.parse(JSON.stringify(R||T));const rep={same:0,added:0,staff:0,pin:''};
+  if(R&&T){
+    const map={},used={};
+    T.staff.forEach(ts=>{
+      const m=base.staff.find(bs=>!used[bs.id]&&nameKey(bs.name)&&nameKey(bs.name)===nameKey(ts.name));
+      if(m){used[m.id]=1;map[ts.id]=m.id;if(ts.brk!=null) m.brk=ts.brk;rep.same++;}
+      else{let id=ts.id;if(base.staff.some(x=>x.id===id)) id=uid();base.staff.push({id:id,name:ts.name,brk:ts.brk!=null?ts.brk:null});map[ts.id]=id;rep.added++;}
+    });
+    const mid=id=>map[id]||id;
+    const remap=src=>{const out={};Object.keys(src||{}).forEach(k=>{const d=src[k],nd={};Object.keys(d).forEach(id=>{nd[mid(id)]=d[id];});out[k]=nd;});return out;};
+    base.punches=remap(T.punches);base.paid=remap(T.paid);
+    base.reqs=(T.reqs||[]).map(q=>Object.assign({},q,{sid:mid(q.sid)}));
+    base.tc=Object.assign({},T.tc);base.tcSnap={};
+    if(!(base.facility.name||'').trim()&&T.facility&&T.facility.name) base.facility.name=T.facility.name;
+    if(!base.pin&&T.pin){base.pin=T.pin;base.rc=T.rc||'';base.rcAt=T.rcAt||0;rep.pin='tc';}
+    else if(base.pin&&T.pin&&base.pin!==T.pin) rep.pin='roster';
+  }
+  if(!R){base.schedules={};base.wishes={};}
+  if(!T){base.punches={};base.reqs=[];base.paid={};base.tcSnap={};}
+  base.sample=false;base.mode='admin';base.view='joken';base.punchAt=Date.now();base.pinReq=null;
+  const st=normalize(base);rep.staff=st?st.staff.length:0;
+  return {state:st,rep:rep};
+}
+function importSection(){
+  if(APP!=='both') return '';
+  const R=readOld('roster'),T=readOld('tc');
+  const line=(lab,o,extra)=>'<li><b>'+lab+'</b>'+(o?'<span class="pill pN">見つかりました</span><span class="hint">'+((o.facility.name||'').trim()?esc(o.facility.name)+'・':'')+'職員 '+o.staff.length+'人'+extra(o)+'</span>':'<span class="pill pO">この端末にはありません</span>')+'</li>';
+  const q=UI.imp;
+  return '<section id="imp-sec"><h2>これまでの勤務表・タイムカードから取りこむ</h2>'
+    +'<p class="hint">「ほほえみ勤務表」と「ほほえみタイムカード」を別々に使っていたときは、そのデータをこのアプリに取りこめます。同じ名前の職員は1人にまとめます。もとのアプリのデータは消えません。</p>'
+    +'<ul class="implist">'+line('勤務表のアプリ',R,o=>'・勤務表 '+Object.keys(o.schedules||{}).length+'か月分')+line('タイムカードのアプリ',T,o=>'・打刻 '+Object.keys(o.punches||{}).length+'日分')+'</ul>'
+    +(q?'<div class="delask" id="imp-ask"><span>いまこのアプリに入っている内容は、取りこむデータに入れかわります。よろしいですか？（取りこむもの：'+[q.R?'勤務表':'',q.T?'タイムカード':''].filter(Boolean).join('と')+'）</span><button type="button" class="btn primary" data-act="impyes">取りこむ</button><button type="button" class="btn quiet" data-act="impno">やめる</button></div>'
+      :'<div class="row"><button type="button" class="btn primary" data-act="impdev"'+(R||T?'':' disabled')+'>この端末のデータを取りこむ</button></div>')
+    +(UI.impMsg?'<p class="sum ok" id="imp-msg" role="status">'+UI.impMsg+'</p>':'')
+    +'<details class="backup" id="imp-paste"><summary>別のパソコン・タブレットのデータを取りこむ（控えを貼り付ける）</summary><div>'
+    +'<p class="hint">それぞれのアプリの「①」の画面の一番下「データの控えをとる・戻す」→「控えをコピー」でコピーした文字を、下に貼り付けてください。片方だけでもかまいません。</p>'
+    +'<label class="fld imp-fld" for="imp-r"><span>勤務表の控え</span><textarea id="imp-r" rows="3"></textarea></label>'
+    +'<label class="fld imp-fld" for="imp-t"><span>タイムカードの控え</span><textarea id="imp-t" rows="3"></textarea></label>'
+    +'<button type="button" class="btn" data-act="imppaste">貼り付けた控えを取りこむ</button></div></details></section>';
+}
+function impScroll(){const f=$('#imp-sec');if(f) f.scrollIntoView({block:'start'});}
 function backupSection(){
   return '<section><details class="backup"><summary>データの控えをとる・戻す</summary><div>'
     +'<p class="hint">入力した内容はこの端末のブラウザに保存されます。別のパソコンで使うときや、もしものときのために、控えをコピーしてメモ帳などに保管できます。</p>'
@@ -1072,14 +1140,17 @@ function staffSum(info){
   return '<p id="staffsum" class="sum '+(ok?'ok':'warn')+'">'+info.m+'月に必要な勤務は のべ'+need+'日、いまの職員の勤務予定は 合計'+have+'日です。'
     +(ok?'':'あと'+(need-have)+'日ぶん足りません。公休を減らすか、勤務日数を増やすか、職員を追加してください。')+'</p>';
 }
+function brkRow(s){const id=s.id;
+  return '<div class="st-row"><label class="lab" for="sb-'+id+'">ふだんの休憩</label><select id="sb-'+id+'" data-chg="sf" data-k="brk" data-sid="'+id+'">'
+    +'<option value=""'+(s.brk==null||s.brk===''?' selected':'')+'>事業所の基本（'+fmtBrk(S.tc.breakMin)+'）</option>'
+    +BRK_OPTS.map(v=>'<option value="'+v+'"'+(s.brk!=null&&s.brk!==''&&Number(s.brk)===v?' selected':'')+'>'+fmtBrk(v)+'</option>').join('')+'</select></div>';
+}
 function viewShokuinTC(){
   const cards=S.staff.map(s=>{const id=s.id;
     return '<article class="staff"><div class="st-head">'
       +'<input type="text" id="sn-'+id+'" data-chg="sf" data-k="name" data-sid="'+id+'" value="'+esc(s.name)+'" placeholder="なまえ" aria-label="なまえ">'
       +'<button type="button" class="iconbtn" data-act="askdel" data-v="'+id+'" aria-label="'+esc(s.name)+'さんを削除">×</button></div>'
-      +'<div class="st-row"><label class="lab" for="sb-'+id+'">ふだんの休憩</label><select id="sb-'+id+'" data-chg="sf" data-k="brk" data-sid="'+id+'">'
-      +'<option value=""'+(s.brk==null||s.brk===''?' selected':'')+'>事業所の基本（'+fmtBrk(S.tc.breakMin)+'）</option>'
-      +BRK_OPTS.map(v=>'<option value="'+v+'"'+(s.brk!=null&&s.brk!==''&&Number(s.brk)===v?' selected':'')+'>'+fmtBrk(v)+'</option>').join('')+'</select></div>'
+      +brkRow(s)
       +(UI.confirmDel===id?'<div class="delask"><span>この職員を削除しますか？タイムカードの記録も消えます。</span><button type="button" class="btn" data-act="delstaff" data-v="'+id+'">削除する</button><button type="button" class="btn quiet" data-act="askdel" data-v="">やめる</button></div>':'')
       +'</article>';}).join('');
   return '<div class="panel"><section><h2>職員の登録</h2>'
@@ -1109,12 +1180,12 @@ function viewShokuin(){
       +'<input type="text" id="sn-'+id+'" data-chg="sf" data-k="name" data-sid="'+id+'" value="'+esc(s.name)+'" placeholder="なまえ" aria-label="なまえ">'
       +'<select id="sy-'+id+'" data-chg="sf" data-k="type" data-sid="'+id+'" aria-label="はたらき方"><option value="full"'+(part?'':' selected')+'>常勤</option><option value="part"'+(part?' selected':'')+'>パート</option></select>'
       +'<button type="button" class="iconbtn" data-act="askdel" data-v="'+id+'" aria-label="'+esc(s.name)+'さんを削除">×</button></div>'
-      +(UI.confirmDel===id?'<div class="delask"><span>この職員を削除しますか？</span><button type="button" class="btn" data-act="delstaff" data-v="'+id+'">削除する</button><button type="button" class="btn quiet" data-act="askdel" data-v="">やめる</button></div>':'')
+      +(UI.confirmDel===id?'<div class="delask"><span>この職員を削除しますか？'+(HAS_TC?'タイムカードの記録も消えます。':'')+'</span><button type="button" class="btn" data-act="delstaff" data-v="'+id+'">削除する</button><button type="button" class="btn quiet" data-act="askdel" data-v="">やめる</button></div>':'')
       +'<div class="st-row"><span class="lab">勤務時間</span><div class="hrsrow"><label class="chk"><input type="checkbox" id="sh-'+id+'-on" data-chg="sf" data-k="hrson" data-sid="'+id+'"'+(ownHrs(s)?' checked':'')+'><span>この人だけの時間にする</span></label>'
         +(s.hrs&&s.hrs.on?'<input type="time" id="sh-'+id+'-st" aria-label="はじまり" data-chg="sf" data-k="hrsst" data-sid="'+id+'" value="'+esc(s.hrs.start)+'"><span>〜</span><input type="time" id="sh-'+id+'-en" aria-label="おわり" data-chg="sf" data-k="hrsen" data-sid="'+id+'" value="'+esc(s.hrs.end)+'">':'<span class="hint">シフトの時間で働きます</span>')
         +'</div><span class="st-note" id="hn-'+id+'">'+hrsNote(s)+'</span></div>'
       +'<div class="st-row"><span class="lab">資格</span><div class="row">'+(S.qualList||[]).map(q=>'<label class="chk" title="'+esc(q.name)+'"><input type="checkbox" id="sq-'+id+'-'+q.id+'" data-chg="sf" data-k="qual" data-v="'+q.id+'" data-sid="'+id+'"'+(hasQ(s,q.id)?' checked':'')+' aria-label="'+esc(q.name)+'"><span>'+esc(qLabel(q))+'</span></label>').join('')+'</div></div>'
-      +(fixed?patRow(s):'')
+      +(fixed?patRow(s):'')+(HAS_TC?brkRow(s):'')
       +'<div class="st-row"><span class="lab">'+(auto?'できる勤務':'代わりに入れる勤務')+'</span><div class="row">'+SH.map(t=>'<label class="chk"><input type="checkbox" id="sc-'+id+'-'+t+'" data-chg="sf" data-k="can" data-v="'+t+'" data-sid="'+id+'"'+(s.can[t]?' checked':'')+'><span>'+SHN[t]+'</span></label>').join('')+'</div></div>'
       +'<div class="st-row"><span class="lab">'+(auto?'勤務できる曜日':'代わりに入れる曜日')+'</span><div class="row">'+[1,2,3,4,5,6,0].map(d=>'<label class="chk"><input type="checkbox" id="sd-'+id+'-'+d+'" data-chg="sf" data-k="dow" data-v="'+d+'" data-sid="'+id+'"'+(s.dows.indexOf(d)>=0?' checked':'')+'><span>'+DOW[d]+'</span></label>').join('')+'</div></div>'
       +(auto?'<div class="st-row"><label class="lab" for="st-'+id+'">'+(part?'月の勤務日数':'月の公休（お休み）の日数')+'</label><div class="row">'
@@ -1137,13 +1208,13 @@ function wishCal(s,locked){
   const info=INFO();const w=wishOf(S,s.id);
   return calGrid(info,day=>{
     const ok=day.open&&s.dows.indexOf(day.dow)>=0;const st=w[day.d]||'';
-    const lab=!day.open?'休園':!ok?'勤務なし':st==='W'?'希望休':st==='P'?'有給':'';
+    const lab=!day.open?'休園':!ok?'勤務なし':st==='W'?'希望休':st==='P'?'有給':st==='H'?'有給(半日)':'';
     return '<button type="button" class="wday'+(st?' st-'+st:'')+(ok&&locked?' is-locked':'')+'" data-act="wish" data-v="'+day.d+'" data-s="'+s.id+'"'+(ok&&!locked?'':' disabled')+' aria-label="'+day.d+'日（'+DOW[day.dow]+'）'+(lab||'希望なし')+'"><b>'+day.d+'</b><small>'+(lab||'&nbsp;')+'</small></button>';
   });
 }
 function wishCounts(s){
   const w=wishOf(S,s.id);const lim=Number(S.rules.wishLimit)||0;const cnt=k=>Object.keys(w).filter(d=>w[d]===k).length;
-  return '<span class="pill pW">希望休 '+cnt('W')+(lim?' / '+lim:'')+'日</span><span class="pill pP">有給 '+cnt('P')+'日</span>';
+  return '<span class="pill pW">希望休 '+cnt('W')+(lim?' / '+lim:'')+'日</span><span class="pill pP">有給 '+(Math.round(paidDays(w)*10)/10)+'日</span>';
 }
 function viewKibou(){
   const info=INFO();
@@ -1153,13 +1224,13 @@ function viewKibou(){
   const chips=S.staff.map(p=>{const pw=wishOf(S,p.id);const k=Object.keys(pw).length;return '<button type="button" class="chip" data-act="selw" data-v="'+p.id+'" aria-pressed="'+(p.id===s.id)+'">'+esc(p.name||'名前なし')+(k?'<small>'+k+'</small>':'')+'</button>';}).join('');
   const list=S.staff.map(p=>{
     const pw=wishOf(S,p.id);const ds=Object.keys(pw).map(Number).sort((a,b)=>a-b);
-    return '<li><b>'+esc(p.name||'名前なし')+'</b><span class="row">'+(ds.length?ds.map(d=>'<span class="pill '+(pw[d]==='P'?'pP':'pW')+'">'+d+'日('+DOW[info.days[d-1].dow]+') '+(pw[d]==='P'?'有給':'希望休')+'</span>').join(''):'<span class="hint">希望なし</span>')+'</span></li>';
+    return '<li><b>'+esc(p.name||'名前なし')+'</b><span class="row">'+(ds.length?ds.map(d=>'<span class="pill '+(pw[d]==='W'?'pW':'pP')+'">'+d+'日('+DOW[info.days[d-1].dow]+') '+(pw[d]==='P'?'有給':pw[d]==='H'?'有給（半日）':'希望休')+'</span>').join(''):'<span class="hint">希望なし</span>')+'</span></li>';
   }).join('');
   return '<div class="panel"><section><h2>'+info.m+'月の休みの希望</h2>'
     +'<div class="accept"><span class="pill '+(closed?'pO':'pN')+'">'+(closed?'受付を締め切りました':'職員からの受付中')+'</span>'
     +'<span class="hint">'+(closed?'職員用の画面では、希望を変えられません。':'職員用の画面から、職員が自分で希望を入れられます。')+'</span>'
     +'<button type="button" class="btn" data-act="wishtoggle">'+(closed?'受付を再開する':'受付を締め切る')+'</button></div>'
-    +'<p class="hint">職員に自分で入れてもらうときは、上の「職員用の画面にする」を押してから端末を渡してください。この画面では、管理者がだれの分でも入力・修正できます（タップで「希望休 → 有給 → なし」）。</p>'
+    +'<p class="hint">職員に自分で入れてもらうときは、上の「職員用の画面にする」を押してから端末を渡してください。この画面では、管理者がだれの分でも入力・修正できます（タップで「希望休 → 有給 → 有給（半日） → なし」）。半日の有給の日は、出勤の日として勤務表を組みます。</p>'
     +'<div class="chips">'+chips+'</div></section>'
     +'<section><div class="row"><h2>'+esc(s.name||'名前なし')+' さん</h2>'+wishCounts(s)+'</div>'+wishCal(s,false)+'</section>'
     +'<section><h2>みんなの希望</h2><ul class="wishlist">'+list+'</ul></section>'
@@ -1178,10 +1249,11 @@ function rosterTable(inter,meId){
     h+='<tr'+(meId===s.id?' class="me"':'')+'><th scope="row" class="namecol">'+esc(s.name||'名前なし')+'<small>'+(ownHrs(s)?fmtT(s.hrs.start)+'〜'+fmtT(s.hrs.end)+' ':'')+(s.type==='part'?'パート':'常勤')+((s.quals||[]).length?'・'+(s.quals||[]).map(id=>{const q=qById(id);return q?esc(qLabel(q)):'';}).filter(Boolean).join('・'):'')+'</small></th>';
     info.days.forEach(day=>{
       const t=c[day.d];let cls,txt,lab;
-      if(t){cls='c'+t+(sb[day.d]?' sub':'');txt=SHS[t];lab=SHN[t]+(sb[day.d]?'（交代）':'');}
+      if(t){cls='c'+t+(sb[day.d]?' sub':'')+(w[day.d]==='H'?' hp':'');txt=SHS[t];lab=SHN[t]+(sb[day.d]?'（交代）':'')+(w[day.d]==='H'?'（半日有給）':'');}
       else if(!day.open){h+='<td class="closed"></td>';return;}
       else if(w[day.d]==='W'){cls='cW';txt='希';lab='希望休';}
       else if(w[day.d]==='P'){cls='cP';txt='有';lab='有給';}
+      else if(w[day.d]==='H'){cls='cP';txt='半';lab='有給（半日）';}
       else{cls='cOff';txt='・';lab='休み';}
       h+=inter?'<td><button type="button" class="cellbtn '+cls+'" data-act="cell" data-s="'+s.id+'" data-d="'+day.d+'" aria-label="'+esc(s.name)+' '+day.d+'日 '+lab+'">'+txt+'</button></td>'
         :'<td><span class="cellbtn '+cls+'">'+txt+'</span></td>';
@@ -1252,7 +1324,7 @@ function overallCal(){
   return calGrid(info,day=>{
     const dc=(day.holiday||day.dow===0)?'sunc':day.dow===6?'satc':'';
     const by={E:[],N:[],L:[]};
-    S.staff.forEach(s=>{const t=(sc.cells[s.id]||{})[day.d];if(t){const sub=sc.subs&&sc.subs[s.id]&&sc.subs[s.id][day.d];by[t].push(sub?'<span class="onsub">'+esc(nm[s.id])+'</span>':esc(nm[s.id]));}});
+    S.staff.forEach(s=>{const t=(sc.cells[s.id]||{})[day.d];if(t){const sub=sc.subs&&sc.subs[s.id]&&sc.subs[s.id][day.d];const hp=wishOf(S,s.id)[day.d]==='H'?'<small class="ohp">(半有)</small>':'';by[t].push((sub?'<span class="onsub">'+esc(nm[s.id])+'</span>':esc(nm[s.id]))+hp);}});
     let h='<div class="oday'+(day.open?'':' closed')+'"><div class="oday-top"><b class="'+dc+'">'+day.d+'</b>'+(day.holiday?'<small>'+esc(day.holiday)+'</small>':'')+'</div>';
     if(!day.open&&!by.E.length&&!by.N.length&&!by.L.length) return h+'<span class="oclosed">休園</span></div>';
     SH.forEach(t=>{
@@ -1311,9 +1383,10 @@ function personalSheet(s){
     if(t){cnt[t]++;cls='t-'+t;lab=SHN[t];const sp=spanOf(S,s,t);time=fmtT(timeOf(sp[0]))+'<br>〜'+fmtT(timeOf(sp[1]));}
     else if(!day.open){cls='t-closed';lab='休園';}
     else if(w[day.d]==='P'){cls='t-P';lab='有給';}
+    else if(w[day.d]==='H'){cls='t-P';lab='有給(半日)';}
     else if(w[day.d]==='W'){cls='t-W';lab='希望休';}
     else{cls='t-off';lab='休み';}
-    return '<div class="pday '+cls+'"><b class="pnum">'+day.d+'</b><span class="plab">'+lab+'</span>'+(time?'<small class="ptime">'+time+'</small>':'')+(t&&sb[day.d]?'<small class="psub">交代</small>':'')+'</div>';
+    return '<div class="pday '+cls+'"><b class="pnum">'+day.d+'</b><span class="plab">'+lab+'</span>'+(time?'<small class="ptime">'+time+'</small>':'')+(t&&sb[day.d]?'<small class="psub">交代</small>':'')+(t&&w[day.d]==='H'?'<small class="psub hpsub">半日有給</small>':'')+'</div>';
   },'pcal');
   const work=cnt.E+cnt.N+cnt.L;
   return '<article class="psheet">'+bunting()
@@ -1328,9 +1401,10 @@ function personalText(s){
   const lines=[(S.facility.name?'【'+S.facility.name+'】':'')+info.y+'年'+info.m+'月の勤務表',(s.name||'名前なし')+' さん',''];
   info.days.forEach(day=>{
     const t=c[day.d];let x;
-    if(t){cnt[t]++;const sp=spanOf(S,s,t);x=SHN[t]+' '+fmtT(timeOf(sp[0]))+'〜'+fmtT(timeOf(sp[1]))+(sc&&sc.subs&&sc.subs[s.id]&&sc.subs[s.id][day.d]?'（交代）':'');}
+    if(t){cnt[t]++;const sp=spanOf(S,s,t);x=SHN[t]+' '+fmtT(timeOf(sp[0]))+'〜'+fmtT(timeOf(sp[1]))+(sc&&sc.subs&&sc.subs[s.id]&&sc.subs[s.id][day.d]?'（交代）':'')+(w[day.d]==='H'?'（半日有給）':'');}
     else if(!day.open) x='休園'+(day.holiday?'（'+day.holiday+'）':'');
     else if(w[day.d]==='P') x='有給';
+    else if(w[day.d]==='H') x='有給（半日）';
     else if(w[day.d]==='W') x='お休み（希望休）';
     else x='お休み';
     lines.push(info.m+'/'+day.d+'('+DOW[day.dow]+') '+x);
@@ -1376,18 +1450,23 @@ function recMin(r,sid){
   const brk=r.b!=null?Number(r.b):autoBrk(g,sid);
   return {gross:g,brk:brk,net:Math.max(0,g-brk),auto:r.b==null};
 }
-/* 有給：S.paid['2026-10-05'][職員のid] = 1（1日）または 0.5（半日） */
-function paidOf(k,sid){const d=S.paid&&S.paid[k];return d&&d[sid]?Number(d[sid]):0;}
+/* 有給：タイムカードで入れた有給は S.paid['2026-10-05'][職員のid] = 1（1日）または 0.5（半日）。
+   合わせたアプリでは、勤務表の希望休で入れた有給（P＝1日、H＝半日）も使う。
+   勤務表の有給は、管理者の「個人の記録」には入れた時点で出し、合計や集計の一覧表・職員の記録には、その月の勤務表を職員に公開してから入れる */
+function rosterPaid(k,sid){if(!HAS_ROSTER) return 0;const v=(((S.wishes[k.slice(0,7)]||{})[sid])||{})[Number(k.slice(8))];return v==='P'?1:v==='H'?0.5:0;}
+function rosterPub(k){const sc=S.schedules[k.slice(0,7)];return !!(sc&&sc.published);}
+function tcPaidOf(k,sid){const d=S.paid&&S.paid[k];return d&&d[sid]?Number(d[sid]):0;}
+function paidOf(k,sid){const rv=rosterPaid(k,sid);if(rv&&rosterPub(k)) return rv;return tcPaidOf(k,sid);}
 function fmtPaid(n){return n===0.5?'半日':(Math.round(n*10)/10)+'日';}
 function paidDates(pd,m){return pd.map(z=>m+'/'+z.d+(z.v===0.5?'(半日)':'')).join('・');}
 function isOpenToday(k,r){return k===todayKey()&&r&&r.i!=null&&r.o==null;}
 function tcPerson(sid,ym){
   const p=ym.split('-').map(Number);const n=new Date(p[0],p[1],0).getDate();let days=0,min=0,miss=0,paid=0;const rows=[],pd=[];
   for(let d=1;d<=n;d++){
-    const k=keyOf(p[0],p[1],d);const r=(S.punches[k]||{})[sid];const c=recMin(r,sid);const pv=paidOf(k,sid);
+    const k=keyOf(p[0],p[1],d);const r=(S.punches[k]||{})[sid];const c=recMin(r,sid);const pv=paidOf(k,sid);const rp=rosterPaid(k,sid);
     if(r){if(c){days++;min+=c.net;}else if(!isOpenToday(k,r)) miss++;}
     if(pv){paid+=pv;pd.push({d:d,v:pv});}
-    rows.push({d:d,k:k,r:r,c:c,p:pv,dow:new Date(p[0],p[1]-1,d).getDay()});
+    rows.push({d:d,k:k,r:r,c:c,p:pv,rp:rp,rpub:rp?rosterPub(k):false,dow:new Date(p[0],p[1]-1,d).getDay()});
   }
   return {rows:rows,days:days,min:min,miss:miss,paid:paid,pd:pd};
 }
@@ -1539,7 +1618,7 @@ function tcDetailRows(ym){
   S.staff.forEach(s=>{
     const p=tcPerson(s.id,ym);
     p.rows.forEach(x=>{
-      const plan=sc&&sc.cells[s.id]&&sc.cells[s.id][x.d]?SHN[sc.cells[s.id][x.d]]:'';
+      const plan=planOf(sc,s.id,x);
       if(!x.r&&!plan&&!x.p) return;
       rows.push([s.name||'',ym+'-'+pad(x.d),DOW[x.dow],plan,x.r?fmtClock(x.r.i):'',x.r?fmtClock(x.r.o):'',x.c?x.c.brk:'',x.c?fmtHM(x.c.net):'',x.c?(x.c.net/60).toFixed(2):'',x.p?(x.p===0.5?'半日':'1日'):'',
         [x.r&&!x.c&&!isOpenToday(x.k,x.r)?'打刻もれ':'',x.r&&x.r.a?'本人申請・承認':'',x.r&&x.r.e?'修正あり':''].filter(Boolean).join('・')]);
@@ -1550,6 +1629,7 @@ function tcDetailRows(ym){
   return rows;
 }
 function toCSV(rows){return '\ufeff'+rows.map(r=>r.map(x=>{const v=String(x);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',')).join('\r\n');}
+function planOf(sc,sid,x){const t=sc&&sc.cells[sid]&&sc.cells[sid][x.d];return (t?SHN[t]:'')+(x.rp===1&&!t?'有給':x.rp===0.5?(t?'・':'')+'半日有給':'');}
 function tcNetHTML(x){return (x.c?fmtHM(x.c.net):x.r&&!isOpenToday(x.k,x.r)?'<span class="tc-miss">打刻もれ</span>':x.r?'勤務中':'')+markHTML(x.r);}
 function tcBrkHTML(x,sid){
   if(!x.c) return '';const auto=autoBrk(x.c.gross,sid);const cur=x.r.b!=null?String(x.r.b):'';
@@ -1559,6 +1639,7 @@ function tcBrkHTML(x,sid){
     +opts.sort((a,b)=>a-b).map(v=>'<option value="'+v+'"'+(cur===String(v)?' selected':'')+'>'+fmtBrk(v)+'</option>').join('')+'</select>';
 }
 function tcPaidHTML(x,sid){
+  if(x.rp) return '<span class="tc-pl">'+(x.rp===0.5?'有給（半日）':'有給')+'</span><span class="tc-src">'+(x.rpub?'勤務表':'勤務表・公開前')+'</span>';
   const v=x.p?String(x.p):'';
   return '<select id="tcps-'+x.k+'" data-chg="tcpaid" data-day="'+x.k+'" data-sid="'+sid+'" aria-label="'+x.d+'日の有給"'+(x.p?' class="on"':'')+'>'
     +'<option value=""'+(v===''?' selected':'')+'>—</option><option value="1"'+(v==='1'?' selected':'')+'>有給</option><option value="0.5"'+(v==='0.5'?' selected':'')+'>有給（半日）</option></select>';
@@ -1607,8 +1688,8 @@ function viewTC(){
   const sel=staffById(UI.tcsel);const p=tcPerson(sel.id,ym);const sc=S.schedules[ym];
   const chips=S.staff.map(s=>'<button type="button" class="chip" data-act="tcsel" data-v="'+s.id+'" aria-pressed="'+(s.id===sel.id)+'">'+esc(s.name||'名前なし')+'</button>').join('');
   const rows=p.rows.map(x=>{
-    const plan=sc&&sc.cells[sel.id]&&sc.cells[sel.id][x.d]?SHN[sc.cells[sel.id][x.d]]:'';
-    return '<tr id="tcr-'+x.k+'"'+(!x.r&&!plan&&!x.p?' class="off"':'')+'><th scope="row">'+ymp[1]+'/'+x.d+'('+DOW[x.dow]+')</th>'+(HAS_ROSTER?'<td>'+plan+'</td>':'')
+    const plan=planOf(sc,sel.id,x);
+    return '<tr id="tcr-'+x.k+'"'+(!x.r&&!plan&&!x.p&&!x.rp?' class="off"':'')+'><th scope="row">'+ymp[1]+'/'+x.d+'('+DOW[x.dow]+')</th>'+(HAS_ROSTER?'<td>'+plan+'</td>':'')
       +'<td><input type="time" id="tci-'+x.k+'" aria-label="'+x.d+'日の出勤" data-chg="tcedit" data-k="i" data-day="'+x.k+'" data-sid="'+sel.id+'" value="'+timeVal(x.r&&x.r.i)+'"></td>'
       +'<td><input type="time" id="tco-'+x.k+'" aria-label="'+x.d+'日の退勤" data-chg="tcedit" data-k="o" data-day="'+x.k+'" data-sid="'+sel.id+'" value="'+timeVal(x.r&&x.r.o)+'"></td>'
       +tcRowCells(x,sel.id)+'</tr>';
@@ -1627,7 +1708,7 @@ function viewTC(){
     +'<p class="hint">タイムカードの記録は、法律で一定期間の保存が必要です。この端末の中だけにあるので、毎月CSVで保存しておくと安心です。</p></section>'
     +'<section id="tc-detail"><h2>個人の記録</h2><div class="chips">'+chips+'</div>'
     +'<p class="sum ok" id="tctot">'+esc(tcTotText(sel.name||'',ymp[1],p))+'</p>'
-    +'<p class="hint">時刻・休憩を直すと、すぐに計算し直します。管理者が直したところには「修正」、職員の申請を承認したところには「本人申請・承認ずみ」と表示されます。休憩の「自動」は、ふだんの休憩をあてはめた時間です。有給の日は、右の「有給」の欄でえらびます。退勤が出勤より早い時刻のときは、次の日の時刻として計算します。</p>'
+    +'<p class="hint">時刻・休憩を直すと、すぐに計算し直します。管理者が直したところには「修正」、職員の申請を承認したところには「本人申請・承認ずみ」と表示されます。休憩の「自動」は、ふだんの休憩をあてはめた時間です。有給の日は、右の「有給」の欄でえらびます。'+(HAS_ROSTER?'勤務表の希望休で入れた有給は自動で出ます（「勤務表・公開前」の有給は、その月の勤務表を職員に公開すると合計と集計に入ります。変えるときは③希望休で）。':'')+'退勤が出勤より早い時刻のときは、次の日の時刻として計算します。</p>'
     +'<div class="tcwrap"><table class="tctable"><thead><tr><th scope="col">日付</th>'+(HAS_ROSTER?'<th scope="col">予定</th>':'')+'<th scope="col">出勤</th><th scope="col">退勤</th><th scope="col">休憩</th><th scope="col">勤務時間</th><th scope="col">有給</th></tr></thead><tbody>'+rows+'</tbody>'
     +'<tfoot><tr><th scope="row">合計</th>'+(HAS_ROSTER?'<td></td>':'')+'<td colspan="2">出勤 '+p.days+'日</td><td></td><td id="tctot2">'+fmtHM(p.min)+'</td><td id="tctot3">'+(p.paid?'有給 '+fmtPaid(p.paid):'')+'</td></tr></tfoot></table></div></section></div>';
 }
@@ -1668,8 +1749,9 @@ const VIEWS=HAS_ROSTER?{joken:viewJoken,shokuin:viewShokuin,kibou:viewKibou,zent
 if(APP==='both') VIEWS.tc=viewTC;
 function renderMain(){$('#main').innerHTML=S.mode==='staff'?viewStaff():(VIEWS[UI.view]||viewJoken)();}
 /* 見出し：園の名前が入っていれば「〇〇の勤務表」、空欄なら「ほほえみ勤務表」 */
-function appTitle(){const n=(S.facility.name||'').trim();const base=HAS_ROSTER?'勤務表':'タイムカード';return n?n+'の'+base:'ほほえみ'+base;}
+function appTitle(){const n=(S.facility.name||'').trim();const base=HAS_ROSTER&&HAS_TC?'勤務表・タイムカード':HAS_ROSTER?'勤務表':'タイムカード';return n?n+'の'+base:'ほほえみ'+base;}
 /* 配る版（単体のページとして開いたとき）は、ブラウザのタブの名前も見出しと同じにする */
+function titleHTML(){const n=(S.facility.name||'').trim();const t=appTitle();if(!n) return esc(t);return '<span class="tw">'+esc(n+'の')+'</span><span class="tw">'+esc(t.slice(n.length+1))+'</span>';}
 function syncTabTitle(){if(TOP){try{document.title=appTitle();}catch(e){}}}
 /* 作成者の表示は画面だけ（.foot は印刷に出ず、PDFにも入らない） */
 function renderFoot(){$('#foot').innerHTML='<p>入力した内容は、この端末のブラウザの中に保存されます。</p>'+(S.mode==='staff'?'<button type="button" class="btn quiet" data-act="adminlogin">管理者の方はこちら</button>':'')+'<p class="credit">合同会社発達支援ほほえみカレッジ作アプリ</p>';}
@@ -1689,7 +1771,7 @@ function staffWish(me){
   const info=INFO();const closed=wishClosed();const lim=Number(S.rules.wishLimit)||0;
   return '<section><div class="row"><h2>'+info.m+'月の休みの希望</h2>'+wishCounts(me)+'</div>'
     +(closed?'<p class="stale">'+info.m+'月の希望の受付は締め切りました。変えたいときは、管理者に相談してください。</p>'
-      :'<p class="hint">休みたい日をタップしてください。タップするたびに「希望休 → 有給 → なし」と切り替わり、そのまま保存されます。'+(lim?'希望休は月'+lim+'日までです。':'')+'</p>')
+      :'<p class="hint">休みたい日をタップしてください。タップするたびに「希望休 → 有給 → 有給（半日） → なし」と切り替わり、そのまま保存されます。'+(lim?'希望休は月'+lim+'日までです。':'')+'</p>')
     +wishCal(me,closed)+'</section>'
     +'<div class="next"><button type="button" class="btn primary" data-act="donewish">入力をおえる</button></div>';
 }
@@ -1830,7 +1912,7 @@ function rosterMatrix(){
   const rows=[['なまえ'].concat(info.days.map(d=>d.d+'('+DOW[d.dow]+')'),['早番','通常','遅番','勤務日数','休み'])];
   S.staff.forEach(s=>{
     const c=sc.cells[s.id]||{};const w=wishOf(S,s.id);const p=ck.per[s.id];
-    rows.push([s.name||'名前なし'].concat(info.days.map(day=>{const t=c[day.d];return t?SHS[t]:!day.open?'':w[day.d]==='W'?'希':w[day.d]==='P'?'有':'休';}),[p.E,p.N,p.L,p.work,info.n-p.work]));
+    rows.push([s.name||'名前なし'].concat(info.days.map(day=>{const t=c[day.d];return t?SHS[t]+(w[day.d]==='H'?'(半有)':''):!day.open?'':w[day.d]==='W'?'希':w[day.d]==='P'?'有':w[day.d]==='H'?'半有':'休';}),[p.E,p.N,p.L,p.work,info.n-p.work]));
   });
   SH.forEach(t=>{rows.push([SHN[t]+'の人数'].concat(info.days.map(day=>day.open?ck.dayCnt[day.d][t]:'')));});
   [{id:null,name:'全員'}].concat(qShown()).forEach(q=>{HALVES.forEach(h=>{rows.push([q.name+'の人数（'+HALFN[h]+'）'].concat(info.days.map(day=>day.open?qCount(S,sc.cells,day.d,q.id,h):'')));});});
@@ -1971,7 +2053,9 @@ const ACT={
       if(lim>0&&used>=lim){w[d]='P';toast('希望休は月'+lim+'日までのため、有給として入れました');}
       else w[d]='W';
     }else if(cur==='W') w[d]='P';
+    else if(cur==='P') w[d]='H';
     else delete w[d];
+    S.punchAt=Date.now();
     touch();renderMain();
   },
   gen(){
@@ -1992,7 +2076,7 @@ const ACT={
   qdelask(v){UI.confirmQ=v||null;renderMain();},
   qdel(v){const q=qById(v);S.qualList=S.qualList.filter(x=>x.id!==v);S.staff.forEach(p=>{p.quals=(p.quals||[]).filter(x=>x!==v);});UI.confirmQ=null;touch();renderMain();if(q) toast('「'+q.name+'」を一覧から消しました');},
   genmode(v){S.genMode=v;touch();renderMain();},
-  publish(){const sc=S.schedules[S.ym];if(!sc) return;sc.published=!sc.published;save();renderMain();toast(sc.published?'職員用の画面で見られるようにしました':'職員用の画面から見えなくしました');},
+  publish(){const sc=S.schedules[S.ym];if(!sc) return;sc.published=!sc.published;S.punchAt=Date.now();save();renderMain();toast(sc.published?'職員用の画面で見られるようにしました'+(HAS_TC?'（有給はタイムカードの集計にも入ります）':''):'職員用の画面から見えなくしました');},
   wishtoggle(){if(wishClosed()) delete S.wishClosed[S.ym];else S.wishClosed[S.ym]=true;save();renderMain();},
   tostaff(){if(!S.pin){openPin('set','staff');return;}toStaffMode('職員用の画面にしました');},
   pinchange(){openPin('set',null);},
@@ -2062,11 +2146,31 @@ const ACT={
   zmode(v){UI.zmode=v;S.zmode=v;save();renderMain();},
   bkcopy(){copyText(JSON.stringify(S),'控えをコピーしました。メモ帳などに貼り付けて保管してください');},
   bkrestore(){
-    let s=null;try{s=normalize(JSON.parse($('#bk-ta').value));}catch(e){s=null;}
+    let s=null;try{const o=JSON.parse($('#bk-ta').value);if(o&&!o.punches){o.punches={};o.reqs=o.reqs||[];o.paid=o.paid||{};}s=normalize(o);}catch(e){s=null;}
     if(!s){toast('控えを読み取れませんでした。コピーした文字をそのまま貼り付けてください');return;}
     S=s;UI.view=S.view||'joken';UI.selW=UI.selP=null;save();render();toast('控えから戻しました');
   },
-  closemodal(){$('#modal').hidden=true;}
+  closemodal(){$('#modal').hidden=true;},
+  impgo(){UI.view='joken';UI.imp=null;render();impScroll();},
+  impdev(){const R=readOld('roster'),T=readOld('tc');if(!R&&!T){toast('この端末には、取りこめるデータがありません');return;}UI.imp={R:R,T:T};UI.impMsg='';renderMain();impScroll();},
+  imppaste(){
+    const tr=($('#imp-r')||{}).value||'',tt=($('#imp-t')||{}).value||'';
+    if(!tr.trim()&&!tt.trim()){toast('控えを貼り付けてください');return;}
+    const R=tr.trim()?parseOld(tr):null,T=tt.trim()?parseOld(tt):null;
+    if(tr.trim()&&!R){toast('勤務表の控えを読み取れませんでした。コピーした文字をそのまま貼り付けてください');return;}
+    if(tt.trim()&&!T){toast('タイムカードの控えを読み取れませんでした。コピーした文字をそのまま貼り付けてください');return;}
+    UI.imp={R:R,T:T};UI.impMsg='';renderMain();impScroll();
+  },
+  impno(){UI.imp=null;renderMain();impScroll();},
+  impyes(){
+    const q=UI.imp;if(!q) return;const res=mergeOld(q.R,q.T);
+    if(!res.state){toast('取りこめませんでした。もう一度お試しください');return;}
+    S=res.state;save();UI.imp=null;UI.view='joken';UI.selW=UI.selP=null;UI.tcsel=null;UI.tcym=null;const r=res.rep;
+    UI.impMsg='取りこみました。職員 '+r.staff+'人'+(q.R&&q.T?'（同じ名前で1人にまとめた人 '+r.same+'人'+(r.added?'、タイムカードだけにいた人 '+r.added+'人':'')+'）':'')+'。'
+      +(r.pin==='roster'?'暗証番号は、勤務表のアプリで決めた番号を使います。':r.pin==='tc'?'暗証番号は、タイムカードのアプリで決めた番号を使います。':'')
+      +'②職員で、資格や勤務できる曜日などを確かめてください。';
+    render();impScroll();toast('取りこみました');
+  }
 };
 const CHG={
   qset(el){const q=qById(el.dataset.q);if(!q) return;q[el.dataset.k]=clampInt(el.value,0,30);el.value=q[el.dataset.k];touch();},
@@ -2134,7 +2238,7 @@ document.addEventListener('change',e=>{
     else if(el.type==='number'){val=clampInt(el.value,el.min,el.max);el.value=val;}
     else val=el.value;
     const ks=el.dataset.bind.split('.');let o=S;for(let i=0;i<ks.length-1;i++) o=o[ks[i]];o[ks[ks.length-1]]=val;
-    if(el.dataset.bind==='facility.name'){save();const f=$('#apptitle');if(f) f.textContent=appTitle();syncTabTitle();return;}
+    if(el.dataset.bind==='facility.name'){save();const f=$('#apptitle');if(f) f.innerHTML=titleHTML();syncTabTitle();return;}
     touch();
     if(el.dataset.after==='cal'){renderTop();$('#jcal').innerHTML=jokenCal(INFO());}
     return;
