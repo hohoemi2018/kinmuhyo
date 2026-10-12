@@ -340,6 +340,15 @@ span.cellbtn{cursor:default}
 .rq-h{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
 .rq-diff{font-variant-numeric:tabular-nums;font-size:14px;line-height:1.8}
 .tc-ap{color:var(--n-fg);background:var(--n-bg);border-radius:6px;padding:0 6px;font-weight:700;font-size:11px;margin-left:4px;white-space:nowrap}
+.tc-pl{color:var(--p-fg);background:var(--p-bg);border-radius:6px;padding:0 6px;font-weight:700;font-size:12px;margin-left:4px;white-space:nowrap}
+.tc-pd{display:block;font-size:12px;font-weight:500;color:var(--muted);white-space:normal;max-width:16em;margin-left:auto}
+.tc-brk-note{font-size:12px;color:var(--muted)}
+.tctable select{min-height:36px;padding:2px 6px;font-size:14px}
+.tctable select.on{background:var(--p-bg);color:var(--p-fg);border-color:transparent;font-weight:700}
+.tc-brkpick{display:flex;flex-direction:column;align-items:center;gap:8px;background:var(--paper-2);border-radius:18px;padding:12px 16px;max-width:100%}
+.tc-brkpick .chips{justify-content:center}
+.tc-brkpick .lab{font-weight:700;color:var(--cocoa)}
+.tc-net{font-weight:700;color:var(--cocoa);font-variant-numeric:tabular-nums}
 .rqform{display:flex;flex-direction:column;gap:10px;background:var(--paper-2);border-radius:18px;padding:14px}
 .rqform select{max-width:14em}
 .rqform .fld input[type=time]{min-width:9em}
@@ -818,7 +827,7 @@ function defPat(){return {1:'N',2:'N',3:'N',4:'N',5:'N',6:'',0:''};}
 function normalize(s){
   if(!s||s.v!==1||!Array.isArray(s.staff)||!s.shifts||!s.ym) return null;
   s.facility=s.facility||{name:''};s.dayOverride=s.dayOverride||{};s.wishes=s.wishes||{};s.schedules=s.schedules||{};
-  s.rules=s.rules||{maxConsec:5,noLateEarly:true,wishLimit:3};s.mode=s.mode==='staff'?'staff':'admin';s.tc=s.tc||{breakMin:60,breakAfterH:6};s.tcSnap=s.tcSnap||{};s.punchAt=s.punchAt||0;if(!s.punches){s.punches=(s.sample&&HAS_TC)?samplePunches(s):{};if(s.sample&&HAS_TC&&!s.reqs) s.reqs=sampleReqs(s);}s.reqs=s.reqs||[];s.genMode=s.genMode||'auto';if(s.fillSubs==null) s.fillSubs=true;s.pin=s.pin||'';s.rc=s.rc||'';s.rcAt=s.rcAt||0;s.pinReq=s.pinReq||null;s.wishClosed=s.wishClosed||{};s.openDows=s.openDows||[1,2,3,4,5,6];
+  s.rules=s.rules||{maxConsec:5,noLateEarly:true,wishLimit:3};s.mode=s.mode==='staff'?'staff':'admin';s.tc=s.tc||{breakMin:60,breakAfterH:6};s.tcSnap=s.tcSnap||{};s.punchAt=s.punchAt||0;if(!s.punches){s.punches=(s.sample&&HAS_TC)?samplePunches(s):{};if(s.sample&&HAS_TC&&!s.reqs) s.reqs=sampleReqs(s);}s.reqs=s.reqs||[];s.genMode=s.genMode||'auto';if(s.fillSubs==null) s.fillSubs=true;s.paid=s.paid||{};s.pin=s.pin||'';s.rc=s.rc||'';s.rcAt=s.rcAt||0;s.pinReq=s.pinReq||null;s.wishClosed=s.wishClosed||{};s.openDows=s.openDows||[1,2,3,4,5,6];
   s.staff.forEach(p=>{p.can=p.can||{E:true,N:true,L:true};p.dows=p.dows||[0,1,2,3,4,5,6];if(p.off==null) p.off=9;if(p.work==null) p.work=12;if(!p.pat) p.pat=defPat();if(!Array.isArray(p.quals)) p.quals=[];if(!p.hrs) p.hrs={on:false,start:'09:00',end:'13:00'};});if(!Array.isArray(s.qualList)) s.qualList=defQuals();s.qualList.forEach(q=>{if(q.wkAM==null){q.wkAM=q.wkPM=Number(q.wk)||0;q.weAM=q.wePM=Number(q.we)||0;}});if(!s.noon) s.noon='12:00';
   return s;
 }
@@ -827,7 +836,7 @@ function touch(){const sc=S.schedules[S.ym];if(sc) sc.stale=true;save();}
 
 function blank(){
   const now=new Date();const nx=new Date(now.getFullYear(),now.getMonth()+1,1);
-  return {v:1,sample:false,mode:'admin',pin:'',rc:'',rcAt:0,pinReq:null,wishClosed:{},qualList:defQuals(),noon:'12:00',reqs:[],genMode:'auto',fillSubs:true,punches:{},tc:{breakMin:60,breakAfterH:6},tcSnap:{},punchAt:0,view:'joken',facility:{name:''},ym:nx.getFullYear()+'-'+pad(nx.getMonth()+1),
+  return {v:1,sample:false,mode:'admin',paid:{},pin:'',rc:'',rcAt:0,pinReq:null,wishClosed:{},qualList:defQuals(),noon:'12:00',reqs:[],genMode:'auto',fillSubs:true,punches:{},tc:{breakMin:60,breakAfterH:6},tcSnap:{},punchAt:0,view:'joken',facility:{name:''},ym:nx.getFullYear()+'-'+pad(nx.getMonth()+1),
     shifts:{E:{start:'07:00',end:'16:00',wk:2,we:1},N:{start:'08:30',end:'17:30',wk:2,we:1},L:{start:'10:00',end:'19:00',wk:2,we:1}},
     openDows:[1,2,3,4,5,6],closeHolidays:true,dayOverride:{},rules:{maxConsec:5,noLateEarly:true,wishLimit:3},
     staff:[],wishes:{},schedules:{}};
@@ -848,8 +857,10 @@ function sample(){
   setW(0,8,'W');setW(2,3,'W');setW(2,13,'P');setW(4,16,'W');setW(5,5,'W');
   if(HAS_ROSTER) st.schedules[st.ym]={cells:generate(st),at:Date.now(),stale:false,edited:false,published:true};
   st.staff.forEach((p,i)=>{const o=SH.filter(t=>p.can[t]);const pt={};[0,1,2,3,4,5,6].forEach(d=>{pt[d]=(d!==0&&p.dows.indexOf(d)>=0&&(d!==6||i<3))?o[i%o.length]:'';});p.pat=pt;});
+  st.staff[3].brk=90;
   st.punches=HAS_TC?samplePunches(st):{};
   st.reqs=HAS_TC?sampleReqs(st):[];
+  st.paid=HAS_TC?samplePaid(st):{};
   return st;
 }
 
@@ -1066,10 +1077,13 @@ function viewShokuinTC(){
     return '<article class="staff"><div class="st-head">'
       +'<input type="text" id="sn-'+id+'" data-chg="sf" data-k="name" data-sid="'+id+'" value="'+esc(s.name)+'" placeholder="なまえ" aria-label="なまえ">'
       +'<button type="button" class="iconbtn" data-act="askdel" data-v="'+id+'" aria-label="'+esc(s.name)+'さんを削除">×</button></div>'
+      +'<div class="st-row"><label class="lab" for="sb-'+id+'">ふだんの休憩</label><select id="sb-'+id+'" data-chg="sf" data-k="brk" data-sid="'+id+'">'
+      +'<option value=""'+(s.brk==null||s.brk===''?' selected':'')+'>事業所の基本（'+fmtBrk(S.tc.breakMin)+'）</option>'
+      +BRK_OPTS.map(v=>'<option value="'+v+'"'+(s.brk!=null&&s.brk!==''&&Number(s.brk)===v?' selected':'')+'>'+fmtBrk(v)+'</option>').join('')+'</select></div>'
       +(UI.confirmDel===id?'<div class="delask"><span>この職員を削除しますか？タイムカードの記録も消えます。</span><button type="button" class="btn" data-act="delstaff" data-v="'+id+'">削除する</button><button type="button" class="btn quiet" data-act="askdel" data-v="">やめる</button></div>':'')
       +'</article>';}).join('');
   return '<div class="panel"><section><h2>職員の登録</h2>'
-    +'<p class="hint">タイムカードを使う職員の名前を登録してください。職員用の画面では、この名前の中から自分を選びます。</p>'
+    +'<p class="hint">タイムカードを使う職員の名前を登録してください。職員用の画面では、この名前の中から自分を選びます。休憩が事業所の基本とちがう人は「ふだんの休憩」をえらびます（日によってちがうときは、退勤のときに職員がえらべます）。</p>'
     +(S.staff.length?'<div class="stafflist">'+cards+'</div>':'<div class="empty">'+chick()+'<p>まだ職員が登録されていません。下のボタンから1人ずつ追加してください。</p></div>')
     +'<div class="row"><button type="button" class="btn" data-act="addstaff">＋ 職員を追加</button></div></section>'
     +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="tc">つぎへ　タイムカードを見る</button></div></div>';
@@ -1350,21 +1364,32 @@ function fmtClock(m){if(m==null) return '—';const mm=((m%1440)+1440)%1440;retu
 function fmtDur(min){const h=Math.floor(min/60),m=min%60;return h+'時間'+(m?m+'分':'');}
 function fmtHM(min){return Math.floor(min/60)+':'+pad(min%60);}
 function timeVal(m){if(m==null) return '';const mm=((m%1440)+1440)%1440;return pad(Math.floor(mm/60))+':'+pad(mm%60);}
-/* 1日の勤務時間＝退勤−出勤。決めた時間をこえた日は休憩を差し引く。1分単位で、切り捨てはしない */
-function recMin(r){
+/* 休憩：その日にえらんだ休憩（r.b）があればそれを差し引く。なければ、決めた時間をこえた日に「ふだんの休憩」を差し引く。
+   ふだんの休憩は、人ごとに決めてあればその時間（s.brk）、なければ事業所の基本（S.tc.breakMin） */
+const BRK_OPTS=[0,30,45,60,90,120];
+function fmtBrk(m){m=Number(m)||0;if(!m) return 'なし';const h=Math.floor(m/60),mm=m%60;return h?(h+'時間'+(mm?mm+'分':'')):mm+'分';}
+function usualBrk(sid){const s=staffById(sid);return s&&s.brk!=null&&s.brk!==''?Number(s.brk):(Number(S.tc.breakMin)||0);}
+function autoBrk(g,sid){return g>(Number(S.tc.breakAfterH)||0)*60?usualBrk(sid):0;}
+/* 1日の勤務時間＝退勤−出勤−休憩。1分単位で、切り捨てはしない */
+function recMin(r,sid){
   if(!r||r.i==null||r.o==null) return null;const g=r.o-r.i;if(g<=0) return null;
-  const brk=g>(Number(S.tc.breakAfterH)||0)*60?(Number(S.tc.breakMin)||0):0;
-  return {gross:g,brk:brk,net:Math.max(0,g-brk)};
+  const brk=r.b!=null?Number(r.b):autoBrk(g,sid);
+  return {gross:g,brk:brk,net:Math.max(0,g-brk),auto:r.b==null};
 }
+/* 有給：S.paid['2026-10-05'][職員のid] = 1（1日）または 0.5（半日） */
+function paidOf(k,sid){const d=S.paid&&S.paid[k];return d&&d[sid]?Number(d[sid]):0;}
+function fmtPaid(n){return n===0.5?'半日':(Math.round(n*10)/10)+'日';}
+function paidDates(pd,m){return pd.map(z=>m+'/'+z.d+(z.v===0.5?'(半日)':'')).join('・');}
 function isOpenToday(k,r){return k===todayKey()&&r&&r.i!=null&&r.o==null;}
 function tcPerson(sid,ym){
-  const p=ym.split('-').map(Number);const n=new Date(p[0],p[1],0).getDate();let days=0,min=0,miss=0;const rows=[];
+  const p=ym.split('-').map(Number);const n=new Date(p[0],p[1],0).getDate();let days=0,min=0,miss=0,paid=0;const rows=[],pd=[];
   for(let d=1;d<=n;d++){
-    const k=keyOf(p[0],p[1],d);const r=(S.punches[k]||{})[sid];const c=recMin(r);
+    const k=keyOf(p[0],p[1],d);const r=(S.punches[k]||{})[sid];const c=recMin(r,sid);const pv=paidOf(k,sid);
     if(r){if(c){days++;min+=c.net;}else if(!isOpenToday(k,r)) miss++;}
-    rows.push({d:d,k:k,r:r,c:c,dow:new Date(p[0],p[1]-1,d).getDay()});
+    if(pv){paid+=pv;pd.push({d:d,v:pv});}
+    rows.push({d:d,k:k,r:r,c:c,p:pv,dow:new Date(p[0],p[1]-1,d).getDay()});
   }
-  return {rows:rows,days:days,min:min,miss:miss};
+  return {rows:rows,days:days,min:min,miss:miss,paid:paid,pd:pd};
 }
 function workingNow(sid){const k=todayKey();const r=(S.punches[k]||{})[sid];return !!(r&&r.i!=null&&r.o==null);}
 function overnightOpen(sid){
@@ -1374,7 +1399,7 @@ function overnightOpen(sid){
 }
 function doPunch(kind){
   const me=staffById(UI.me);if(!me) return;
-  const k=todayKey(),now=nowMin();const day=S.punches[k]||(S.punches[k]={});const r=day[me.id];let t=now,note='';
+  const k=todayKey(),now=nowMin();const day=S.punches[k]||(S.punches[k]={});const r=day[me.id];let t=now,note='',rk=k;
   if(kind==='in'){
     if(r&&r.i!=null){toast('きょうは '+fmtClock(r.i)+' に出勤ずみです');return;}
     if(r) r.i=now;else day[me.id]={i:now,o:null};
@@ -1382,14 +1407,22 @@ function doPunch(kind){
     const pr=overnightOpen(me.id);
     if(r&&r.o!=null){toast('きょうは '+fmtClock(r.o)+' に退勤ずみです');return;}
     if(r) r.o=now;
-    else if(pr){pr.o=now+1440;}
+    else if(pr){pr.o=now+1440;rk=prevKey(k);}
     else{day[me.id]={i:null,o:now};note='出勤の記録がありません。管理者に出勤の時刻を直してもらってください。';}
   }
   S.punchAt=Date.now();save();
-  const token=Date.now();UI.punched={kind:kind,t:t,name:me.name,note:note,token:token};renderMain();
-  setTimeout(()=>{if(UI.punched&&UI.punched.token===token&&S.mode==='staff'){UI.punched=null;UI.me=null;renderMain();}},note?12000:6000);
+  UI.punched={kind:kind,t:t,name:me.name,note:note,rk:rk,sid:me.id};renderMain();
+  punchTimer(note?12000:kind==='out'?15000:6000);
 }
-const REASONS=['出勤を押し忘れ','退勤を押し忘れ','押しまちがい','その他'];
+/* 打刻のあとの画面は、しばらくすると名前の選択にもどる（さわると少しのばす） */
+function punchTimer(ms){const token=Date.now()+Math.random();if(UI.punched) UI.punched.token=token;
+  setTimeout(()=>{if(UI.punched&&UI.punched.token===token&&S.mode==='staff'){UI.punched=null;UI.me=null;renderMain();}},ms);}
+function brkPick(v){
+  const P=UI.punched;if(!P||P.kind!=='out') return;const r=(S.punches[P.rk]||{})[P.sid];if(!r) return;
+  r.b=Number(v);S.punchAt=Date.now();save();renderMain();punchTimer(10000);
+}
+const REASONS=['出勤を押し忘れ','退勤を押し忘れ','押しまちがい','休憩の時間がちがう','その他'];
+function rqText(q){return '出勤 <b>'+(q.i!=null?fmtClock(q.i):'そのまま')+'</b>・退勤 <b>'+(q.o!=null?fmtClock(q.o):'そのまま')+'</b>'+(q.b!=null?'・休憩 <b>'+fmtBrk(q.b)+'</b>':'');}
 function dayLabel(k){const p=k.split('-').map(Number);return p[1]+'/'+p[2]+'('+DOW[new Date(p[0],p[1]-1,p[2]).getDay()]+')';}
 function pendingReqs(){return (S.reqs||[]).filter(q=>q.st==='wait');}
 function tcBadge(){const n=HAS_TC?pendingReqs().length:0;return n?'<span class="stbadge" aria-label="修正の申請 '+n+'件">'+n+'</span>':'';}
@@ -1397,11 +1430,12 @@ function markHTML(r){return (r&&r.a?'<span class="tc-ap">本人申請・承認�
 function rqForm(me){
   const q=UI.rq;const day=q.day||todayKey();const r=(S.punches[day]||{})[me.id];
   let opts='',k=todayKey();for(let i=0;i<35;i++){opts+='<option value="'+k+'"'+(k===day?' selected':'')+'>'+dayLabel(k)+'</option>';k=prevKey(k);}
-  const iv=q.iv!=null?q.iv:timeVal(r&&r.i),ov=q.ov!=null?q.ov:timeVal(r&&r.o);
+  const iv=q.iv!=null?q.iv:timeVal(r&&r.i),ov=q.ov!=null?q.ov:timeVal(r&&r.o);const c=recMin(r,me.id);const bv=q.bv!=null?q.bv:'';
   return '<div class="rqform">'
     +'<label class="fld" for="rq-day"><span>日付</span><select id="rq-day" data-chg="rqday">'+opts+'</select></label>'
-    +'<p class="hint">いまの記録：出勤 '+fmtClock(r&&r.i)+'・退勤 '+fmtClock(r&&r.o)+'</p>'
-    +'<div class="row"><label class="fld" for="rq-i"><span>正しい出勤</span><input type="time" id="rq-i" value="'+iv+'"></label><label class="fld" for="rq-o"><span>正しい退勤</span><input type="time" id="rq-o" value="'+ov+'"></label></div>'
+    +'<p class="hint">いまの記録：出勤 '+fmtClock(r&&r.i)+'・退勤 '+fmtClock(r&&r.o)+(c?'・休憩 '+fmtBrk(c.brk):'')+'</p>'
+    +'<div class="row"><label class="fld" for="rq-i"><span>正しい出勤</span><input type="time" id="rq-i" value="'+iv+'"></label><label class="fld" for="rq-o"><span>正しい退勤</span><input type="time" id="rq-o" value="'+ov+'"></label>'
+    +'<label class="fld" for="rq-b"><span>正しい休憩</span><select id="rq-b"><option value="">そのまま</option>'+BRK_OPTS.map(v=>'<option value="'+v+'"'+(String(bv)===String(v)?' selected':'')+'>'+fmtBrk(v)+'</option>').join('')+'</select></label></div>'
     +'<div class="st-row"><span class="lab">理由</span><div class="chips">'+REASONS.map(x=>'<button type="button" class="chip" data-act="rqreason" data-v="'+x+'" aria-pressed="'+(q.reason===x)+'">'+x+'</button>').join('')+'</div></div>'
     +'<label class="fld" for="rq-note"><span>くわしく（書かなくてもかまいません）</span><input type="text" id="rq-note" maxlength="60" value="'+esc(q.note||'')+'"></label>'
     +(q.err?'<p class="pin-err" role="alert">'+esc(q.err)+'</p>':'')
@@ -1410,7 +1444,7 @@ function rqForm(me){
 function myReqs(me){
   const list=(S.reqs||[]).filter(q=>q.sid===me.id).sort((a,b)=>b.at-a.at).slice(0,6);
   if(!list.length) return '';
-  return '<ul class="myreq">'+list.map(q=>'<li><b>'+dayLabel(q.day)+'</b><span>出勤 '+(q.i!=null?fmtClock(q.i):'そのまま')+'・退勤 '+(q.o!=null?fmtClock(q.o):'そのまま')+'</span><span class="hint">'+esc(q.reason)+'</span>'
+  return '<ul class="myreq">'+list.map(q=>'<li><b>'+dayLabel(q.day)+'</b><span>'+rqText(q)+'</span><span class="hint">'+esc(q.reason)+'</span>'
     +(q.st==='wait'?'<span class="pill pW">申請中</span><button type="button" class="btn quiet" data-act="rqcancel" data-v="'+q.id+'">取り下げる</button>'
       :q.st==='ok'?'<span class="pill pN">承認ずみ</span>':'<span class="pill pO">見送り（管理者に確認してください）</span>')+'</li>').join('')+'</ul>';
 }
@@ -1421,24 +1455,25 @@ function rqSection(me){
 }
 function rqSubmit(){
   const me=staffById(UI.me);if(!me||!UI.rq) return;
-  const day=$('#rq-day').value,iv=$('#rq-i').value,ov=$('#rq-o').value,note=$('#rq-note').value.trim();
-  Object.assign(UI.rq,{day:day,iv:iv,ov:ov,note:note,err:''});
+  const day=$('#rq-day').value,iv=$('#rq-i').value,ov=$('#rq-o').value,note=$('#rq-note').value.trim(),bs=$('#rq-b')?$('#rq-b').value:'';
+  Object.assign(UI.rq,{day:day,iv:iv,ov:ov,bv:bs,note:note,err:''});const b=bs===''?null:Number(bs);
   const i=toMin(iv),o=toMin(ov);const r=(S.punches[day]||{})[me.id];
   const fi=i!=null?i:(r?r.i:null),fo=o!=null?o:(r?r.o:null);
   let err='';
-  if(i==null&&o==null) err='出勤か退勤の時刻を入れてください';
+  if(i==null&&o==null&&b==null) err='出勤・退勤の時刻か、休憩をえらんでください';
+  else if(b!=null&&(fi==null||fo==null)) err='休憩を直すときは、出勤と退勤の時刻もそろえてください';
   else if(fi!=null&&fo!=null&&fo<1440&&fo<=fi) err='退勤は、出勤より後の時刻にしてください';
   else if(day===todayKey()&&((i!=null&&i>nowMin())||(o!=null&&o>nowMin()))) err='まだ来ていない時刻は申請できません';
   else if(!UI.rq.reason) err='理由をえらんでください';
   if(err){UI.rq.err=err;renderMain();const f=$('#rq-sec');if(f) f.scrollIntoView({block:'nearest'});return;}
-  S.reqs.push({id:uid(),sid:me.id,day:day,i:i,o:o,reason:UI.rq.reason,note:note,at:Date.now(),st:'wait'});
+  S.reqs.push({id:uid(),sid:me.id,day:day,i:i,o:o,b:b,reason:UI.rq.reason,note:note,at:Date.now(),st:'wait'});
   save();UI.rq=null;renderMain();toast('申請しました。管理者が承認すると記録が直ります');
 }
 function reqAdminSection(){
   const pend=pendingReqs().sort((a,b)=>a.at-b.at);const done=(S.reqs||[]).filter(q=>q.st!=='wait').sort((a,b)=>(b.doneAt||0)-(a.doneAt||0)).slice(0,10);
   const item=(q,act)=>{const s=staffById(q.sid);const r=(S.punches[q.day]||{})[q.sid];
     return '<li><div class="rq-h"><b>'+esc((s&&s.name)||'（削除された職員）')+'</b><span>'+dayLabel(q.day)+'</span><span class="hint">'+esc(q.reason)+(q.note?'：'+esc(q.note):'')+'</span></div>'
-      +'<div class="rq-diff">'+(act?'いまの記録：出勤 '+fmtClock(r&&r.i)+'・退勤 '+fmtClock(r&&r.o)+'<br>':'')+'申請：出勤 <b>'+(q.i!=null?fmtClock(q.i):'そのまま')+'</b>・退勤 <b>'+(q.o!=null?fmtClock(q.o):'そのまま')+'</b></div>'
+      +'<div class="rq-diff">'+(act?'いまの記録：出勤 '+fmtClock(r&&r.i)+'・退勤 '+fmtClock(r&&r.o)+(recMin(r,q.sid)?'・休憩 '+fmtBrk(recMin(r,q.sid).brk):'')+'<br>':'')+'申請：'+rqText(q)+'</div>'
       +(act?'<div class="row"><button type="button" class="btn primary" data-act="rqok" data-v="'+q.id+'">承認する</button><button type="button" class="btn" data-act="rqng" data-v="'+q.id+'">見送る</button></div>'
         :'<div><span class="pill '+(q.st==='ok'?'pN':'pO')+'">'+(q.st==='ok'?'承認ずみ':'見送り')+'</span></div>')+'</li>';};
   return (pend.length?'<section class="reqbox"><h2>修正の申請 '+pend.length+'件</h2><p>職員から、打刻もれ・まちがいの申請が届いています。内容を確かめて「承認する」を押すと、記録が直ります。</p><ul class="reqlist">'+pend.map(q=>item(q,true)).join('')+'</ul></section>':'')
@@ -1450,13 +1485,21 @@ function sampleReqs(st){
   const k=Object.keys(st.punches||{}).find(k=>{const r=st.punches[k][s1.id];return r&&r.i!=null&&r.o==null&&k!==tk;});
   return k?[{id:uid(),sid:s1.id,day:k,i:null,o:toMin(st.shifts.N.end)+12,reason:'退勤を押し忘れ',note:'',at:Date.now()-3600000,st:'wait'}]:[];
 }
+function brkPickHTML(P){
+  if(P.kind!=='out') return '';const r=(S.punches[P.rk]||{})[P.sid];const c=recMin(r,P.sid);if(!c) return '';
+  const opts=[0,30,60,90];const u=usualBrk(P.sid);if(opts.indexOf(u)<0) opts.push(u);if(r.b!=null&&opts.indexOf(Number(r.b))<0) opts.push(Number(r.b));opts.sort((a,b)=>a-b);
+  return '<div class="tc-brkpick"><p class="lab" id="bp-h">きょうの休憩</p><div class="chips" role="group" aria-labelledby="bp-h">'
+    +opts.map(v=>'<button type="button" class="chip" data-act="brkpick" data-v="'+v+'" aria-pressed="'+(c.brk===v)+'">'+fmtBrk(v)+'</button>').join('')+'</div>'
+    +'<p class="hint">ちがうときだけ押してください。分けて取った日は、合計をえらびます（例：1時間と30分 → 1時間30分）。</p>'
+    +'<p class="tc-net">きょうの勤務時間　'+fmtDur(c.net)+'</p></div>';
+}
 function clockHTML(){const d=new Date();return d.getHours()+':'+pad(d.getMinutes())+'<small>:'+pad(d.getSeconds())+'</small>';}
 function staffTC(me){
   if(UI.punched){
     const P=UI.punched;const hello=P.kind==='in'?(P.t<11*60?'おはようございます':'こんにちは'):'おつかれさまでした';
     return '<section class="tc-done" aria-live="polite">'+chick()+'<p class="tc-done-msg">'+hello+'</p>'
       +'<p><strong>'+esc(P.name||'')+'</strong> さん　'+(P.kind==='in'?'出勤':'退勤')+' <b>'+fmtClock(P.t)+'</b> を記録しました</p>'
-      +(P.note?'<p class="stale">'+esc(P.note)+'</p>':'')
+      +(P.note?'<p class="stale">'+esc(P.note)+'</p>':'')+brkPickHTML(P)
       +'<div class="row"><button type="button" class="btn primary" data-act="me" data-v="">名前の選択にもどる</button><button type="button" class="btn" data-act="tcback">今月の記録を見る</button></div>'
       +'<p class="hint">しばらくすると、自動で名前の選択にもどります。</p></section>';
   }
@@ -1469,60 +1512,95 @@ function staffTC(me){
   else status=fmtClock(r.o)+' に退勤しました（出勤の記録なし）';
   const canIn=!pr&&!(r&&r.i!=null);const canOut=!(r&&r.o!=null);
   const ym=curYm();const p=tcPerson(me.id,ym);
-  const list=p.rows.filter(x=>x.r).map(x=>'<li><b>'+Number(ym.split('-')[1])+'/'+x.d+'('+DOW[x.dow]+')</b><span>'+fmtClock(x.r.i)+'〜'+fmtClock(x.r.o)+'</span><span>'+(x.c?fmtDur(x.c.net):isOpenToday(x.k,x.r)?'勤務中':'<span class="tc-miss">打刻もれ</span> <button type="button" class="btn quiet" data-act="rqopen" data-v="'+x.k+'">申請する</button>')+markHTML(x.r)+'</span></li>').join('');
+  const list=p.rows.filter(x=>x.r||x.p).map(x=>'<li><b>'+Number(ym.split('-')[1])+'/'+x.d+'('+DOW[x.dow]+')</b>'
+    +(x.r?'<span>'+fmtClock(x.r.i)+'〜'+fmtClock(x.r.o)+(x.c?'<span class="tc-brk-note">（休憩'+fmtBrk(x.c.brk)+'）</span>':'')+'</span><span>'+(x.c?fmtDur(x.c.net):isOpenToday(x.k,x.r)?'勤務中':'<span class="tc-miss">打刻もれ</span> <button type="button" class="btn quiet" data-act="rqopen" data-v="'+x.k+'">申請する</button>')+markHTML(x.r)+'</span>':'')
+    +(x.p?'<span class="tc-pl">有給'+(x.p===0.5?'（半日）':'')+'</span>':'')+'</li>').join('');
   return '<section class="tc-punch"><div class="tc-clock" id="tc-clock">'+clockHTML()+'</div><p class="tc-date">'+(d.getMonth()+1)+'月'+d.getDate()+'日（'+DOW[d.getDay()]+'）</p>'
     +'<p class="tc-status">'+status+'</p>'
     +'<div class="tc-btns"><button type="button" class="tcbtn in" data-act="punch" data-v="in"'+(canIn?'':' disabled')+'>'+icon('E')+'出勤</button>'
     +'<button type="button" class="tcbtn out" data-act="punch" data-v="out"'+(canOut?'':' disabled')+'>'+icon('L')+'退勤</button></div>'
     +'<p class="hint">押し忘れや押しまちがいは、下の「打刻もれ・まちがいの申請」から申請できます。</p></section>'
     +'<section><h2>'+(d.getMonth()+1)+'月のわたしの記録</h2>'
-    +'<p class="sum ok">勤務 '+p.days+'日・合計 '+fmtDur(p.min)+'</p>'
+    +'<p class="sum ok">勤務 '+p.days+'日・合計 '+fmtDur(p.min)+(p.paid?'・有給 '+fmtPaid(p.paid):'')+'</p>'
     +(list?'<ul class="mytc">'+list+'</ul>':'<p class="hint">まだ記録はありません。</p>')+'</section>'
     +rqSection(me);
 }
 function tcSummaryRows(ym){
   const sn=S.tcSnap[ym];if(!sn) return [];
-  const rows=[['なまえ','出勤日数','勤務時間（時:分）','勤務時間（時間）','打刻もれ']];
-  sn.rows.forEach(r=>{const s=staffById(r.sid);rows.push([(s&&s.name)||r.name||'',r.days,fmtHM(r.min),(r.min/60).toFixed(2),r.miss]);});
-  rows.push(['全員の合計',sn.total.days,fmtHM(sn.total.min),(sn.total.min/60).toFixed(2),sn.total.miss]);
+  const m=Number(ym.split('-')[1]);
+  const rows=[['なまえ','出勤日数','勤務時間（時:分）','勤務時間（時間）','有給（日）','有給の日','打刻もれ']];
+  sn.rows.forEach(r=>{const s=staffById(r.sid);rows.push([(s&&s.name)||r.name||'',r.days,fmtHM(r.min),(r.min/60).toFixed(2),r.paid!=null?r.paid:'',r.pd?paidDates(r.pd,m):'',r.miss]);});
+  rows.push(['全員の合計',sn.total.days,fmtHM(sn.total.min),(sn.total.min/60).toFixed(2),sn.total.paid!=null?sn.total.paid:'','',sn.total.miss]);
   return rows;
 }
 function tcDetailRows(ym){
-  const rows=[['なまえ','日付','曜日','予定','出勤','退勤','休憩（分）','勤務時間（時:分）','勤務時間（時間）','備考']];
+  const rows=[['なまえ','日付','曜日','予定','出勤','退勤','休憩（分）','勤務時間（時:分）','勤務時間（時間）','有給','備考']];
   const sc=S.schedules[ym];
   S.staff.forEach(s=>{
     const p=tcPerson(s.id,ym);
     p.rows.forEach(x=>{
       const plan=sc&&sc.cells[s.id]&&sc.cells[s.id][x.d]?SHN[sc.cells[s.id][x.d]]:'';
-      if(!x.r&&!plan) return;
-      rows.push([s.name||'',ym+'-'+pad(x.d),DOW[x.dow],plan,x.r?fmtClock(x.r.i):'',x.r?fmtClock(x.r.o):'',x.c?x.c.brk:'',x.c?fmtHM(x.c.net):'',x.c?(x.c.net/60).toFixed(2):'',
+      if(!x.r&&!plan&&!x.p) return;
+      rows.push([s.name||'',ym+'-'+pad(x.d),DOW[x.dow],plan,x.r?fmtClock(x.r.i):'',x.r?fmtClock(x.r.o):'',x.c?x.c.brk:'',x.c?fmtHM(x.c.net):'',x.c?(x.c.net/60).toFixed(2):'',x.p?(x.p===0.5?'半日':'1日'):'',
         [x.r&&!x.c&&!isOpenToday(x.k,x.r)?'打刻もれ':'',x.r&&x.r.a?'本人申請・承認':'',x.r&&x.r.e?'修正あり':''].filter(Boolean).join('・')]);
     });
-    rows.push([s.name||'','合計','','','','','',fmtHM(p.min),(p.min/60).toFixed(2),'出勤'+p.days+'日']);
+    rows.push([s.name||'','合計','','','','','',fmtHM(p.min),(p.min/60).toFixed(2),p.paid?fmtPaid(p.paid):'','出勤'+p.days+'日']);
   });
   if(!HAS_ROSTER) rows.forEach(r=>r.splice(3,1));
   return rows;
 }
 function toCSV(rows){return '\ufeff'+rows.map(r=>r.map(x=>{const v=String(x);return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;}).join(',')).join('\r\n');}
-function tcRowCells(x){
-  return '<td id="tcb-'+x.k+'">'+(x.c&&x.c.brk?x.c.brk+'分':'')+'</td><td id="tcn-'+x.k+'" class="big">'
-    +(x.c?fmtHM(x.c.net):x.r&&!isOpenToday(x.k,x.r)?'<span class="tc-miss">打刻もれ</span>':x.r?'勤務中':'')+markHTML(x.r)+'</td>';
+function tcNetHTML(x){return (x.c?fmtHM(x.c.net):x.r&&!isOpenToday(x.k,x.r)?'<span class="tc-miss">打刻もれ</span>':x.r?'勤務中':'')+markHTML(x.r);}
+function tcBrkHTML(x,sid){
+  if(!x.c) return '';const auto=autoBrk(x.c.gross,sid);const cur=x.r.b!=null?String(x.r.b):'';
+  const opts=BRK_OPTS.slice();if(x.r.b!=null&&opts.indexOf(Number(x.r.b))<0) opts.push(Number(x.r.b));
+  return '<select id="tcbs-'+x.k+'" data-chg="tcbrk" data-day="'+x.k+'" data-sid="'+sid+'" aria-label="'+x.d+'日の休憩">'
+    +'<option value=""'+(cur===''?' selected':'')+'>自動（'+fmtBrk(auto)+'）</option>'
+    +opts.sort((a,b)=>a-b).map(v=>'<option value="'+v+'"'+(cur===String(v)?' selected':'')+'>'+fmtBrk(v)+'</option>').join('')+'</select>';
+}
+function tcPaidHTML(x,sid){
+  const v=x.p?String(x.p):'';
+  return '<select id="tcps-'+x.k+'" data-chg="tcpaid" data-day="'+x.k+'" data-sid="'+sid+'" aria-label="'+x.d+'日の有給"'+(x.p?' class="on"':'')+'>'
+    +'<option value=""'+(v===''?' selected':'')+'>—</option><option value="1"'+(v==='1'?' selected':'')+'>有給</option><option value="0.5"'+(v==='0.5'?' selected':'')+'>有給（半日）</option></select>';
+}
+function tcRowCells(x,sid){
+  return '<td id="tcb-'+x.k+'">'+tcBrkHTML(x,sid)+'</td><td id="tcn-'+x.k+'" class="big">'+tcNetHTML(x)+'</td><td id="tcp-'+x.k+'">'+tcPaidHTML(x,sid)+'</td>';
+}
+function tcTotText(name,m,p){return name+'さん　'+m+'月：出勤 '+p.days+'日・合計 '+fmtDur(p.min)+(p.paid?'・有給 '+fmtPaid(p.paid):'')+(p.miss?'・打刻もれ '+p.miss+'件':'');}
+/* 個人の記録を1行だけ直したときに、その行と合計を書きかえる（入力中の欄はそのまま） */
+function tcDetailRefresh(k,sid,skip){
+  const ym=UI.tcym||curYm();const p=tcPerson(sid,ym);const x=p.rows.find(z=>z.k===k);
+  if(x){
+    const tr=document.getElementById('tcr-'+k);if(tr&&(x.r||x.p)) tr.classList.remove('off');
+    const n=$('#tcn-'+k);if(n) n.innerHTML=tcNetHTML(x);
+    if(skip!=='b'){const b=$('#tcb-'+k);if(b) b.innerHTML=tcBrkHTML(x,sid);}
+  }
+  const s=staffById(sid);const m=Number(ym.split('-')[1]);
+  const t1=$('#tctot');if(t1) t1.textContent=tcTotText(s?s.name:'',m,p);
+  const t2=$('#tctot2');if(t2) t2.textContent=fmtHM(p.min);
+  const t3=$('#tctot3');if(t3) t3.textContent=p.paid?'有給 '+fmtPaid(p.paid):'';
+  const sn=$('#snapnote');if(sn&&!sn.dataset.stale){sn.dataset.stale='1';sn.insertAdjacentHTML('beforeend','<strong>そのあとに打刻や修正があります。もう一度「集計する」を押すと最新になります。</strong>');}
 }
 function viewTC(){
   if(!S.staff.length) return emptyBox('まだ職員が登録されていません','②で職員を登録すると、タイムカードが使えます。','shokuin','職員を登録する');
   const ym=UI.tcym||(UI.tcym=curYm());const ymp=ym.split('-').map(Number);
   const tk=todayKey();const today=S.punches[tk]||{};const td=new Date();
   const todayList=S.staff.map(s=>{
-    const r=today[s.id];const st=!r?'<span class="pill pO">未出勤</span>':r.i!=null&&r.o==null?'<span class="pill pN">勤務中</span>':'<span class="pill pL">退勤</span>';
+    const r=today[s.id];const pv=paidOf(tk,s.id);
+    const st=(!r?(pv?'':'<span class="pill pO">未出勤</span>'):r.i!=null&&r.o==null?'<span class="pill pN">勤務中</span>':'<span class="pill pL">退勤</span>')+(pv?'<span class="pill pP">有給'+(pv===0.5?'（半日）':'')+'</span>':'');
     return '<li><b>'+esc(s.name||'名前なし')+'</b><span>'+st+'</span><span>出勤 '+fmtClock(r&&r.i)+'　退勤 '+fmtClock(r&&r.o)+'</span></li>';
   }).join('');
   const sn=S.tcSnap[ym];let snapHtml='';
   if(sn){
     const stale=S.punchAt>sn.at;const at=new Date(sn.at);
+    const m=ymp[1];const hasPd=sn.total.paid!=null;
     snapHtml='<p class="snapnote" id="snapnote"'+(stale?' data-stale="1"':'')+'>'+(at.getMonth()+1)+'/'+at.getDate()+' '+at.getHours()+':'+pad(at.getMinutes())+' 時点の集計です。'+(stale?'<strong>そのあとに打刻や修正があります。もう一度「集計する」を押すと最新になります。</strong>':'')+'</p>'
-      +'<div class="tcwrap"><table class="tctable"><thead><tr><th scope="col">なまえ</th><th scope="col">出勤日数</th><th scope="col">勤務時間の合計</th><th scope="col">打刻もれ</th><th scope="col"><span class="sr-only">くわしく</span></th></tr></thead><tbody>'
-      +sn.rows.map(r=>{const s=staffById(r.sid);return '<tr><th scope="row">'+esc((s&&s.name)||r.name||'')+'</th><td>'+r.days+'日</td><td class="big">'+fmtDur(r.min)+'</td><td>'+(r.miss?'<span class="tc-miss">'+r.miss+'件</span>':'—')+'</td><td>'+(s?'<button type="button" class="btn quiet" data-act="tcsel" data-v="'+r.sid+'">くわしく</button>':'')+'</td></tr>';}).join('')
-      +'</tbody><tfoot><tr><th scope="row">全員の合計</th><td>'+sn.total.days+'日</td><td>'+fmtDur(sn.total.min)+'</td><td>'+(sn.total.miss?sn.total.miss+'件':'—')+'</td><td></td></tr></tfoot></table></div>'
+      +'<div class="tcwrap"><table class="tctable"><thead><tr><th scope="col">なまえ</th><th scope="col">出勤日数</th><th scope="col">勤務時間の合計</th><th scope="col">有給</th><th scope="col">打刻もれ</th><th scope="col"><span class="sr-only">くわしく</span></th></tr></thead><tbody>'
+      +sn.rows.map(r=>{const s=staffById(r.sid);return '<tr><th scope="row">'+esc((s&&s.name)||r.name||'')+'</th><td>'+r.days+'日</td><td class="big">'+fmtDur(r.min)+'</td>'
+        +'<td>'+(r.paid?'<span class="tc-pl">'+fmtPaid(r.paid)+'</span><span class="tc-pd">'+paidDates(r.pd||[],m)+'</span>':'—')+'</td>'
+        +'<td>'+(r.miss?'<span class="tc-miss">'+r.miss+'件</span>':'—')+'</td><td>'+(s?'<button type="button" class="btn quiet" data-act="tcsel" data-v="'+r.sid+'">くわしく</button>':'')+'</td></tr>';}).join('')
+      +'</tbody><tfoot><tr><th scope="row">全員の合計</th><td>'+sn.total.days+'日</td><td>'+fmtDur(sn.total.min)+'</td><td>'+(hasPd?(sn.total.paid?fmtPaid(sn.total.paid):'—'):'')+'</td><td>'+(sn.total.miss?sn.total.miss+'件':'—')+'</td><td></td></tr></tfoot></table></div>'
+      +(hasPd?'':'<p class="hint">有給の列は、もう一度「集計する」を押すと出ます。</p>')
       +'<div class="row"><button type="button" class="btn" data-act="tccopy">集計をExcel用にコピー</button>'+((DL||TOP)?'<button type="button" class="btn" data-act="tccsv">打刻の記録をCSVで保存</button>':'')+'</div>';
   }
   if(!staffById(UI.tcsel)) UI.tcsel=S.staff[0].id;
@@ -1530,10 +1608,10 @@ function viewTC(){
   const chips=S.staff.map(s=>'<button type="button" class="chip" data-act="tcsel" data-v="'+s.id+'" aria-pressed="'+(s.id===sel.id)+'">'+esc(s.name||'名前なし')+'</button>').join('');
   const rows=p.rows.map(x=>{
     const plan=sc&&sc.cells[sel.id]&&sc.cells[sel.id][x.d]?SHN[sc.cells[sel.id][x.d]]:'';
-    return '<tr'+(!x.r&&!plan?' class="off"':'')+'><th scope="row">'+ymp[1]+'/'+x.d+'('+DOW[x.dow]+')</th>'+(HAS_ROSTER?'<td>'+plan+'</td>':'')
+    return '<tr id="tcr-'+x.k+'"'+(!x.r&&!plan&&!x.p?' class="off"':'')+'><th scope="row">'+ymp[1]+'/'+x.d+'('+DOW[x.dow]+')</th>'+(HAS_ROSTER?'<td>'+plan+'</td>':'')
       +'<td><input type="time" id="tci-'+x.k+'" aria-label="'+x.d+'日の出勤" data-chg="tcedit" data-k="i" data-day="'+x.k+'" data-sid="'+sel.id+'" value="'+timeVal(x.r&&x.r.i)+'"></td>'
       +'<td><input type="time" id="tco-'+x.k+'" aria-label="'+x.d+'日の退勤" data-chg="tcedit" data-k="o" data-day="'+x.k+'" data-sid="'+sel.id+'" value="'+timeVal(x.r&&x.r.o)+'"></td>'
-      +tcRowCells(x)+'</tr>';
+      +tcRowCells(x,sel.id)+'</tr>';
   }).join('');
   return '<div class="panel">'
     +'<section><h2>タイムカード</h2>'
@@ -1542,16 +1620,16 @@ function viewTC(){
     +reqAdminSection()
     +'<section><h2>きょう（'+(td.getMonth()+1)+'/'+td.getDate()+'）の打刻</h2><ul class="todaygrid">'+todayList+'</ul></section>'
     +'<section><h2>勤務時間の集計</h2>'
-    +'<div class="rule"><label for="tc-brk">休憩として</label><input type="number" id="tc-brk" min="0" max="180" inputmode="numeric" data-chg="tcset" data-k="breakMin" value="'+esc(S.tc.breakMin)+'"><span>分を差し引く（1日の勤務が</span><input type="number" id="tc-aft" min="0" max="12" inputmode="numeric" data-chg="tcset" data-k="breakAfterH" value="'+esc(S.tc.breakAfterH)+'" aria-label="何時間をこえた日か"><span>時間をこえた日）</span></div>'
-    +'<p class="hint">勤務時間は「退勤 − 出勤 − 休憩」で、1分単位で計算します（切り捨てはしません）。</p>'
+    +'<div class="rule"><label for="tc-brk">事業所の基本の休憩</label><input type="number" id="tc-brk" min="0" max="180" inputmode="numeric" data-chg="tcset" data-k="breakMin" value="'+esc(S.tc.breakMin)+'"><span>分（1日の勤務が</span><input type="number" id="tc-aft" min="0" max="12" inputmode="numeric" data-chg="tcset" data-k="breakAfterH" value="'+esc(S.tc.breakAfterH)+'" aria-label="何時間をこえた日か"><span>時間をこえた日に差し引きます）</span></div>'
+    +'<p class="hint">勤務時間は「退勤 − 出勤 − 休憩」で、1分単位で計算します（切り捨てはしません）。休憩が人によってちがうときは、②職員の「ふだんの休憩」で決めます。日によってちがうときは、職員が退勤のときにえらぶか、下の「個人の記録」で直せます。その日の休憩をえらんだ日は、勤務の長さに関係なく、その休憩を差し引きます。</p>'
     +'<div class="row"><button type="button" class="btn primary big" data-act="tcsum">全員の勤務時間を集計する</button></div>'
     +snapHtml
     +'<p class="hint">タイムカードの記録は、法律で一定期間の保存が必要です。この端末の中だけにあるので、毎月CSVで保存しておくと安心です。</p></section>'
     +'<section id="tc-detail"><h2>個人の記録</h2><div class="chips">'+chips+'</div>'
-    +'<p class="sum ok" id="tctot">'+esc(sel.name||'')+'さん　'+ymp[1]+'月：出勤 '+p.days+'日・合計 '+fmtDur(p.min)+(p.miss?'・打刻もれ '+p.miss+'件':'')+'</p>'
-    +'<p class="hint">時刻を直すと、すぐに計算し直します。管理者が直したところには「修正」、職員の申請を承認したところには「本人申請・承認ずみ」と表示されます。退勤が出勤より早い時刻のときは、次の日の時刻として計算します。</p>'
-    +'<div class="tcwrap"><table class="tctable"><thead><tr><th scope="col">日付</th>'+(HAS_ROSTER?'<th scope="col">予定</th>':'')+'<th scope="col">出勤</th><th scope="col">退勤</th><th scope="col">休憩</th><th scope="col">勤務時間</th></tr></thead><tbody>'+rows+'</tbody>'
-    +'<tfoot><tr><th scope="row">合計</th>'+(HAS_ROSTER?'<td></td>':'')+'<td colspan="2">出勤 '+p.days+'日</td><td></td><td id="tctot2">'+fmtHM(p.min)+'</td></tr></tfoot></table></div></section></div>';
+    +'<p class="sum ok" id="tctot">'+esc(tcTotText(sel.name||'',ymp[1],p))+'</p>'
+    +'<p class="hint">時刻・休憩を直すと、すぐに計算し直します。管理者が直したところには「修正」、職員の申請を承認したところには「本人申請・承認ずみ」と表示されます。休憩の「自動」は、ふだんの休憩をあてはめた時間です。有給の日は、右の「有給」の欄でえらびます。退勤が出勤より早い時刻のときは、次の日の時刻として計算します。</p>'
+    +'<div class="tcwrap"><table class="tctable"><thead><tr><th scope="col">日付</th>'+(HAS_ROSTER?'<th scope="col">予定</th>':'')+'<th scope="col">出勤</th><th scope="col">退勤</th><th scope="col">休憩</th><th scope="col">勤務時間</th><th scope="col">有給</th></tr></thead><tbody>'+rows+'</tbody>'
+    +'<tfoot><tr><th scope="row">合計</th>'+(HAS_ROSTER?'<td></td>':'')+'<td colspan="2">出勤 '+p.days+'日</td><td></td><td id="tctot2">'+fmtHM(p.min)+'</td><td id="tctot3">'+(p.paid?'有給 '+fmtPaid(p.paid):'')+'</td></tr></tfoot></table></div></section></div>';
 }
 /* 見本用：今月のきのうまでの打刻（きょうは時刻に合わせて） */
 function samplePunches(st){
@@ -1570,7 +1648,20 @@ function samplePunches(st){
   }
   const keys=Object.keys(P).filter(k=>k!==keyOf(y,m,today));
   if(keys.length>2&&st.staff[1]){const k=keys[Math.floor(keys.length/2)];if(P[k][st.staff[1].id]) P[k][st.staff[1].id].o=null;}
+  /* ふだんの休憩が決まっている人は、日によって1時間の日もある */
+  st.staff.forEach(s=>{if(s.brk!=null) keys.forEach((k,j)=>{const r=P[k][s.id];if(r&&r.o!=null&&j%3===1) r.b=60;});});
   return P;
+}
+/* 見本用：有給の日（1日を2回、半日を1回） */
+function samplePaid(st){
+  const out={};const now=new Date();const y=now.getFullYear(),m=now.getMonth()+1,today=now.getDate();
+  const put=(k,id,v)=>{(out[k]=out[k]||{})[id]=v;};
+  const a=st.staff[0],b=st.staff[4];const wd=[];
+  for(let d=2;d<today;d++){const dow=new Date(y,m-1,d).getDay();if(dow>0&&dow<6) wd.push(d);}
+  if(a) [wd[1],wd[5]].filter(Boolean).forEach(d=>{const k=keyOf(y,m,d);if(st.punches[k]){delete st.punches[k][a.id];if(!Object.keys(st.punches[k]).length) delete st.punches[k];}put(k,a.id,1);});
+  if(b){const k3=Object.keys(st.punches).filter(k=>k!==keyOf(y,m,today)).find(k=>{const r=st.punches[k][b.id];return r&&r.i!=null&&r.o!=null;});
+    if(k3){const r=st.punches[k3][b.id];r.o=r.i+240;delete r.b;put(k3,b.id,0.5);}}
+  return out;
 }
 
 const VIEWS=HAS_ROSTER?{joken:viewJoken,shokuin:viewShokuin,kibou:viewKibou,zentai:viewZentai,kojin:viewKojin}:{joken:viewJoken,shokuin:viewShokuin,tc:viewTC};
@@ -1942,6 +2033,7 @@ const ACT={
   },
   pdf(v){makePdf(v,false);},
   punch(v){doPunch(v);},
+  brkpick(v){brkPick(v);},
   rqopen(v){const me=staffById(UI.me);if(!me) return;const day=v||todayKey();const r=(S.punches[day]||{})[me.id];
     UI.rq={day:day,reason:r&&r.i!=null&&r.o==null?'退勤を押し忘れ':r&&r.i==null&&r.o!=null?'出勤を押し忘れ':'',note:'',err:''};renderMain();const f=$('#rq-sec');if(f) f.scrollIntoView({block:'start'});},
   rqreason(v){if(!UI.rq) return;UI.rq.reason=v;document.querySelectorAll('[data-act="rqreason"]').forEach(x=>x.setAttribute('aria-pressed',String(x.dataset.v===v)));},
@@ -1951,7 +2043,7 @@ const ACT={
   rqok(v){
     const q=(S.reqs||[]).find(x=>x.id===v);if(!q||q.st!=='wait') return;
     const day=S.punches[q.day]||(S.punches[q.day]={});const r=day[q.sid]||(day[q.sid]={i:null,o:null});
-    if(q.i!=null) r.i=q.i;if(q.o!=null) r.o=q.o;
+    if(q.i!=null) r.i=q.i;if(q.o!=null) r.o=q.o;if(q.b!=null) r.b=q.b;
     if(r.i!=null&&r.o!=null&&r.o<=r.i) r.o+=1440;
     r.a=1;q.st='ok';q.doneAt=Date.now();S.punchAt=Date.now();UI.tcsel=q.sid;UI.tcym=q.day.slice(0,7);save();renderSteps();renderMain();toast('承認して、記録を直しました（下の「個人の記録」に表示しています）');
   },
@@ -1960,8 +2052,8 @@ const ACT={
   tcmonth(v){const p=(UI.tcym||curYm()).split('-').map(Number);const dt=new Date(p[0],p[1]-1+Number(v),1);UI.tcym=dt.getFullYear()+'-'+pad(dt.getMonth()+1);renderMain();},
   tcsel(v){UI.tcsel=v;renderMain();const d=$('#tc-detail');if(d) d.scrollIntoView({block:'start'});},
   tcsum(){
-    const ym=UI.tcym||curYm();const rows=S.staff.map(s=>{const p=tcPerson(s.id,ym);return {sid:s.id,name:s.name,days:p.days,min:p.min,miss:p.miss};});
-    const total={days:0,min:0,miss:0};rows.forEach(r=>{total.days+=r.days;total.min+=r.min;total.miss+=r.miss;});
+    const ym=UI.tcym||curYm();const rows=S.staff.map(s=>{const p=tcPerson(s.id,ym);return {sid:s.id,name:s.name,days:p.days,min:p.min,miss:p.miss,paid:p.paid,pd:p.pd};});
+    const total={days:0,min:0,miss:0,paid:0};rows.forEach(r=>{total.days+=r.days;total.min+=r.min;total.miss+=r.miss;total.paid+=r.paid;});
     S.tcSnap[ym]={at:Date.now(),rows:rows,total:total};save();renderMain();toast('全員の勤務時間を集計しました');
   },
   tccopy(){copyText(tcSummaryRows(UI.tcym||curYm()).map(r=>r.join('\t')).join('\n'),'コピーしました。Excelに貼り付けてください');},
@@ -1978,7 +2070,7 @@ const ACT={
 };
 const CHG={
   qset(el){const q=qById(el.dataset.q);if(!q) return;q[el.dataset.k]=clampInt(el.value,0,30);el.value=q[el.dataset.k];touch();},
-  rqday(el){if(!UI.rq) return;UI.rq.day=el.value;UI.rq.iv=null;UI.rq.ov=null;UI.rq.err='';renderMain();const d=$('#rq-day');if(d) d.focus();},
+  rqday(el){if(!UI.rq) return;UI.rq.day=el.value;UI.rq.iv=null;UI.rq.ov=null;UI.rq.bv=null;UI.rq.err='';renderMain();const d=$('#rq-day');if(d) d.focus();},
   tcset(el){S.tc[el.dataset.k]=clampInt(el.value,el.min,el.max);el.value=S.tc[el.dataset.k];S.punchAt=Date.now();save();renderMain();},
   tcedit(el){
     const k=el.dataset.day,sid=el.dataset.sid;const day=S.punches[k]||(S.punches[k]={});const r=day[sid]||(day[sid]={i:null,o:null});
@@ -1986,13 +2078,18 @@ const CHG={
     if(r.i!=null&&r.o!=null){r.o=r.o%1440;if(r.o<=r.i) r.o+=1440;}
     if(r.i==null&&r.o==null) delete day[sid];else r.e=1;
     if(!Object.keys(day).length) delete S.punches[k];
-    S.punchAt=Date.now();save();
-    const p=tcPerson(sid,UI.tcym||curYm());const x=p.rows.find(z=>z.k===k);const tr=el.closest('tr');
-    if(tr&&x){tr.classList.remove('off');const cells=tr.querySelectorAll('td');cells[cells.length-1].outerHTML='<td id="tcn-'+k+'" class="big">'+(x.c?fmtHM(x.c.net):x.r&&!isOpenToday(x.k,x.r)?'<span class="tc-miss">打刻もれ</span>':x.r?'勤務中':'')+markHTML(x.r)+'</td>';const b=$('#tcb-'+k);if(b) b.textContent=x.c&&x.c.brk?x.c.brk+'分':'';}
-    const s=staffById(sid);const m=Number((UI.tcym||curYm()).split('-')[1]);
-    const t1=$('#tctot');if(t1) t1.textContent=(s?s.name:'')+'さん　'+m+'月：出勤 '+p.days+'日・合計 '+fmtDur(p.min)+(p.miss?'・打刻もれ '+p.miss+'件':'');
-    const t2=$('#tctot2');if(t2) t2.textContent=fmtHM(p.min);
-    const sn=$('#snapnote');if(sn&&!sn.dataset.stale){sn.dataset.stale='1';sn.insertAdjacentHTML('beforeend','<strong>そのあとに打刻や修正があります。もう一度「集計する」を押すと最新になります。</strong>');}
+    S.punchAt=Date.now();save();tcDetailRefresh(k,sid);
+  },
+  tcbrk(el){
+    const k=el.dataset.day,sid=el.dataset.sid;const r=(S.punches[k]||{})[sid];if(!r) return;
+    if(el.value==='') delete r.b;else r.b=Number(el.value);r.e=1;
+    S.punchAt=Date.now();save();tcDetailRefresh(k,sid,'b');
+  },
+  tcpaid(el){
+    const k=el.dataset.day,sid=el.dataset.sid;
+    if(el.value===''){if(S.paid[k]){delete S.paid[k][sid];if(!Object.keys(S.paid[k]).length) delete S.paid[k];}}
+    else (S.paid[k]=S.paid[k]||{})[sid]=Number(el.value);
+    el.classList.toggle('on',el.value!=='');S.punchAt=Date.now();save();tcDetailRefresh(k,sid);
   },
   opendow(el){
     const d=Number(el.dataset.v);const i=S.openDows.indexOf(d);
@@ -2002,6 +2099,7 @@ const CHG={
   sf(el){
     const s=staffById(el.dataset.sid);if(!s) return;const k=el.dataset.k;
     if(k==='name'){s.name=el.value.trim();save();return;}
+    if(k==='brk'){s.brk=el.value===''?null:Number(el.value);S.punchAt=Date.now();save();return;}
     if(k==='type'){s.type=el.value;touch();renderMain();return;}
     if(k==='can') s.can[el.dataset.v]=el.checked;
     else if(k==='hrson'||k==='hrsst'||k==='hrsen'){s.hrs=s.hrs||{on:false,start:'09:00',end:'13:00'};if(k==='hrson'){s.hrs.on=el.checked;touch();renderMain();return;}const v=el.value;if(v){if(k==='hrsst') s.hrs.start=v;else s.hrs.end=v;}touch();const hn=$('#hn-'+s.id);if(hn) hn.textContent=hrsNote(s);return;}
@@ -2014,7 +2112,7 @@ const CHG={
     const sm=$('#staffsum');if(sm) sm.outerHTML=staffSum(info);
   }
 };
-const STAFF_ACTS={me:1,stab:1,smonth:1,wish:1,donewish:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,closemodal:1,rqopen:1,rqreason:1,rqsend:1,rqclose:1,rqcancel:1,punch:1,tcback:1};
+const STAFF_ACTS={brkpick:1,me:1,stab:1,smonth:1,wish:1,donewish:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,closemodal:1,rqopen:1,rqreason:1,rqsend:1,rqclose:1,rqcancel:1,punch:1,tcback:1};
 const sig=el=>el&&el.dataset&&el.dataset.act?[el.dataset.act,el.dataset.v||'',el.dataset.s||'',el.dataset.d||''].join('|'):null;
 document.addEventListener('click',e=>{
   const b=e.target.closest?e.target.closest('[data-act]'):null;if(!b||b.disabled) return;
