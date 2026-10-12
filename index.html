@@ -420,6 +420,31 @@ span.cellbtn{cursor:default}
 .pg-head h3{font-size:24px;color:var(--cocoa)}
 .pg-fac{font-size:13px;color:var(--muted);font-weight:700}
 .pg-head .legend{margin-left:auto;justify-content:flex-end;max-width:560px}
+.ts{gap:12px}
+.ts-head{display:flex;align-items:flex-end;gap:18px}
+.ts-ttl{flex:1;display:flex;flex-direction:column;gap:6px;min-width:0}
+.ts-ttl h3{font-family:var(--font-display);font-weight:500;font-size:23px;color:var(--ink);margin:0}
+.ts-name{font-size:14px;color:var(--ink);border-bottom:1.5px solid var(--ink);padding:0 4px 3px;max-width:380px}
+.ts-name strong{font-size:20px;margin-left:10px}
+.ts-stamp{border-collapse:collapse;font-size:11px;color:var(--ink)}
+.ts-stamp th,.ts-stamp td{border:1px solid var(--ink);width:66px;text-align:center;font-weight:700}
+.ts-stamp th{height:20px;background:var(--paper-2)}
+.ts-stamp td{height:56px}
+.tst{width:100%;border-collapse:collapse;table-layout:fixed;font-size:13.5px;color:var(--ink);font-variant-numeric:tabular-nums}
+.tst th,.tst td{border:1px solid #7A675D;height:27px;padding:0 5px;text-align:center;white-space:nowrap;overflow:hidden;font-weight:500}
+.tst thead th{background:#F3E9DF;font-size:12px;height:27px;font-weight:700}
+.tst tbody th{font-weight:700}
+.tst .sat{color:#2F64A8;background:#F1F6FC}
+.tst .sun{color:#C0392B;background:#FDF2F0}
+.tst .pl{font-weight:700;color:#1D526E;background:#E3F1F8}
+.tst .nt{text-align:left;font-size:11px;white-space:normal;line-height:1.15}
+.tst .miss{color:#8F4310;font-weight:700}
+.tst tfoot th,.tst tfoot td{background:#FFF1D2;font-weight:700;height:28px}
+.ts-sum{display:grid;grid-template-columns:1fr 1.4fr 1.6fr 1fr;gap:8px}
+.ts-sum div{border:1px solid #7A675D;border-radius:8px;padding:6px 10px;display:flex;flex-direction:column;gap:2px;min-width:0}
+.ts-sum small{font-size:11px;color:var(--muted);font-weight:700}
+.ts-sum b{font-size:16px;color:var(--ink)}
+.ts-sum span{font-size:10.5px;color:var(--muted);white-space:normal;line-height:1.3}
 .pg-foot{display:flex;justify-content:space-between;gap:12px;font-size:11px;color:var(--muted)}
 .pg .bunting{max-width:460px}
 .pg .psheet{max-width:none}
@@ -1708,6 +1733,11 @@ function viewTC(){
     +'<p class="hint">タイムカードの記録は、法律で一定期間の保存が必要です。この端末の中だけにあるので、毎月CSVで保存しておくと安心です。</p></section>'
     +'<section id="tc-detail"><h2>個人の記録</h2><div class="chips">'+chips+'</div>'
     +'<p class="sum ok" id="tctot">'+esc(tcTotText(sel.name||'',ymp[1],p))+'</p>'
+    +((DL||TOP)?'<div class="outbox"><p class="outlab">出勤簿をPDFで保存・印刷（A4縦・'+ymp[0]+'年'+ymp[1]+'月）</p><div class="row">'
+      +'<button type="button" class="btn primary" data-act="pdf" data-v="tcone">'+esc(sel.name||'名前なし')+'さんの出勤簿をPDF保存</button>'
+      +'<button type="button" class="btn" data-act="pdf" data-v="tcall">全員分（'+S.staff.length+'人）をPDF保存</button>'
+      +(TOP?'<button type="button" class="btn" data-act="pdfprint" data-v="tcone">'+esc(sel.name||'名前なし')+'さんの出勤簿を印刷する</button>':'')+'</div>'
+      +'<p class="hint">年・月・氏名と、毎日の出勤・退勤・休憩・勤務時間・有給が入ります。月は上の「‹ ›」で切りかえます。</p></div>':'')
     +'<p class="hint">時刻・休憩を直すと、すぐに計算し直します。管理者が直したところには「修正」、職員の申請を承認したところには「本人申請・承認ずみ」と表示されます。休憩の「自動」は、ふだんの休憩をあてはめた時間です。有給の日は、右の「有給」の欄でえらびます。'+(HAS_ROSTER?'勤務表の希望休で入れた有給は自動で出ます（「勤務表・公開前」の有給は、その月の勤務表を職員に公開すると合計と集計に入ります。変えるときは③希望休で）。':'')+'退勤が出勤より早い時刻のときは、次の日の時刻として計算します。</p>'
     +'<div class="tcwrap"><table class="tctable"><thead><tr><th scope="col">日付</th>'+(HAS_ROSTER?'<th scope="col">予定</th>':'')+'<th scope="col">出勤</th><th scope="col">退勤</th><th scope="col">休憩</th><th scope="col">勤務時間</th><th scope="col">有給</th></tr></thead><tbody>'+rows+'</tbody>'
     +'<tfoot><tr><th scope="row">合計</th>'+(HAS_ROSTER?'<td></td>':'')+'<td colspan="2">出勤 '+p.days+'日</td><td></td><td id="tctot2">'+fmtHM(p.min)+'</td><td id="tctot3">'+(p.paid?'有給 '+fmtPaid(p.paid):'')+'</td></tr></tfoot></table></div></section></div>';
@@ -1927,6 +1957,7 @@ function loadLibs(){
 }
 function todayStr(){const d=new Date();return d.getFullYear()+'/'+(d.getMonth()+1)+'/'+d.getDate();}
 function pdfPages(kind){
+  if(kind==='tcone'||kind==='tcall'){const ym=UI.tcym||curYm();return (kind==='tcall'?S.staff:[staffById(UI.tcsel)]).filter(Boolean).map(s=>tsPage(s,ym));}
   const info=INFO();const ttl=info.y+'年'+info.m+'月の勤務表';
   const foot='<p class="pg-foot"><span>'+esc(S.facility.name)+'</span><span>'+todayStr()+' 作成</span></p>';
   const head=sub=>'<header class="pg-head">'+chick()+'<div><p class="pg-fac">'+esc(S.facility.name)+'</p><h3>'+ttl+'<small style="font-size:15px;color:var(--muted)">　'+sub+'</small></h3></div>'+legend(sub==='カレンダー')+'</header>';
@@ -1934,7 +1965,37 @@ function pdfPages(kind){
   if(kind==='otable') return ['<div class="pg pg-landscape">'+head('一覧')+'<div class="tbl-wrap">'+rosterTable(false)+'</div>'+foot+'</div>'];
   return (UI.all?S.staff:[staffById(UI.selP)]).filter(Boolean).map(s=>'<div class="pg pg-portrait">'+personalSheet(s)+'</div>');
 }
+/* ---------- タイムカード：一人ずつの出勤簿（PDF・A4縦） ---------- */
+function wareki(y){const r=y-2018;return y>=2019?'令和'+(r===1?'元':r)+'年':'平成'+(y-1988)+'年';}
+function tsPage(s,ym){
+  const p=tcPerson(s.id,ym);const yp=ym.split('-').map(Number);const hol=holidaysOf(yp[0]);const sc=HAS_ROSTER?S.schedules[ym]:null;
+  const rows=p.rows.map(x=>{
+    const hn=hol[yp[1]+'-'+x.d];const cls=hn||x.dow===0?'sun':x.dow===6?'sat':'';const r=x.r;
+    const span=r?fmtClock(r.i)+' 〜 '+fmtClock(r.o):'';
+    const notes=[r&&!x.c&&!isOpenToday(x.k,r)?'<span class="miss">打刻もれ</span>':'',r&&r.e?'修正':'',r&&r.a?'本人申請・承認':'',hn?esc(hn):''].filter(Boolean).join('・');
+    return '<tr><th class="'+cls+'">'+x.d+'</th><td class="'+cls+'">'+DOW[x.dow]+'</td>'+(HAS_ROSTER?'<td>'+planOf(sc,s.id,x)+'</td>':'')
+      +'<td>'+span+'</td><td>'+(x.c?fmtHM(x.c.brk):'')+'</td><td>'+(x.c?fmtHM(x.c.net):r&&isOpenToday(x.k,r)?'勤務中':'')+'</td>'
+      +'<td'+(x.p?' class="pl"':'')+'>'+(x.p?(x.p===0.5?'半日':'有給'):'')+'</td><td class="nt">'+notes+'</td></tr>';
+  }).join('');
+  const cols='<colgroup><col style="width:36px"><col style="width:36px">'+(HAS_ROSTER?'<col style="width:84px">':'')+'<col style="width:150px"><col style="width:52px"><col style="width:66px"><col style="width:50px"><col></colgroup>';
+  const pd=p.pd.length?paidDates(p.pd,yp[1]):'';
+  return '<div class="pg pg-portrait ts">'
+    +'<header class="ts-head"><div class="ts-ttl"><p class="pg-fac">'+esc(S.facility.name)+'</p>'
+    +'<h3>'+wareki(yp[0])+'（'+yp[0]+'年）'+yp[1]+'月　出勤簿</h3>'
+    +'<p class="ts-name">氏名<strong>'+esc(s.name||'名前なし')+'</strong></p></div>'
+    +'<table class="ts-stamp"><tr><th>本人</th><th>管理者</th></tr><tr><td></td><td></td></tr></table></header>'
+    +'<table class="tst">'+cols+'<thead><tr><th>日</th><th>曜日</th>'+(HAS_ROSTER?'<th>予定</th>':'')+'<th>出勤 〜 退勤</th><th>休憩</th><th>勤務時間</th><th>有給</th><th>備考</th></tr></thead>'
+    +'<tbody>'+rows+'</tbody>'
+    +'<tfoot><tr><th colspan="2">合計</th>'+(HAS_ROSTER?'<td></td>':'')+'<td>出勤 '+p.days+'日</td><td></td><td>'+fmtHM(p.min)+'</td><td>'+(p.paid?fmtPaid(p.paid):'')+'</td><td class="nt">'+(p.miss?'<span class="miss">打刻もれ '+p.miss+'件</span>':'')+'</td></tr></tfoot></table>'
+    +'<div class="ts-sum"><div><small>出勤日数</small><b>'+p.days+'日</b></div>'
+    +'<div><small>勤務時間の合計</small><b>'+fmtDur(p.min)+'</b><span>（'+(p.min/60).toFixed(2)+'時間）</span></div>'
+    +'<div><small>有給</small><b>'+(p.paid?fmtPaid(p.paid):'なし')+'</b>'+(pd?'<span>'+pd+'</span>':'')+'</div>'
+    +'<div><small>打刻もれ</small><b>'+(p.miss?p.miss+'件':'なし')+'</b></div></div>'
+    +'<p class="pg-foot"><span>勤務時間＝退勤−出勤−休憩（1分単位）。時刻は「時:分」。</span><span>'+todayStr()+' 作成</span></p></div>';
+}
 function pdfName(kind){
+  if(kind==='tcone'||kind==='tcall'){const ym=UI.tcym||curYm();const s=staffById(UI.tcsel);
+    return '出勤簿_'+ym+'_'+(kind==='tcall'?'全員':(((s&&s.name)||'個人').replace(/[\s　\\/:*?"<>|]+/g,'')))+'.pdf';}
   const base='勤務表_'+S.ym;
   if(kind==='ocal') return base+'_全体カレンダー.pdf';
   if(kind==='otable') return base+'_全体一覧.pdf';
@@ -1951,7 +2012,7 @@ async function makePdf(kind,printIt){
   try{
     await loadLibs();
     const pages=pdfPages(kind);if(!pages.length) throw new Error('empty');
-    const orient=kind==='personal'?'portrait':'landscape';
+    const orient=(kind==='personal'||kind==='tcone'||kind==='tcall')?'portrait':'landscape';
     const PW=orient==='portrait'?210:297,PH=orient==='portrait'?297:210,M=8;
     const pdf=new window.jspdf.jsPDF({orientation:orient,unit:'mm',format:'a4',compress:true});
     for(let i=0;i<pages.length;i++){
