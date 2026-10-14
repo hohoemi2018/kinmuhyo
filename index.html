@@ -115,7 +115,7 @@ h2::before{content:"";width:12px;height:12px;border-radius:50%;background:var(--
 @media (hover:hover){ .btn:hover,.mbtn:hover,.step:hover{filter:brightness(.97)} }
 .iconbtn{appearance:none;width:40px;height:40px;border-radius:50%;border:2px solid var(--line);background:var(--paper-2);cursor:pointer;font-size:18px;line-height:1;color:var(--muted);flex:none}
 
-input[type=text],input[type=number],input[type=time],select,textarea{background:var(--paper-2);border:2px solid var(--line);border-radius:12px;padding:6px 10px;min-height:42px;max-width:100%}
+input[type=text],input[type=number],input[type=time],input[type=password],select,textarea{background:var(--paper-2);border:2px solid var(--line);border-radius:12px;padding:6px 10px;min-height:42px;max-width:100%}
 input[type=number]{width:5em;text-align:right;font-variant-numeric:tabular-nums}
 input.wide{width:min(100%,26em)}
 textarea{width:100%;min-height:84px;line-height:1.5}
@@ -453,6 +453,12 @@ span.cellbtn{cursor:default}
 .cm-opt[aria-pressed="true"]{border-color:var(--cocoa)}
 .cm-opt.cm-off{background:var(--paper-2);color:var(--muted)}
 .cm-sub{font-size:14px;font-weight:700;color:var(--muted);margin-top:4px}
+
+/* ---- 控えのパスワード ---- */
+.bkpw{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;max-width:30em}
+.bkpw input,.bk-rpw input{width:100%}
+.bk-rpw{max-width:30em}
+@media (max-width:520px){.bkpw{grid-template-columns:minmax(0,1fr)}}
 
 /* ---- ご利用の登録 ---- */
 .licbar{background:var(--p-bg);color:var(--p-fg);border-radius:14px;padding:10px 14px;margin-bottom:12px;font-size:14px}
@@ -1107,7 +1113,7 @@ async function licAddText(text){
 function licWho(o){return esc(o.n||'')+' 様（'+(o.g?'ほほえみカレッジ 特典':o.x?ymdLabel(o.x)+'まで':'期限なし')+'）';}
 function licDaysLeft(o){if(!o||!o.x) return null;const p=o.x.split('-').map(Number);const end=new Date(p[0],p[1]-1,p[2]);const t=new Date();t.setHours(0,0,0,0);return Math.round((end-t)/86400000);}
 /* 期限が切れたときに使えるボタン（見る・控え・PDFだけ） */
-const VIEW_ACTS={go:1,month:1,zmode:1,selp:1,allp:1,pdf:1,pdfprint:1,copyp:1,copytsv:1,savecsv:1,tcmonth:1,tcsel:1,tccopy:1,tccsv:1,tcsum:1,bkcopy:1,closemodal:1,licadd:1,me:1,stab:1,smonth:1,tcback:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,rccopy:1,cellclose:1,selw:1};
+const VIEW_ACTS={bkmode:1,go:1,month:1,zmode:1,selp:1,allp:1,pdf:1,pdfprint:1,copyp:1,copytsv:1,savecsv:1,tcmonth:1,tcsel:1,tccopy:1,tccsv:1,tcsum:1,bkcopy:1,closemodal:1,licadd:1,me:1,stab:1,smonth:1,tcback:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,rccopy:1,cellclose:1,selw:1};
 const GATE_ACTS={licadd:1,closemodal:1};
 function licBar(){
   if(LIC.state==='expired') return '<div class="licbar warn no-print" role="status"><b>ご利用の期限（'+ymdLabel(LIC.expired.x)+'）が切れています。</b>いまは見ることと、控え・PDFの保存だけできます。続けてお使いになるときは、合同会社発達支援ほほえみカレッジにご連絡ください。新しい利用リンクを開くと、そのまま使えます。</div>';
@@ -1373,15 +1379,58 @@ function importSection(){
     +'<p class="hint">それぞれのアプリの「①」の画面の一番下「データの控えをとる・戻す」→「控えをコピー」でコピーした文字を、下に貼り付けてください。片方だけでもかまいません。</p>'
     +'<label class="fld imp-fld" for="imp-r"><span>勤務表の控え</span><textarea id="imp-r" rows="3"></textarea></label>'
     +'<label class="fld imp-fld" for="imp-t"><span>タイムカードの控え</span><textarea id="imp-t" rows="3"></textarea></label>'
+    +'<label class="fld bk-rpw" for="imp-pw"><span>控えのパスワード（パスワードをかけた控えのときだけ）</span><input type="password" id="imp-pw" autocomplete="off"></label>'
     +'<button type="button" class="btn" data-act="imppaste">貼り付けた控えを取りこむ</button></div></details></section>';
 }
 function impScroll(){const f=$('#imp-sec');if(f) f.scrollIntoView({block:'start'});}
+/* ---------- 控えのパスワード ----------
+   パスワードをかけた控えは「HOHOEMI-ENC1:」ではじまる。中身は AES-GCM（かぎはパスワードから PBKDF2 で作る）。
+   パスワードなしの控えは、これまでどおり JSON のまま */
+const BK_PREFIX='HOHOEMI-ENC1:';
+const bkCan=()=>!!(window.crypto&&crypto.subtle&&window.TextEncoder);
+function isEncBk(t){return String(t||'').trim().indexOf(BK_PREFIX)===0;}
+function u8b64(u){let x='';for(let i=0;i<u.length;i+=0x8000) x+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(x);}
+function b64u8(t){const b=atob(t);const u=new Uint8Array(b.length);for(let i=0;i<b.length;i++) u[i]=b.charCodeAt(i);return u;}
+async function bkKey(pw,salt){const base=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:200000,hash:'SHA-256'},base,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
+async function bkEncrypt(text,pw){
+  const salt=crypto.getRandomValues(new Uint8Array(16)),iv=crypto.getRandomValues(new Uint8Array(12));const key=await bkKey(pw,salt);
+  const ct=new Uint8Array(await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},key,new TextEncoder().encode(text)));
+  const all=new Uint8Array(28+ct.length);all.set(salt,0);all.set(iv,16);all.set(ct,28);return BK_PREFIX+u8b64(all);
+}
+async function bkDecrypt(text,pw){
+  const all=b64u8(String(text).trim().slice(BK_PREFIX.length).replace(/\s+/g,''));
+  const key=await bkKey(pw,all.slice(0,16));const pt=await crypto.subtle.decrypt({name:'AES-GCM',iv:all.slice(16,28)},key,all.slice(28));
+  return new TextDecoder().decode(pt);
+}
+/* 時間のかかる文字（パスワードをかけた控え）をコピーする。Safari でもコピーできるように、押したその場でコピーを始める */
+function copyLater(promise,okMsg){
+  try{
+    if(window.ClipboardItem&&navigator.clipboard&&navigator.clipboard.write){
+      navigator.clipboard.write([new ClipboardItem({'text/plain':promise.then(t=>new Blob([t],{type:'text/plain'}))})]).then(()=>toast(okMsg),()=>promise.then(t=>copyText(t,okMsg),()=>{}));
+      return;
+    }
+  }catch(e){}
+  promise.then(t=>copyText(t,okMsg),()=>{});
+}
 function backupSection(){
-  return '<section><details class="backup"><summary>データの控えをとる・戻す</summary><div>'
-    +'<p class="hint">入力した内容はこの端末のブラウザに保存されます。別のパソコンで使うときや、もしものときのために、控えをコピーしてメモ帳などに保管できます。</p>'
-    +'<button type="button" class="btn" data-act="bkcopy">控えをコピー</button>'
+  const pw=UI.bkpw!==false&&bkCan();
+  return '<section><details class="backup" id="bk-det"><summary>データの控えをとる・戻す</summary><div>'
+    +'<p class="hint">入力した内容はこの端末のブラウザに保存されます。別のパソコンで使うときや、もしものときのために、控えをコピーしてメモ帳などに保管できます。控えには職員の名前や勤務の記録が入っているので、パスワードをかけておくと安心です。</p>'
+    +(bkCan()?'<div class="chips" role="group" aria-label="控えのパスワード"><button type="button" class="chip" data-act="bkmode" data-v="pw" aria-pressed="'+pw+'">パスワードをかける（おすすめ）</button><button type="button" class="chip" data-act="bkmode" data-v="plain" aria-pressed="'+(!pw)+'">パスワードをかけない</button></div>':'')
+    +(pw?'<div class="bkpw"><label class="fld" for="bk-pw1"><span>パスワード（6文字以上）</span><input type="password" id="bk-pw1" autocomplete="new-password"></label><label class="fld" for="bk-pw2"><span>もう一度</span><input type="password" id="bk-pw2" autocomplete="new-password"></label></div>'
+      +'<p class="hint">パスワードを忘れると、この控えは戻せません。控えとは別の場所（紙など）に書いておいてください。</p>'
+      :'<p class="hint">パスワードをかけない控えは、だれでも中身を読めます。LINEやメールでは送らないでください。</p>')
+    +'<button type="button" class="btn" data-act="bkcopy">'+(pw?'パスワードをかけて控えをコピー':'控えをコピー')+'</button>'
     +'<label for="bk-ta" class="hint">控えから戻すときは、下に貼り付けてください。</label><textarea id="bk-ta" rows="3"></textarea>'
+    +'<label class="fld bk-rpw" for="bk-rpw"><span>控えのパスワード（パスワードをかけた控えのときだけ）</span><input type="password" id="bk-rpw" autocomplete="off"></label>'
     +'<button type="button" class="btn" data-act="bkrestore">この控えで戻す</button></div></details></section>';
+}
+/* 貼り付けられた控えを読む（パスワードがかかっていればはずす）。だめなときは null と理由 */
+async function bkRead(text,pw){
+  if(!isEncBk(text)) return {text:text};
+  if(!bkCan()) return {err:'このブラウザでは、パスワードをかけた控えを戻せません'};
+  if(!pw) return {err:'控えのパスワードを入れてください',needPw:true};
+  try{return {text:await bkDecrypt(text,pw)};}catch(e){return {err:'パスワードがちがうか、控えが途中で切れています'};}
 }
 function viewJokenTC(){
   return '<div class="panel">'
@@ -2567,9 +2616,19 @@ const ACT={
   tccsv(){const ym=UI.tcym||curYm();saveFile('timecard-'+ym+'.csv',toCSV(tcDetailRows(ym)),'text/csv;charset=utf-8');},
   pdfprint(v){makePdf(v,true);},
   zmode(v){UI.zmode=v;S.zmode=v;save();renderMain();},
-  bkcopy(){copyText(JSON.stringify(S),'控えをコピーしました。メモ帳などに貼り付けて保管してください');},
-  bkrestore(){
-    let s=null;try{const o=JSON.parse($('#bk-ta').value);if(o&&!o.punches){o.punches={};o.reqs=o.reqs||[];o.paid=o.paid||{};}s=normalize(o);}catch(e){s=null;}
+  bkmode(v){UI.bkpw=v!=='plain';renderMain();const d=$('#bk-det');if(d){d.open=true;const f=$('#bk-pw1')||d.querySelector('[data-act="bkcopy"]');if(f) f.focus({preventScroll:true});}},
+  bkcopy(){
+    const raw=JSON.stringify(S);
+    if(!(UI.bkpw!==false&&bkCan())){copyText(raw,'控えをコピーしました。メモ帳などに貼り付けて保管してください');return;}
+    const a=($('#bk-pw1')||{}).value||'',b=($('#bk-pw2')||{}).value||'';
+    if(a.length<6){toast('パスワードは6文字以上にしてください');const f=$('#bk-pw1');if(f) f.focus();return;}
+    if(a!==b){toast('2つのパスワードがちがいます。同じパスワードを入れてください');const f=$('#bk-pw2');if(f) f.focus();return;}
+    copyLater(bkEncrypt(raw,a),'パスワードをかけた控えをコピーしました。メモ帳などに貼り付けて保管してください');
+  },
+  async bkrestore(){
+    const r=await bkRead(($('#bk-ta')||{}).value||'',($('#bk-rpw')||{}).value||'');
+    if(r.err){toast(r.err);if(r.needPw){const f=$('#bk-rpw');if(f) f.focus();}return;}
+    let s=null;try{const o=JSON.parse(r.text);if(o&&!o.punches){o.punches={};o.reqs=o.reqs||[];o.paid=o.paid||{};}s=normalize(o);}catch(e){s=null;}
     if(!s){toast('控えを読み取れませんでした。コピーした文字をそのまま貼り付けてください');return;}
     S=s;UI.view=S.view||'joken';UI.selW=UI.selP=null;save();render();toast('控えから戻しました');
   },
@@ -2582,9 +2641,12 @@ const ACT={
   },
   impgo(){UI.view='joken';UI.imp=null;render();impScroll();},
   impdev(){const R=readOld('roster'),T=readOld('tc');if(!R&&!T){toast('この端末には、取りこめるデータがありません');return;}UI.imp={R:R,T:T};UI.impMsg='';renderMain();impScroll();},
-  imppaste(){
-    const tr=($('#imp-r')||{}).value||'',tt=($('#imp-t')||{}).value||'';
+  async imppaste(){
+    let tr=($('#imp-r')||{}).value||'',tt=($('#imp-t')||{}).value||'';const pw=($('#imp-pw')||{}).value||'';
     if(!tr.trim()&&!tt.trim()){toast('控えを貼り付けてください');return;}
+    for(const k of ['r','t']){const v=k==='r'?tr:tt;if(!v.trim()) continue;const x=await bkRead(v,pw);
+      if(x.err){toast((k==='r'?'勤務表':'タイムカード')+'の控え：'+x.err);if(x.needPw){const f=$('#imp-pw');if(f) f.focus();}return;}
+      if(k==='r') tr=x.text;else tt=x.text;}
     const R=tr.trim()?parseOld(tr):null,T=tt.trim()?parseOld(tt):null;
     if(tr.trim()&&!R){toast('勤務表の控えを読み取れませんでした。コピーした文字をそのまま貼り付けてください');return;}
     if(tt.trim()&&!T){toast('タイムカードの控えを読み取れませんでした。コピーした文字をそのまま貼り付けてください');return;}
