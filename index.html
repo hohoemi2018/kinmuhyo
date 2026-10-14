@@ -1161,7 +1161,7 @@ const STANDALONE=IOS_APP||(()=>{try{return !!(window.matchMedia&&window.matchMed
 function viewGate(){
   return '<div class="panel"><div class="empty gate">'+chick()+'<h2>ご利用の登録をお願いします</h2>'
     +(IOS_APP?'<p>ホーム画面のアプリは、Safari とは別にデータを保存します。合同会社発達支援ほほえみカレッジからお送りした「利用リンク」を長押しして「コピー」し、下の欄に貼り付けて「登録する」を押してください。</p>'
-      +'<p class="hint">Safari で使っていたデータは、登録のあと「データの控え」で移せます（Safari で控えをコピーし、ここで「控えから戻す」に貼り付けます）。</p>'
+      +'<p class="hint">Safari で使っていたデータは、登録のあとに移せます。Safari の「データの控えをとる・戻す」で「控えをコピー」し、ここで同じところに貼り付けて「この控えで戻す」を押します。</p>'
     :'<p>このアプリは、ご購入いただいた事業所でお使いいただけます。合同会社発達支援ほほえみカレッジからお送りした「利用リンク」を、いつもお使いのブラウザ（Chrome・Edge・Safari など）で開いてください。</p>')
     +(LIC.noCrypto?'<p class="sum warn">このブラウザでは、利用リンクをたしかめられません。新しいブラウザで開いてください。</p>':'')
     +(LIC.badUrl?'<p class="sum warn">利用リンクをたしかめられませんでした。リンクが途中で切れていないか、たしかめてください。</p>':'')
