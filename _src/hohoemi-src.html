@@ -256,6 +256,12 @@ span.cellbtn{cursor:default}
 .modal{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:16px;background:rgba(40,28,22,.55)}
 .modal-box{background:var(--paper);color:var(--ink);border-radius:22px;padding:18px;width:min(100%,520px);display:flex;flex-direction:column;gap:10px}
 .backup summary{cursor:pointer;font-weight:700;color:var(--muted)}
+.kkbox summary{cursor:pointer;font-size:13px;font-weight:700;color:var(--muted)}
+#kk-sec .rule select{max-width:100%;min-width:0}
+.kkbox summary small{font-weight:500;margin-left:6px}
+.kkgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:8px 12px;padding-top:8px}
+.kkgrid label{display:flex;flex-direction:column;gap:4px;font-size:13px;font-weight:700;color:var(--muted);min-width:0}
+.kkgrid input,.kkgrid select{width:100%;min-width:0}
 .backup > div{display:flex;flex-direction:column;gap:10px;align-items:flex-start;padding-top:10px}
 
 /* ---- staff screen ---- */
@@ -1019,6 +1025,7 @@ function normalize(s){
   normShifts(s);
   s.staff.forEach(p=>{p.can=p.can||{E:true,N:true,L:true};s.shiftIds.forEach(k=>{if(p.can[k]==null) p.can[k]=true;});p.dows=p.dows||[0,1,2,3,4,5,6];if(p.off==null) p.off=9;if(p.work==null) p.work=12;if(!p.pat) p.pat=defPat();if(!Array.isArray(p.quals)) p.quals=[];if(!p.hrs) p.hrs={on:false,start:'09:00',end:'13:00'};
     if(!Array.isArray(p.hrs.alt)) p.hrs.alt=[];p.hrs.alt=p.hrs.alt.filter(b=>b&&typeof b==='object').slice(0,HRS_MAX-1);p.hrs.alt.forEach(b=>{if(!Array.isArray(b.dows)) b.dows=[];});});if(!Array.isArray(s.qualList)) s.qualList=defQuals();s.qualList.forEach(q=>{if(q.wkAM==null){q.wkAM=q.wkPM=Number(q.wk)||0;q.weAM=q.wePM=Number(q.we)||0;}});if(!s.noon) s.noon='12:00';
+  s.kk=Object.assign({svc:'jh',cap:'',wh:40,per:'m'},s.kk||{});s.staff.forEach(p=>{if(!p.kk||typeof p.kk!=='object') p.kk={};});
   return s;
 }
 function save(){try{localStorage.setItem(KEY,JSON.stringify(S));}catch(e){}}
@@ -1026,7 +1033,7 @@ function touch(){const sc=S.schedules[S.ym];if(sc) sc.stale=true;save();}
 
 function blank(){
   const now=new Date();const nx=new Date(now.getFullYear(),now.getMonth()+1,1);
-  return {v:1,lv:1,sample:false,mode:'admin',paid:{},pin:'',rc:'',rcAt:0,pinReq:null,wishClosed:{},qualList:defQuals(),noon:'12:00',reqs:[],genMode:'auto',fillSubs:true,punches:{},tc:{breakMin:60,breakAfterH:6},tcSnap:{},punchAt:0,view:'joken',facility:{name:''},ym:nx.getFullYear()+'-'+pad(nx.getMonth()+1),
+  return {v:1,lv:1,kk:{svc:'jh',cap:'',wh:40,per:'m'},sample:false,mode:'admin',paid:{},pin:'',rc:'',rcAt:0,pinReq:null,wishClosed:{},qualList:defQuals(),noon:'12:00',reqs:[],genMode:'auto',fillSubs:true,punches:{},tc:{breakMin:60,breakAfterH:6},tcSnap:{},punchAt:0,view:'joken',facility:{name:''},ym:nx.getFullYear()+'-'+pad(nx.getMonth()+1),
     shifts:{E:{name:'早番',ab:'早',abAuto:true,col:0,start:'07:00',end:'16:00',wk:2,we:1},N:{name:'通常',ab:'通',abAuto:true,col:1,start:'08:30',end:'17:30',wk:2,we:1},L:{name:'遅番',ab:'遅',abAuto:true,col:2,start:'10:00',end:'19:00',wk:2,we:1}},shiftIds:['E','N','L'],
     openDows:[1,2,3,4,5,6],closeHolidays:true,dayOverride:{},rules:{maxConsec:5,noLateEarly:true,wishLimit:3},
     staff:[],wishes:{},schedules:{}};
@@ -1120,7 +1127,7 @@ async function licAddText(text){
 function licWho(o){return esc(o.n||'')+' 様（'+(o.g?'ほほえみカレッジ 特典':o.x?ymdLabel(o.x)+'まで':'期限なし')+'）';}
 function licDaysLeft(o){if(!o||!o.x) return null;const p=o.x.split('-').map(Number);const end=new Date(p[0],p[1]-1,p[2]);const t=new Date();t.setHours(0,0,0,0);return Math.round((end-t)/86400000);}
 /* 期限が切れたときに使えるボタン（見る・控え・PDFだけ） */
-const VIEW_ACTS={shgo:1,shclose:1,bkrcshow:1,bkrcdone:1,bkrccopy:1,bkask:1,bkmode:1,go:1,month:1,zmode:1,selp:1,allp:1,pdf:1,pdfprint:1,copyp:1,copytsv:1,savecsv:1,tcmonth:1,tcsel:1,tccopy:1,tccsv:1,tcsum:1,bkcopy:1,closemodal:1,licadd:1,me:1,stab:1,smonth:1,tcback:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,rccopy:1,cellclose:1,selw:1};
+const VIEW_ACTS={kkxl:1,shgo:1,shclose:1,bkrcshow:1,bkrcdone:1,bkrccopy:1,bkask:1,bkmode:1,go:1,month:1,zmode:1,selp:1,allp:1,pdf:1,pdfprint:1,copyp:1,copytsv:1,savecsv:1,tcmonth:1,tcsel:1,tccopy:1,tccsv:1,tcsum:1,bkcopy:1,closemodal:1,licadd:1,me:1,stab:1,smonth:1,tcback:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,rccopy:1,cellclose:1,selw:1};
 const GATE_ACTS={licadd:1,closemodal:1};
 function licBar(){
   if(LIC.state==='expired') return '<div class="licbar warn no-print" role="status"><b>ご利用の期限（'+ymdLabel(LIC.expired.x)+'）が切れています。</b>いまは見ることと、控え・PDFの保存だけできます。続けてお使いになるときは、合同会社発達支援ほほえみカレッジにご連絡ください。新しい利用リンクを開くと、そのまま使えます。</div>';
@@ -1335,7 +1342,7 @@ function viewJoken(){
     +'<div class="rule"><label for="r-max">つづけて勤務できるのは</label><input type="number" id="r-max" min="1" max="14" inputmode="numeric" data-bind="rules.maxConsec" value="'+esc(R.maxConsec)+'"><span>日まで</span></div>'
     +'<div class="rule" id="le-rule">'+leRuleHTML()+'</div>'
     +'<div class="rule"><label for="r-wish">希望休は1人あたり月</label><input type="number" id="r-wish" min="0" max="31" inputmode="numeric" data-bind="rules.wishLimit" value="'+esc(R.wishLimit)+'"><span>日まで（0にすると制限なし。有給は別に数えます）</span></div></section>'
-    +pinSection()+backupSection()+importSection()+licSection()
+    +kkSection()+pinSection()+backupSection()+importSection()+licSection()
     +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="shokuin">つぎへ　職員を登録する</button></div></div>';
 }
 function pinSection(){
@@ -1519,7 +1526,7 @@ function showBkRc(isNew){
 function viewJokenTC(){
   return '<div class="panel">'
     +'<section><h2>園・事業所の名前</h2><input type="text" class="wide" id="fac-name" data-bind="facility.name" value="'+esc(S.facility.name)+'" placeholder="例：ほほえみ児童デイ" aria-label="園・事業所の名前"></section>'
-    +pinSection().replace('勤務表づくり','タイムカードの集計')+backupSection()+licSection()
+    +kkSection()+pinSection().replace('勤務表づくり','タイムカードの集計')+backupSection()+licSection()
     +'<div class="next"><button type="button" class="btn primary" data-act="go" data-v="shokuin">つぎへ　職員を登録する</button></div></div>';
 }
 
@@ -1581,7 +1588,7 @@ function viewShokuinTC(){
     return '<article class="staff"><div class="st-head">'
       +'<input type="text" id="sn-'+id+'" data-chg="sf" data-k="name" data-sid="'+id+'" value="'+esc(s.name)+'" placeholder="なまえ" aria-label="なまえ">'
       +'<button type="button" class="iconbtn" data-act="askdel" data-v="'+id+'" aria-label="'+esc(s.name)+'さんを削除">×</button></div>'
-      +brkRow(s)
+      +brkRow(s)+kkRow(s)
       +(UI.confirmDel===id?'<div class="delask"><span>この職員を削除しますか？タイムカードの記録も消えます。</span><button type="button" class="btn" data-act="delstaff" data-v="'+id+'">削除する</button><button type="button" class="btn quiet" data-act="askdel" data-v="">やめる</button></div>':'')
       +'</article>';}).join('');
   return '<div class="panel"><section><h2>職員の登録</h2>'
@@ -1639,7 +1646,7 @@ function viewShokuin(){
       +'<div class="st-row"><span class="lab">'+(auto?'勤務できる曜日':'代わりに入れる曜日')+'</span><div class="row">'+[1,2,3,4,5,6,0].map(d=>'<label class="chk"><input type="checkbox" id="sd-'+id+'-'+d+'" data-chg="sf" data-k="dow" data-v="'+d+'" data-sid="'+id+'"'+(s.dows.indexOf(d)>=0?' checked':'')+'><span>'+DOW[d]+'</span></label>').join('')+'</div></div>'
       +(auto?'<div class="st-row"><label class="lab" for="st-'+id+'">'+(part?'月の勤務日数':'月の公休（お休み）の日数')+'</label><div class="row">'
       +'<input type="number" id="st-'+id+'" min="0" max="31" inputmode="numeric" data-chg="sf" data-k="'+(part?'work':'off')+'" data-sid="'+id+'" value="'+esc(part?s.work:s.off)+'"><span>日</span>'
-      +'<span class="st-note" id="note-'+id+'">'+staffNote(s,info)+'</span></div></div>':'')+'</article>';
+      +'<span class="st-note" id="note-'+id+'">'+staffNote(s,info)+'</span></div></div>':'')+kkRow(s)+'</article>';
   }).join('');
   return '<div class="panel"><section><h2>職員の登録</h2>'
     +'<p class="hint">'+(auto?'常勤の方は月の公休の日数を、パートの方は月の勤務日数を入れてください。休園日も公休に数えます。この日数になるように勤務を組みます。'
@@ -1777,7 +1784,7 @@ function outButtons(kind){
   h+='</div><div class="row">';
   if(kind==='roster'){
     h+='<button type="button" class="btn" data-act="copytsv">Excel用にコピー</button>';
-    if(canPdf) h+='<button type="button" class="btn" data-act="savecsv">CSVで保存</button>';
+    if(canPdf) h+='<button type="button" class="btn" data-act="savecsv">CSVで保存</button><button type="button" class="btn" data-act="kkxl" data-v="plan">勤務形態一覧表（国の様式・Excel）</button>';
   }else h+='<button type="button" class="btn" data-act="copyp">文章でコピー（LINEなど）</button>';
   return h+'</div>';
 }
@@ -2158,7 +2165,7 @@ function viewTC(){
         +'<td>'+(r.miss?'<span class="tc-miss">'+r.miss+'件</span>':'—')+'</td><td>'+(s?'<button type="button" class="btn quiet" data-act="tcsel" data-v="'+r.sid+'">くわしく</button>':'')+'</td></tr>';}).join('')
       +'</tbody><tfoot><tr><th scope="row">全員の合計</th><td>'+sn.total.days+'日</td><td>'+fmtDur(sn.total.min)+'</td><td>'+(hasPd?(sn.total.paid?fmtPaid(sn.total.paid):'—'):'')+'</td><td>'+(sn.total.miss?sn.total.miss+'件':'—')+'</td><td></td></tr></tfoot></table></div>'
       +(hasPd?'':'<p class="hint">有給の列は、もう一度「集計する」を押すと出ます。</p>')
-      +'<div class="row"><button type="button" class="btn" data-act="tccopy">集計をExcel用にコピー</button>'+((DL||TOP)?'<button type="button" class="btn" data-act="tccsv">打刻の記録をCSVで保存</button>':'')+'</div>';
+      +'<div class="row"><button type="button" class="btn" data-act="tccopy">集計をExcel用にコピー</button>'+((DL||TOP)?'<button type="button" class="btn" data-act="tccsv">打刻の記録をCSVで保存</button><button type="button" class="btn" data-act="kkxl" data-v="act">勤務形態一覧表（実績・国の様式・Excel）</button>':'')+'</div>';
   }
   if(!staffById(UI.tcsel)) UI.tcsel=S.staff[0].id;
   const sel=staffById(UI.tcsel);const p=tcPerson(sel.id,ym);const sc=S.schedules[ym];
@@ -2541,6 +2548,149 @@ function copyText(text,okMsg){
 let toastTimer=0;
 function toast(msg){const t=$('#toast');t.textContent=msg;t.hidden=false;clearTimeout(toastTimer);toastTimer=setTimeout(()=>{t.hidden=true;},2800);}
 
+/* ---------- 勤務形態一覧表（国の標準様式4「従業者の勤務の体制及び勤務形態一覧表」） ----------
+   国のExcel（_src/kk）から作ったひな形 kk-jh.xlsx などを読み、職員の行（12〜31行）に書きこんで渡す。
+   予定＝勤務表（勤務の時間−休憩）、実績＝タイムカード（1日の勤務時間）。常勤の有給の日は「休」と書き、合計に含める */
+const KK_SVC={
+  jh:{file:'kk-jh.xlsx',name:'児童発達支援・放課後等デイサービス',jobs:['管理者','児童発達支援管理責任者','児童指導員','保育士','機能訓練担当職員','看護職員','その他職員']},
+  js:{file:'kk-js.xlsx',name:'児童発達支援（主として重症心身障害児）',jobs:['管理者','児童発達支援管理責任者','嘱託医','看護職員','児童指導員','保育士','機能訓練担当職員','その他職員']},
+  jc:{file:'kk-jc.xlsx',name:'児童発達支援センター',jobs:['管理者','児童発達支援管理責任者','嘱託医','児童指導員','保育士','栄養士','調理員','機能訓練担当職員','看護職員','その他職員']}};
+const KK_FORMS={A:'常勤で専従',B:'常勤で兼務',C:'非常勤で専従',D:'非常勤で兼務'};
+const JSZIP_URL='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+function kkConf(){if(!S.kk||typeof S.kk!=='object') S.kk={};const K=S.kk;if(!KK_SVC[K.svc]) K.svc='jh';if(K.cap==null) K.cap='';if(!(Number(K.wh)>0)) K.wh=40;if(K.per!=='4w') K.per='m';return K;}
+function kkSvc(){return KK_SVC[kkConf().svc];}
+function kkQualNames(s){return (s.quals||[]).map(id=>{const q=(S.qualList||[]).find(x=>x.id===id);return q?q.name:'';}).filter(n=>n&&!/その他/.test(n));}
+function kkGuessJob(s){const q=kkQualNames(s).join(' ');return /児童発達支援管理/.test(q)?'児童発達支援管理責任者':/看護/.test(q)?'看護職員':/保育士/.test(q)?'保育士':/児童指導員/.test(q)?'児童指導員':'その他職員';}
+function kkJob(s){const k=s.kk||{};return k.job==='*'?(k.jobx||'その他職員'):(k.job||kkGuessJob(s));}
+function kkForm(s){const k=s.kk||{};return KK_FORMS[k.form]?k.form:(s.type==='part'?'C':'A');}
+function kkQual(s){const k=s.kk||{};return k.qual?k.qual:kkQualNames(s).join('・');}
+function kkSummary(s){const f=kkForm(s);return kkJob(s)+'・'+f+' '+KK_FORMS[f];}
+function kkRow(s){
+  const id=s.id,k=s.kk||{},jobs=kkSvc().jobs,cur=k.job==='*'?'*':(k.job&&jobs.indexOf(k.job)<0?'*':kkJob(s)),f=kkForm(s);
+  const jx=k.job==='*'?(k.jobx||''):(k.job&&jobs.indexOf(k.job)<0?k.job:'');
+  return '<details class="kkbox"><summary>勤務形態一覧表（国の様式）<small id="kks-'+id+'">'+esc(kkSummary(s))+'</small></summary><div class="kkgrid">'
+    +'<label for="kkj-'+id+'">職種<select id="kkj-'+id+'" data-chg="sf" data-k="kkjob" data-sid="'+id+'">'+jobs.map(j=>'<option value="'+esc(j)+'"'+(cur===j?' selected':'')+'>'+esc(j)+'</option>').join('')+'<option value="*"'+(cur==='*'?' selected':'')+'>そのほか（入力する）</option></select>'
+    +'<input type="text" id="kkjx-'+id+'" data-chg="sf" data-k="kkjobx" data-sid="'+id+'" value="'+esc(jx)+'" placeholder="職種を入力" aria-label="職種を入力"'+(cur==='*'?'':' hidden')+'></label>'
+    +'<label for="kkf-'+id+'">勤務形態<select id="kkf-'+id+'" data-chg="sf" data-k="kkform" data-sid="'+id+'">'+Object.keys(KK_FORMS).map(x=>'<option value="'+x+'"'+(f===x?' selected':'')+'>'+x+'　'+KK_FORMS[x]+'</option>').join('')+'</select></label>'
+    +'<label for="kkq-'+id+'">資格（人員基準・加算で求められるもの）<input type="text" id="kkq-'+id+'" data-chg="sf" data-k="kkqual" data-sid="'+id+'" value="'+esc(k.qual||'')+'" placeholder="'+esc(kkQualNames(s).join('・')||'例：保育士')+'"></label>'
+    +'<label for="kke-'+id+'">兼務状況（兼務先／兼務する職務）<input type="text" id="kke-'+id+'" data-chg="sf" data-k="kken" data-sid="'+id+'" value="'+esc(k.en||'')+'" placeholder="例：管理者と兼務"></label>'
+    +'</div><p class="hint">常勤とは、事業所の常勤の人が勤務すべき時間（週'+esc(kkConf().wh)+'時間）はたらく人のことです。パートでも、その時間はたらく人は常勤です。</p></details>';
+}
+function kkSection(){
+  const K=kkConf();
+  return '<section id="kk-sec"><h2>勤務形態一覧表（国の様式）</h2>'
+    +'<p class="hint">児童発達支援・放課後等デイサービスの事業所が、指定の申請や変更の届出、運営指導などで出す国の様式（標準様式4「従業者の勤務の体制及び勤務形態一覧表」）を、Excelで作れます。保育園では使いません。</p>'
+    +'<details class="backup" id="kk-det"><summary>設定する</summary><div>'
+    +'<div class="rule"><label for="kk-svc">サービスの種類</label><select id="kk-svc" data-chg="kkset" data-k="svc">'+Object.keys(KK_SVC).map(x=>'<option value="'+x+'"'+(K.svc===x?' selected':'')+'>'+KK_SVC[x].name+'</option>').join('')+'</select></div>'
+    +'<div class="rule"><label for="kk-cap">定員</label><input type="number" id="kk-cap" min="0" max="999" inputmode="numeric" data-chg="kkset" data-k="cap" value="'+esc(K.cap)+'"><span>人</span></div>'
+    +'<div class="rule"><label for="kk-wh">常勤の人が勤務すべき時間</label><input type="number" id="kk-wh" min="1" max="80" step="0.5" inputmode="decimal" data-chg="kkset" data-k="wh" value="'+esc(K.wh)+'"><span>時間／週</span></div>'
+    +'<div class="rule"><label for="kk-per">記載する期間</label><select id="kk-per" data-chg="kkset" data-k="per"><option value="m"'+(K.per!=='4w'?' selected':'')+'>暦月（1日〜月末）</option><option value="4w"'+(K.per==='4w'?' selected':'')+'>4週（1日〜28日）</option></select></div>'
+    +(HAS_TC?'':'<div class="rule"><label for="kk-brk">休憩</label><input type="number" id="kk-brk" min="0" max="180" inputmode="numeric" data-chg="tcset" data-k="breakMin" value="'+esc(S.tc.breakMin)+'"><span>分を、1日の勤務が</span><input type="number" id="kk-aft" min="0" max="12" inputmode="numeric" data-chg="tcset" data-k="breakAfterH" value="'+esc(S.tc.breakAfterH)+'" aria-label="何時間をこえた日か"><span>時間をこえた日に引きます</span></div>')
+    +'<p class="hint">職員ごとの職種・勤務形態・資格は、②職員のカードの「勤務形態一覧表（国の様式）」で決めます。'+(HAS_ROSTER?'④勤務表の画面で、その月の予定を出せます。':'')+(HAS_TC?'タイムカードの集計の画面で、その月の実績を出せます。':'')+'</p>'
+    +'<p class="hint">月の時間は「週の時間×その月の日数÷7」で入れます。常勤の人の有給の日は「休」と書き、1日（週の時間÷5）として合計に入れます。21人目からは2枚目のシートに続けます。同じ人が2つの職種を兼ねて時間を分けるときは、Excelで行を分けてください。</p>'
+    +'</div></details></section>';
+}
+function kkCol(n){let s='';while(n>0){const m=(n-1)%26;s=String.fromCharCode(65+m)+s;n=Math.floor((n-1)/26);}return s;}
+function kkColNum(c){let n=0;for(let i=0;i<c.length;i++) n=n*26+(c.charCodeAt(i)-64);return n;}
+/* 職員ごとの日ごとの時間（分）。'L'＝有給（1日・出勤なし）、'H'＝有給（半日・出勤なし） */
+function kkPlanDays(ym){
+  const sc=S.schedules[ym];if(!sc||!sc.cells) return null;
+  const n=monthInfo(S).n;const out={};
+  S.staff.forEach(s=>{const o={};const row=sc.cells[s.id]||{};const w=(S.wishes[ym]||{})[s.id]||{};
+    for(let d=1;d<=n;d++){const t=row[d];
+      if(t&&S.shifts[t]){const sp=spanOf(S,s,t,d,sc.hb);if(sp[0]==null||sp[1]==null) continue;let g=sp[1]-sp[0];if(g<=0) g+=1440;if(g>=1440) continue;o[d]=Math.max(0,g-autoBrk(g,s.id));}
+      else if(w[d]==='P') o[d]='L';
+    }
+    out[s.id]=o;});
+  return out;
+}
+function kkActDays(ym){
+  const out={};
+  S.staff.forEach(s=>{const o={};tcPerson(s.id,ym).rows.forEach(x=>{if(x.c) o[x.d]=x.c.net;else if(x.p===1) o[x.d]='L';else if(x.p===0.5) o[x.d]='H';});out[s.id]=o;});
+  return out;
+}
+function loadZipLib(){
+  if(window.JSZip) return Promise.resolve();
+  return new Promise((res,rej)=>{const sc=document.createElement('script');sc.src=JSZIP_URL;sc.onload=res;sc.onerror=()=>rej(new Error('load'));document.head.appendChild(sc);});
+}
+/* シートのXMLのセルに値を入れる（数字はそのまま、文字はセルの中に）。null は空にする（式も消す） */
+function kkSheet(xml){
+  const doc=new DOMParser().parseFromString(xml,'application/xml');const NS=doc.documentElement.namespaceURI;
+  const sd=doc.getElementsByTagNameNS(NS,'sheetData')[0];const rows={};
+  Array.prototype.forEach.call(sd.children,r=>{rows[r.getAttribute('r')]=r;});
+  const set=(ref,val)=>{
+    const rn=ref.replace(/^[A-Z]+/,''),col=kkColNum(ref.replace(/\d+$/,''));
+    let row=rows[rn];
+    if(!row){row=doc.createElementNS(NS,'row');row.setAttribute('r',rn);let nx=null;Array.prototype.some.call(sd.children,r=>{if(Number(r.getAttribute('r'))>Number(rn)){nx=r;return true;}return false;});sd.insertBefore(row,nx);rows[rn]=row;}
+    let c=null,nx=null;
+    Array.prototype.some.call(row.children,x=>{const cn=kkColNum(x.getAttribute('r').replace(/\d+$/,''));if(cn===col){c=x;return true;}if(cn>col){nx=x;return true;}return false;});
+    if(!c){c=doc.createElementNS(NS,'c');c.setAttribute('r',ref);row.insertBefore(c,nx);}
+    while(c.firstChild) c.removeChild(c.firstChild);c.removeAttribute('t');
+    if(val==null||val==='') return;
+    if(typeof val==='number'){const v=doc.createElementNS(NS,'v');v.textContent=String(val);c.appendChild(v);}
+    else{c.setAttribute('t','inlineStr');const is=doc.createElementNS(NS,'is'),t=doc.createElementNS(NS,'t');t.textContent=String(val);is.appendChild(t);c.appendChild(is);}
+  };
+  return {set:set,xml:()=>new XMLSerializer().serializeToString(doc)};
+}
+function kkRows(kind,ym){
+  const days=kind==='plan'?kkPlanDays(ym):kkActDays(ym);if(!days) return null;
+  const jobs=kkSvc().jobs;const rank=j=>{const i=jobs.indexOf(j);return i<0?jobs.length-0.5:i;};
+  return S.staff.filter(s=>(s.name||'').trim()).map((s,i)=>({s:s,i:i,job:kkJob(s),d:days[s.id]||{}})).sort((a,b)=>rank(a.job)-rank(b.job)||a.i-b.i);
+}
+async function kkExport(kind,ym){
+  if(BUSY) return;
+  if(!S.staff.some(s=>(s.name||'').trim())){toast('先に、②職員で職員を登録してください');return;}
+  const list=kkRows(kind,ym);
+  if(!list){toast('この月の勤務表がまだありません。先に④勤務表で勤務表をつくってください');return;}
+  BUSY=true;busy('勤務形態一覧表を作っています…');
+  try{
+    await loadZipLib();
+    const svc=kkSvc();const res=await fetch(svc.file,{cache:'no-cache'});if(!res.ok) throw new Error('tpl');
+    const zip=await window.JSZip.loadAsync(await res.arrayBuffer());
+    const p=ym.split('-').map(Number);const n=new Date(p[0],p[1],0).getDate();
+    const K=kkConf();const wh=Number(K.wh)||40;const four=K.per==='4w';const mh=Math.round(wh*n/7*10)/10;const last=four?28:n;
+    const cap=four?wh*4:mh;const dayH=Math.round(wh/5*100)/100;
+    const base=await zip.file('xl/worksheets/sheet1.xml').async('string');
+    const chunks=[];for(let i=0;i<list.length;i+=20) chunks.push(list.slice(i,i+20));if(!chunks.length) chunks.push([]);
+    const sheets=chunks.map((ch,ci)=>{
+      const sh=kkSheet(base);
+      sh.set('M2',p[0]);sh.set('S2',p[1]);sh.set('AK2',S.facility.name||'');sh.set('AK3',four?'４週':'歴月');sh.set('AK4',kind==='plan'?'予定':'実績');
+      sh.set('AK5',K.cap===''||K.cap==null?null:Number(K.cap));sh.set('AH6',wh);sh.set('AL6',mh);
+      for(let j=0;j<20;j++) sh.set('A'+(12+j),ci*20+j+1);
+      ch.forEach((x,j)=>{const r=12+j;const full=kkForm(x.s)==='A'||kkForm(x.s)==='B';let sum=0,extra=0;
+        sh.set('B'+r,x.job);sh.set('C'+r,kkForm(x.s));sh.set('D'+r,kkQual(x.s));sh.set('E'+r,x.s.name.trim());
+        for(let d=1;d<=31;d++){const ref=kkCol(5+d)+r;const v=d<=last?x.d[d]:null;
+          if(typeof v==='number'){const h=Math.round(v/60*100)/100;sh.set(ref,h);sum+=h;}
+          else if((v==='L'||v==='H')&&full){sh.set(ref,'休');extra+=v==='L'?dayH:dayH/2;}
+          else sh.set(ref,null);}
+        sh.set('AM'+r,(x.s.kk&&x.s.kk.en)||'');
+        const tot=Math.round(Math.min(sum+extra,cap)*100)/100;
+        if(extra>0||sum>cap) sh.set('AK'+r,tot);
+      });
+      return sh.xml();
+    });
+    zip.file('xl/worksheets/sheet1.xml',sheets[0]);
+    if(sheets.length>1){
+      let wb=await zip.file('xl/workbook.xml').async('string');let rels=await zip.file('xl/_rels/workbook.xml.rels').async('string');let ct=await zip.file('[Content_Types].xml').async('string');
+      const nm=(wb.match(/<sheet name="([^"]+)" sheetId="1"/)||[])[1]||'勤務形態一覧表';const area=(wb.match(/<definedName name="_xlnm.Print_Area" localSheetId="0">[^!]*!([^<]+)<\/definedName>/)||[])[1];
+      let add='',dn='';
+      for(let i=1;i<sheets.length;i++){const no=10+i;
+        zip.file('xl/worksheets/sheet'+no+'.xml',sheets[i].replace(/\s+tabSelected="1"/,''));
+        add+='<sheet name="'+nm+'（'+(i+1)+'）" sheetId="'+no+'" r:id="rIdk'+i+'"/>';
+        rels=rels.replace('</Relationships>','<Relationship Id="rIdk'+i+'" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/worksheet" Target="worksheets/sheet'+no+'.xml"/></Relationships>');
+        ct=ct.replace('</Types>','<Override PartName="/xl/worksheets/sheet'+no+'.xml" ContentType="application/vnd.openxmlformats-officedocument.spreadsheetml.worksheet+xml"/></Types>');
+        if(area) dn+='<definedName name="_xlnm.Print_Area" localSheetId="'+i+'">\''+nm+'（'+(i+1)+'）\'!'+area+'</definedName>';
+      }
+      wb=wb.replace(/(<sheet name="[^"]+" sheetId="1" r:id="[^"]+"\/>)/,'$1'+add).replace('<definedNames>','<definedNames>'+dn);
+      zip.file('xl/workbook.xml',wb);zip.file('xl/_rels/workbook.xml.rels',rels);zip.file('[Content_Types].xml',ct);
+    }
+    const blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',mimeType:'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'});
+    busy(null);
+    await saveFile('勤務形態一覧表_'+ym+'_'+(kind==='plan'?'予定':'実績')+'.xlsx',blob,'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  }catch(e){toast(e&&e.message==='load'?'Excelを作る部品を読み込めませんでした。インターネットにつながった状態で、もう一度お試しください':'勤務形態一覧表を作れませんでした。インターネットにつながっているか確かめて、もう一度お試しください');}
+  finally{BUSY=false;busy(null);}
+}
+
 /* ---------- 操作 ---------- */
 const ACT={
   go(v){
@@ -2749,6 +2899,7 @@ const ACT={
     S=s;UI.view=S.view||'joken';UI.selW=UI.selP=null;save();render();toast('控えから戻しました');
   },
   closemodal(){$('#modal').hidden=true;},
+  kkxl(v){kkExport(v==='act'?'act':'plan',v==='act'?(UI.tcym||curYm()):S.ym);},
   async shgo(){const f=SHARE_FILE;$('#shm').hidden=true;SHARE_FILE=null;if(f) await shareOut(f);},
   shclose(){$('#shm').hidden=true;SHARE_FILE=null;},
   async licadd(){
@@ -2792,6 +2943,10 @@ const CHG={
   },
   qset(el){const q=qById(el.dataset.q);if(!q) return;q[el.dataset.k]=clampInt(el.value,0,30);el.value=q[el.dataset.k];touch();},
   rqday(el){if(!UI.rq) return;UI.rq.day=el.value;UI.rq.iv=null;UI.rq.ov=null;UI.rq.bv=null;UI.rq.err='';renderMain();const d=$('#rq-day');if(d) d.focus();},
+  kkset(el){const k=el.dataset.k;let v=el.value;
+    if(k==='cap'){v=v===''?'':clampInt(v,0,999);el.value=v;}
+    else if(k==='wh'){v=Math.round((parseFloat(v)||40)*100)/100;v=Math.min(80,Math.max(1,v));el.value=v;}
+    kkConf()[k]=v;save();if(k==='svc') renderMain();},
   tcset(el){S.tc[el.dataset.k]=clampInt(el.value,el.min,el.max);el.value=S.tc[el.dataset.k];S.punchAt=Date.now();save();renderMain();},
   tcedit(el){
     const k=el.dataset.day,sid=el.dataset.sid;const day=S.punches[k]||(S.punches[k]={});const r=day[sid]||(day[sid]={i:null,o:null});
@@ -2822,6 +2977,8 @@ const CHG={
     if(k==='name'){s.name=el.value.trim();save();return;}
     if(k==='brk'){s.brk=el.value===''?null:Number(el.value);S.punchAt=Date.now();save();return;}
     if(k==='type'){s.type=el.value;touch();renderMain();return;}
+    if(k==='kkjob'||k==='kkjobx'||k==='kkform'||k==='kkqual'||k==='kken'){s.kk=s.kk||{};s.kk[k.slice(2)]=el.value.trim();save();
+      const sm=$('#kks-'+s.id);if(sm) sm.textContent=kkSummary(s);if(k==='kkjob'){const x=$('#kkjx-'+s.id);if(x) x.hidden=el.value!=='*';}return;}
     if(k==='can') s.can[el.dataset.v]=el.checked;
     else if(k==='bst'||k==='ben'){const b=((s.hrs||{}).alt||[])[Number(el.dataset.b)];if(!b) return;if(el.value){if(k==='bst') b.start=el.value;else b.end=el.value;}touch();const hn=$('#hn-'+s.id);if(hn) hn.textContent=hrsNote(s);return;}
     else if(k==='bdow'){

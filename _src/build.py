@@ -94,6 +94,9 @@ def main():
             f.write(manifest(app, title))
         for suf, name in ICONS:
             shutil.copyfile(os.path.join(HERE, 'icons', '%s-%s.png' % (app, suf)), os.path.join(d, name))
+        # 勤務形態一覧表（国の標準様式4）のひな形。_src/kk_template.py で作る
+        for code in ('jh', 'js', 'jc'):
+            shutil.copyfile(os.path.join(HERE, 'kk', 'kk-%s.xlsx' % code), os.path.join(d, 'kk-%s.xlsx' % code))
         print(app, '->', out)
 
 
