@@ -1085,7 +1085,9 @@ const LIC_KEY='hohoemi-license-v1',LEG_KEY='hohoemi-legacy-v1';
 const LIC_PUB=[{"kty":"EC","crv":"P-256","x":"56AOz_HCMxeiFtEJnyAjqC86K4rvs-W7PpBglh_Y6s0","y":"V7o1woeb7wL57NxE9xOGu-PcS1GQx7eESvtBRPESJ_0"}];
 const APP_CODE=APP==='roster'?'k':APP==='timecard'?'t':'b';
 const APP_LABEL={k:'勤務表',t:'タイムカード',b:'勤務表・タイムカード'};
-const LIC={state:'checking',lic:null,expired:null,legacy:false,all:[],badUrl:false,justAdded:null};
+/* 取り消した利用リンクの番号（トークンの i）。もれたリンクを止めるときに足す。その端末のデータは消えない */
+const LIC_REVOKED=[];
+const LIC={state:'checking',lic:null,expired:null,legacy:false,all:[],badUrl:false,justAdded:null,revoked:false};
 function legacyCheck(){
   try{if(localStorage.getItem(LEG_KEY)) return true;}catch(e){return false;}
   const found=['hohoemi-kinmuhyo-v1','hohoemi-timecard-v1','hohoemi-kinmuhyo-tc-v1'].some(k=>{try{const o=JSON.parse(localStorage.getItem(k)||'null');return !!(o&&o.v===1&&Array.isArray(o.staff)&&o.lv==null);}catch(e){return false;}});
@@ -1100,7 +1102,7 @@ async function licVerify(tok){
     const data=b64uDec(p[0]),sig=b64uDec(p[1]);
     for(const jwk of LIC_PUB){
       const key=await crypto.subtle.importKey('jwk',jwk,{name:'ECDSA',namedCurve:'P-256'},false,['verify']);
-      if(await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},key,sig,data)){const o=JSON.parse(new TextDecoder().decode(data));if(o&&o.v===1&&Array.isArray(o.a)) return Object.assign(o,{tok:String(tok).trim()});}
+      if(await crypto.subtle.verify({name:'ECDSA',hash:'SHA-256'},key,sig,data)){const o=JSON.parse(new TextDecoder().decode(data));if(o&&o.v===1&&Array.isArray(o.a)){if(LIC_REVOKED.indexOf(o.i)>=0){LIC.revoked=true;return null;}return Object.assign(o,{tok:String(tok).trim()});}}
     }
   }catch(e){}
   return null;
@@ -1123,7 +1125,7 @@ async function licInit(){
   let fromUrl=null;try{fromUrl=tokFrom(location.hash);}catch(e){}
   const toks=licReadToks();if(fromUrl&&toks.indexOf(fromUrl)<0) toks.push(fromUrl);
   const ok=[],keep=[];
-  if(window.crypto&&crypto.subtle){for(const t of toks){const o=await licVerify(t);if(o){ok.push(o);keep.push(t);}}}
+  if(window.crypto&&crypto.subtle){for(const t of toks){const before=LIC.revoked;LIC.revoked=false;const o=await licVerify(t);const rv=LIC.revoked;LIC.revoked=before||rv;if(o){ok.push(o);keep.push(t);}else if(rv) keep.push(t);}}
   else LIC.noCrypto=true;
   if(fromUrl){
     if(keep.indexOf(fromUrl)>=0){LIC.justAdded=ok.find(o=>o.tok===fromUrl)||null;} else LIC.badUrl=true;
@@ -1135,12 +1137,12 @@ async function licInit(){
 /* 利用リンクを貼り付けて登録する（LINEなどの中でリンクを開いてしまったとき） */
 async function licAddText(text){
   const tok=tokFrom(text);if(!tok) return {ok:false,msg:'利用リンクが見つかりませんでした。届いたリンクを、そのまま全部貼り付けてください'};
-  const o=await licVerify(tok);if(!o) return {ok:false,msg:'利用リンクをたしかめられませんでした。リンクが途中で切れていないか、たしかめてください'};
+  const was=LIC.revoked;LIC.revoked=false;const o=await licVerify(tok);if(!o){const rv=LIC.revoked;LIC.revoked=was||rv;return {ok:false,msg:rv?'この利用リンクは使えなくなっています。合同会社発達支援ほほえみカレッジにご連絡ください':'利用リンクをたしかめられませんでした。リンクが途中で切れていないか、たしかめてください'};}
   const toks=licReadToks();if(toks.indexOf(tok)<0) toks.push(tok);licWriteToks(toks);
   if(!LIC.all.some(x=>x.tok===tok)) LIC.all.push(o);const before=LIC.state;licPick();
   return {ok:true,o:o,mine:(o.a||[]).indexOf(APP_CODE)>=0,before:before};
 }
-function licWho(o){return esc(o.n||'')+' 様（'+(o.g?'ほほえみカレッジ 特典':o.x?ymdLabel(o.x)+'まで':'期限なし')+'）';}
+function licWho(o){return esc(o.n||'')+' 様（'+(o.g?'ほほえみカレッジ 特典'+(o.x?'・'+ymdLabel(o.x)+'まで':''):o.x?ymdLabel(o.x)+'まで':'期限なし')+'）';}
 function licDaysLeft(o){if(!o||!o.x) return null;const p=o.x.split('-').map(Number);const end=new Date(p[0],p[1]-1,p[2]);const t=new Date();t.setHours(0,0,0,0);return Math.round((end-t)/86400000);}
 /* 期限が切れたときに使えるボタン（見る・控え・PDFだけ） */
 const VIEW_ACTS={kkxl:1,shgo:1,shclose:1,bkrcshow:1,bkrcdone:1,bkrccopy:1,bkask:1,bkmode:1,go:1,month:1,zmode:1,selp:1,allp:1,pdf:1,pdfprint:1,copyp:1,copytsv:1,savecsv:1,tcmonth:1,tcsel:1,tccopy:1,tccsv:1,tcsum:1,bkcopy:1,closemodal:1,licadd:1,me:1,stab:1,smonth:1,tcback:1,adminlogin:1,pincancel:1,pinok:1,pinforgot:1,pinback:1,rcuse:1,ulunlock:1,rcdone:1,rccopy:1,cellclose:1,selw:1};
@@ -1171,6 +1173,7 @@ function viewGate(){
       +'<p class="hint">Safari で使っていたデータは、登録のあとに移せます。Safari の「データの控えをとる・戻す」で「控えをコピー」し、ここで同じところに貼り付けて「この控えで戻す」を押します。</p>'
     :'<p>このアプリは、ご購入いただいた事業所でお使いいただけます。合同会社発達支援ほほえみカレッジからお送りした「利用リンク」を、いつもお使いのブラウザ（Chrome・Edge・Safari など）で開いてください。</p>')
     +(LIC.noCrypto?'<p class="sum warn">このブラウザでは、利用リンクをたしかめられません。新しいブラウザで開いてください。</p>':'')
+    +(LIC.revoked&&!LIC.expired?'<p class="sum warn">この端末で使っていた利用リンクは、使えなくなりました。合同会社発達支援ほほえみカレッジにご連絡ください。入力したデータは消えていません。</p>':'')
     +(LIC.badUrl?'<p class="sum warn">利用リンクをたしかめられませんでした。リンクが途中で切れていないか、たしかめてください。</p>':'')
     +(LIC.expired?'<p class="sum warn">ご利用の期限（'+ymdLabel(LIC.expired.x)+'）が切れています。</p>':'')
     +(STANDALONE?'<details class="backup gate-paste" open><summary>利用リンクを貼り付けて登録する</summary><div>'
