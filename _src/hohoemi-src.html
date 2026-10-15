@@ -2557,7 +2557,7 @@ const KK_SVC={
   jc:{file:'kk-jc.xlsx',name:'児童発達支援センター',jobs:['管理者','児童発達支援管理責任者','嘱託医','児童指導員','保育士','栄養士','調理員','機能訓練担当職員','看護職員','その他職員']}};
 const KK_FORMS={A:'常勤で専従',B:'常勤で兼務',C:'非常勤で専従',D:'非常勤で兼務'};
 const JSZIP_URL='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-function kkConf(){if(!S.kk||typeof S.kk!=='object') S.kk={};const K=S.kk;if(!KK_SVC[K.svc]) K.svc='jh';if(K.cap==null) K.cap='';if(!(Number(K.wh)>0)) K.wh=40;if(K.per!=='4w') K.per='m';return K;}
+function kkConf(){if(!S.kk||typeof S.kk!=='object') S.kk={};const K=S.kk;if(!KK_SVC[K.svc]) K.svc='jh';if(K.cap==null) K.cap='';if(!(Number(K.wh)>0)) K.wh=40;if(K.per!=='4w') K.per='m';if(!K.sv||typeof K.sv!=='object') K.sv={};['wk','sa','su','lv','lp'].forEach(x=>{if(K.sv[x]==null) K.sv[x]='';});return K;}
 function kkSvc(){return KK_SVC[kkConf().svc];}
 function kkQualNames(s){return (s.quals||[]).map(id=>{const q=(S.qualList||[]).find(x=>x.id===id);return q?q.name:'';}).filter(n=>n&&!/その他/.test(n));}
 function kkGuessJob(s){const q=kkQualNames(s).join(' ');return /児童発達支援管理/.test(q)?'児童発達支援管理責任者':/看護/.test(q)?'看護職員':/保育士/.test(q)?'保育士':/児童指導員/.test(q)?'児童指導員':'その他職員';}
@@ -2585,6 +2585,10 @@ function kkSection(){
     +'<div class="rule"><label for="kk-cap">定員</label><input type="number" id="kk-cap" min="0" max="999" inputmode="numeric" data-chg="kkset" data-k="cap" value="'+esc(K.cap)+'"><span>人</span></div>'
     +'<div class="rule"><label for="kk-wh">常勤の人が勤務すべき時間</label><input type="number" id="kk-wh" min="1" max="80" step="0.5" inputmode="decimal" data-chg="kkset" data-k="wh" value="'+esc(K.wh)+'"><span>時間／週</span></div>'
     +'<div class="rule"><label for="kk-per">記載する期間</label><select id="kk-per" data-chg="kkset" data-k="per"><option value="m"'+(K.per!=='4w'?' selected':'')+'>暦月（1日〜月末）</option><option value="4w"'+(K.per==='4w'?' selected':'')+'>4週（1日〜28日）</option></select></div>'
+    +'<p class="hint" style="margin:6px 0 0"><b>サービス提供時間</b>（その日に子どもを受け入れて支援する時間。1日の時間数で入れます。空欄の日は入りません）</p>'
+    +'<div class="rule">'+[['wk','平日'],['sa','土曜'],['su','日曜・祝日'],['lv','長期休み']].map(x=>'<label for="kk-sv-'+x[0]+'">'+x[1]+'</label><input type="number" id="kk-sv-'+x[0]+'" min="0" max="24" step="0.5" inputmode="decimal" data-chg="kkset" data-k="sv.'+x[0]+'" value="'+esc(K.sv[x[0]])+'"><span>時間</span>').join('')+'</div>'
+    +'<div class="rule"><label for="kk-sv-lp">長期休みの期間</label><input type="text" id="kk-sv-lp" data-chg="kkset" data-k="sv.lp" value="'+esc(K.sv.lp)+'" placeholder="例：7/21〜8/31、12/25〜1/7、3/25〜4/6"></div>'
+    +'<p class="hint">長期休みの期間の平日は「長期休み」の時間を入れます。'+(HAS_ROSTER?'休園日（①条件で開園しない日）は入りません。':'')+'</p>'
     +(HAS_TC?'':'<div class="rule"><label for="kk-brk">休憩</label><input type="number" id="kk-brk" min="0" max="180" inputmode="numeric" data-chg="tcset" data-k="breakMin" value="'+esc(S.tc.breakMin)+'"><span>分を、1日の勤務が</span><input type="number" id="kk-aft" min="0" max="12" inputmode="numeric" data-chg="tcset" data-k="breakAfterH" value="'+esc(S.tc.breakAfterH)+'" aria-label="何時間をこえた日か"><span>時間をこえた日に引きます</span></div>')
     +'<p class="hint">職員ごとの職種・勤務形態・資格は、②職員のカードの「勤務形態一覧表（国の様式）」で決めます。'+(HAS_ROSTER?'④勤務表の画面で、その月の予定を出せます。':'')+(HAS_TC?'タイムカードの集計の画面で、その月の実績を出せます。':'')+'</p>'
     +'<p class="hint">月の時間は「週の時間×その月の日数÷7」で入れます。常勤の人の有給の日は「休」と書き、1日（週の時間÷5）として合計に入れます。21人目からは2枚目のシートに続けます。同じ人が2つの職種を兼ねて時間を分けるときは、Excelで行を分けてください。</p>'
@@ -2607,6 +2611,26 @@ function kkPlanDays(ym){
 function kkActDays(ym){
   const out={};
   S.staff.forEach(s=>{const o={};tcPerson(s.id,ym).rows.forEach(x=>{if(x.c) o[x.d]=x.c.net;else if(x.p===1) o[x.d]='L';else if(x.p===0.5) o[x.d]='H';});out[s.id]=o;});
+  return out;
+}
+/* 長期休みの期間「7/21〜8/31、12/25〜1/7」：その日が入るか */
+function kkInLong(txt,m,d){
+  const t=String(txt||'').replace(/[０-９]/g,c=>String.fromCharCode(c.charCodeAt(0)-0xFEE0)).replace(/[／]/g,'/');
+  const re=/(\d{1,2})\/(\d{1,2})\s*[〜~～\-－ー―から]+\s*(\d{1,2})\/(\d{1,2})/g;let mm;const x=m*100+d;
+  while((mm=re.exec(t))){const a=Number(mm[1])*100+Number(mm[2]),b=Number(mm[3])*100+Number(mm[4]);if(a<=b?(x>=a&&x<=b):(x>=a||x<=b)) return true;}
+  return false;
+}
+/* その月の日ごとのサービス提供時間（時間数）。勤務表のあるアプリでは、休園日は入れない */
+function kkServiceHours(ym){
+  const sv=kkConf().sv;const p=ym.split('-').map(Number);const n=new Date(p[0],p[1],0).getDate();const hol=holidaysOf(p[0]);
+  const ov=(S.dayOverride&&S.dayOverride[ym])||{};const out={};const num=v=>v===''||v==null?null:Number(v);
+  for(let d=1;d<=n;d++){
+    const dow=new Date(p[0],p[1]-1,d).getDay();const isHol=!!hol[p[1]+'-'+d];
+    if(HAS_ROSTER){let open=(S.openDows||[]).indexOf(dow)>=0;if(isHol&&S.closeHolidays) open=false;if(d in ov) open=!!ov[d];if(!open) continue;}
+    let h;
+    if(dow===0||isHol) h=num(sv.su);else if(dow===6) h=num(sv.sa);else h=kkInLong(sv.lp,p[1],d)?num(sv.lv):num(sv.wk);
+    if(h!=null&&h>0) out[d]=h;
+  }
   return out;
 }
 function loadZipLib(){
@@ -2649,13 +2673,14 @@ async function kkExport(kind,ym){
     const zip=await window.JSZip.loadAsync(await res.arrayBuffer());
     const p=ym.split('-').map(Number);const n=new Date(p[0],p[1],0).getDate();
     const K=kkConf();const wh=Number(K.wh)||40;const four=K.per==='4w';const mh=Math.round(wh*n/7*10)/10;const last=four?28:n;
-    const cap=four?wh*4:mh;const dayH=Math.round(wh/5*100)/100;
+    const cap=four?wh*4:mh;const dayH=Math.round(wh/5*100)/100;const svh=kkServiceHours(ym);
     const base=await zip.file('xl/worksheets/sheet1.xml').async('string');
     const chunks=[];for(let i=0;i<list.length;i+=20) chunks.push(list.slice(i,i+20));if(!chunks.length) chunks.push([]);
     const sheets=chunks.map((ch,ci)=>{
       const sh=kkSheet(base);
       sh.set('M2',p[0]);sh.set('S2',p[1]);sh.set('AK2',S.facility.name||'');sh.set('AK3',four?'４週':'歴月');sh.set('AK4',kind==='plan'?'予定':'実績');
       sh.set('AK5',K.cap===''||K.cap==null?null:Number(K.cap));sh.set('AH6',wh);sh.set('AL6',mh);
+      for(let d=1;d<=31;d++) sh.set(kkCol(5+d)+'33',d<=last&&svh[d]!=null?svh[d]:null);
       for(let j=0;j<20;j++) sh.set('A'+(12+j),ci*20+j+1);
       ch.forEach((x,j)=>{const r=12+j;const full=kkForm(x.s)==='A'||kkForm(x.s)==='B';let sum=0,extra=0;
         sh.set('B'+r,x.job);sh.set('C'+r,kkForm(x.s));sh.set('D'+r,kkQual(x.s));sh.set('E'+r,x.s.name.trim());
@@ -2944,6 +2969,7 @@ const CHG={
   qset(el){const q=qById(el.dataset.q);if(!q) return;q[el.dataset.k]=clampInt(el.value,0,30);el.value=q[el.dataset.k];touch();},
   rqday(el){if(!UI.rq) return;UI.rq.day=el.value;UI.rq.iv=null;UI.rq.ov=null;UI.rq.bv=null;UI.rq.err='';renderMain();const d=$('#rq-day');if(d) d.focus();},
   kkset(el){const k=el.dataset.k;let v=el.value;
+    if(k.slice(0,3)==='sv.'){const x=k.slice(3);if(x==='lp') v=v.trim();else if(v!==''){v=Math.min(24,Math.max(0,Math.round((parseFloat(v)||0)*100)/100));el.value=v;}kkConf().sv[x]=v;save();return;}
     if(k==='cap'){v=v===''?'':clampInt(v,0,999);el.value=v;}
     else if(k==='wh'){v=Math.round((parseFloat(v)||40)*100)/100;v=Math.min(80,Math.max(1,v));el.value=v;}
     kkConf()[k]=v;save();if(k==='svc') renderMain();},
