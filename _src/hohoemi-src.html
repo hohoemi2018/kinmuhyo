@@ -1070,7 +1070,7 @@ const LIC_PUB=[{"kty":"EC","crv":"P-256","x":"56AOz_HCMxeiFtEJnyAjqC86K4rvs-W7Pp
 const APP_CODE=APP==='roster'?'k':APP==='timecard'?'t':'b';
 const APP_LABEL={k:'勤務表',t:'タイムカード',b:'勤務表・タイムカード'};
 /* 取り消した利用リンクの番号（トークンの i）。もれたリンクを止めるときに足す。その端末のデータは消えない */
-const LIC_REVOKED=[];
+const LIC_REVOKED=['H261016-GY9X'/* 見本・2026-10-17 取り消し */];
 const LIC={state:'checking',lic:null,expired:null,legacy:false,all:[],badUrl:false,justAdded:null,revoked:false};
 function legacyCheck(){
   try{if(localStorage.getItem(LEG_KEY)) return true;}catch(e){return false;}
